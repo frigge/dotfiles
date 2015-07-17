@@ -53,6 +53,12 @@
     (("gnu" . "http://elpa.gnu.org/packages/")
      ("melpa" . "http://melpa.org/packages/"))))
  '(projectile-global-mode t)
+ '(rcirc-server-alist
+   (quote
+    (("irc.deepirc.net" :nick "frigge" :port 6667 :channels
+      ("#oal"))
+     ("irc.freenode.net" :nick "frigge" :channels
+      ("#rcirc")))))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
  '(tab-width 4)
