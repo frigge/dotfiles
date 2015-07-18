@@ -6,13 +6,14 @@ filetype off
 set rtp+=~/.vim/bundle/vundle
 call vundle#begin()
 
+Plugin 'godlygeek/tabular'
 Plugin 'gmarik/vundle'
-Plugin 'Valloric/YouCompleteMe'
 Plugin 'tikhomirov/vim-glsl'
 Plugin 'tpope/vim-fugitive'
 Plugin 'bling/vim-airline'
-Plugin 'majutsushi/tagbar'
 Plugin 'tpope/vim-surround'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'wakatime/vim-wakatime'
 
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
@@ -21,6 +22,7 @@ call vundle#end()
 " ---------------------------------------------
 
 filetype plugin indent on
+syntax on
 
 set encoding=utf-8
 
@@ -34,20 +36,16 @@ set showcmd
 set splitright
 set splitbelow
 
-let g:tagbar_autoclose=1
-let g:tagbar_autofocus=1
-
-nmap <F9> :Tagbar<CR>
-
 nmap <F1> :vsplit $MYVIMRC<CR>
 
 set t_Co=256
-colorscheme molokai
+set background=light
+colorscheme solarized
 set cul
 set cursorcolumn
-highlight Folded guibg=#111111 ctermbg=232
-highlight ColorColumn term=none cterm=none guibg=#111111 ctermbg=232
-highlight CursorLine term=none cterm=none ctermbg=232 guibg=#111111
+" highlight Folded guibg=#111111 ctermbg=232
+" highlight ColorColumn term=none cterm=none guibg=#111111 ctermbg=232
+" highlight CursorLine term=none cterm=none ctermbg=232 guibg=#111111
 set guifont=Consolas\ for\ Powerline\ 9
 
 noremap <leader>n :bn<CR>
@@ -69,8 +67,6 @@ let g:UltiSnipsExpandTrigger="<C-Tab>"
 
 " let g:airline_theme='powerlineish'
 let g:airline_powerline_fonts=1
-
-let g:airline#extensions#tabline#enabled=1
 
 if (!exists("g:airline_symbols"))
     let g:airline_symbols={}
@@ -133,18 +129,18 @@ execute "set colorcolumn=".join(range(80, 400), ',')
 autocmd BufNewFile,BufRead *.glsl,*.geom,*.vert,*.frag,*.gsh,*.vsh,*.fsh,*.vs,*.fs set filetype=glsl
 
 set scrolloff=5
-nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>
+nnoremap <Space> :nohlsearch<CR>
 
 " stay at position when searching
 nnoremap * mz*`z
 nnoremap # mz#`z
 
+map <F5> :make!\|copen<CR>
 " FileType dependand stuff ...
 
 " set cpp compiler
 au FileType cpp compiler gcc
 au FileType cpp map <F4> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
-au FileType cpp map <F5> :make!\|copen<CR>
 
 " set java compiler and makeprg to use ant
 au FileType java compiler ant
@@ -160,7 +156,7 @@ au FileType java map <F5> :make!\|copen<CR>
 set tags=tags
 
 " build tags of your own project with Ctrl-F12
-map <C-F12> :!bash -c "ack -f \| grep -v build \| ctags --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q -L -"<CR>
+map <F12> :!bash -c "ack -f \| grep -v build \| ctags --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q -L -"<CR>
 iabbr _> ->
 iabbr teh the
 
