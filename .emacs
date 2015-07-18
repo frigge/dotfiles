@@ -104,7 +104,6 @@
 (powerline-default-theme)
 
 (require 'cedet)
-(load-file ".emacs.d/helm-etags-plus/helm-etags+.el")
 
 (add-hook 'c++-mode-hook 'irony-mode)
 (add-hook 'c-mode-hook 'irony-mode)
