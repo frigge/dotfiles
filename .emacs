@@ -12,6 +12,12 @@
      (awk-mode . "awk")
      (other . "gnu"))))
  '(column-highlight-mode nil)
+ '(company-auto-complete t)
+ '(company-backends
+   (quote
+    (company-bbdb company-nxml company-css company-eclim company-semantic company-clang company-xcode company-cmake company-capf
+                  (company-dabbrev-code company-gtags company-etags company-keywords)
+                  company-oddmuse company-files company-dabbrev company-irony)))
  '(completion-on-separator-character t)
  '(ctags-update-command "ctags")
  '(ctags-update-delay-seconds 10)
@@ -26,11 +32,14 @@
  '(evil-jumper-mode t)
  '(evil-mode t)
  '(evil-visual-mark-mode nil)
+ '(flycheck-clang-language-standard "c++14")
  '(global-auto-complete-mode t)
+ '(global-company-mode t)
  '(global-ede-mode t)
  '(global-evil-search-highlight-persist t)
  '(global-evil-surround-mode t)
  '(global-evil-visualstar-mode t)
+ '(global-flycheck-mode t)
  '(global-hl-line-mode t)
  '(global-linum-mode t)
  '(global-visual-line-mode t)
@@ -96,3 +105,17 @@
 
 (require 'cedet)
 (load-file ".emacs.d/helm-etags-plus/helm-etags+.el")
+
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+(add-hook 'objc-mode-hook 'irony-mode)
+
+;; replace the `completion-at-point' and `complete-symbol' bindings in
+;; irony-mode's buffers by irony-mode's function
+(defun my-irony-mode-hook ()
+  (define-key irony-mode-map [remap completion-at-point]
+    'irony-completion-at-point-async)
+  (define-key irony-mode-map [remap complete-symbol]
+    'irony-completion-at-point-async))
+(add-hook 'irony-mode-hook 'my-irony-mode-hook)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
