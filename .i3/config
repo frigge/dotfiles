@@ -28,6 +28,12 @@ floating_modifier $mod
 # start a terminal
 bindsym $mod+Return exec i3-sensible-terminal
 
+#wacom switch monitor
+bindsym Ctrl+Shift+F12 exec ~/.wacom_right
+bindsym Ctrl+Shift+F11 exec ~/.wacom_left
+bindsym Ctrl+Shift+F10 exec ~/.wacom_both
+
+
 # kill focused window
 bindsym $mod+Shift+q kill
 
