@@ -104,6 +104,7 @@
 (powerline-default-theme)
 
 (require 'cedet)
+(require 'evil-org)
 
 (add-hook 'c++-mode-hook 'irony-mode)
 (add-hook 'c-mode-hook 'irony-mode)
