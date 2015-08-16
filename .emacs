@@ -12,7 +12,7 @@
      (awk-mode . "awk")
      (other . "gnu"))))
  '(column-highlight-mode nil)
- '(company-auto-complete t)
+ ; '(company-auto-complete t)
  '(company-backends
    (quote
     (company-bbdb company-nxml company-css company-eclim company-semantic company-clang company-xcode company-cmake company-capf
@@ -28,7 +28,7 @@
  '(custom-enabled-themes (quote (solarized-light)))
  '(custom-safe-themes
    (quote
-    ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
+    ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
  '(evil-jumper-mode t)
  '(evil-mode t)
  '(evil-visual-mark-mode nil)
@@ -54,9 +54,7 @@
  '(line-number-mode t)
  '(magit-use-overlays nil)
  '(menu-bar-mode nil)
- '(org-agenda-files
-   (quote
-    ("~/informatik_master/einfuehrung_in_die_logik/summary/summary.org")))
+ '(org-agenda-files (quote ("~/agenda/agenda.org")))
  '(package-archives
    (quote
     (("gnu" . "http://elpa.gnu.org/packages/")
@@ -86,7 +84,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#fdf6e3" :foreground "#657b83" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 110 :width normal :foundry "unknown" :family "Consolas"))))
+ '(default ((t (:inherit nil :stipple nil :background "#fdf6e3" :foreground "#657b83" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 100 :width normal :foundry "unknown" :family "Consolas"))))
  '(col-highlight ((t (:background "#eee8d5"))))
  '(whitespace-empty ((t (:inverse-video nil))))
  '(whitespace-indentation ((t (:foreground "light gray" :weight light)))))
@@ -100,22 +98,29 @@
 (global-set-key (kbd "<f4>") 'ff-find-other-file)
 (evil-ex-define-cmd "ta" 'evil-etags-select-find-tag)
 
-(require 'powerline)
-(powerline-default-theme)
+;; (require 'powerline)
+;; (require 'powerline-evil)
+;; (powerline-center-evil-theme)
 
 (require 'cedet)
 (require 'evil-org)
+(require 'evil-numbers)
 
-(add-hook 'c++-mode-hook 'irony-mode)
-(add-hook 'c-mode-hook 'irony-mode)
-(add-hook 'objc-mode-hook 'irony-mode)
+(define-key evil-normal-state-map (kbd "+") 'evil-numbers/inc-at-pt)
+(define-key evil-normal-state-map (kbd "-") 'evil-numbers/dec-at-pt)
+(define-key evil-visual-state-map (kbd "+") 'evil-numbers/inc-at-pt)
+(define-key evil-visual-state-map (kbd "-") 'evil-numbers/dec-at-pt)
+
+;; (add-hook 'c++-mode-hook 'irony-mode)
+;; (add-hook 'c-mode-hook 'irony-mode)
+;; (add-hook 'objc-mode-hook 'irony-mode)
 
 ;; replace the `completion-at-point' and `complete-symbol' bindings in
 ;; irony-mode's buffers by irony-mode's function
-(defun my-irony-mode-hook ()
-  (define-key irony-mode-map [remap completion-at-point]
-    'irony-completion-at-point-async)
-  (define-key irony-mode-map [remap complete-symbol]
-    'irony-completion-at-point-async))
-(add-hook 'irony-mode-hook 'my-irony-mode-hook)
-(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+;; (defun my-irony-mode-hook ()
+;;   (define-key irony-mode-map [remap completion-at-point]
+;;     'irony-completion-at-point-async)
+;;   (define-key irony-mode-map [remap complete-symbol]
+;;     'irony-completion-at-point-async))
+;; (add-hook 'irony-mode-hook 'my-irony-mode-hook)
+;; (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
