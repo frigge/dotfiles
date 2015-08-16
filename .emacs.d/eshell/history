@@ -104,3 +104,9 @@ cp Makefile ../sheet08/
 cd ..
 cd sheet08/
 ls
+cd ..
+git clone git@gitlab.com:frigge/my_agenda.git
+cd my_agenda/
+ls
+find-file agenda
+find-file agenda.org 

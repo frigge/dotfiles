@@ -56,7 +56,9 @@
  '(menu-bar-mode nil)
  '(org-agenda-files
    (quote
-    ("~/informatik_master/einfuehrung_in_die_logik/summary/summary.org")))
+    ("~/haushalt/haushalt.org" "~/my_agenda/work.org" "~/my_agenda/agenda.org" "~/informatik_master/einfuehrung_in_die_logik/summary/summary.org")))
+ '(org-babel-load-languages (quote ((emacs-lisp . t) (python . t) (sh . t))))
+ '(org-src-fontify-natively t)
  '(package-archives
    (quote
     (("gnu" . "http://elpa.gnu.org/packages/")
