@@ -104,3 +104,6 @@ cp Makefile ../sheet08/
 cd ..
 cd sheet08/
 ls
+ls
+:q
+ls
