@@ -1,4 +1,4 @@
-set nocompatible
+ret nocompatible
 
 " Vundle
 " ---------------------------------------------
@@ -10,10 +10,11 @@ Plugin 'godlygeek/tabular'
 Plugin 'gmarik/vundle'
 Plugin 'tikhomirov/vim-glsl'
 Plugin 'tpope/vim-fugitive'
-Plugin 'bling/vim-airline'
+" Plugin 'bling/vim-airline'
 Plugin 'tpope/vim-surround'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'wakatime/vim-wakatime'
+Plugin 'sickill/vim-monokai'
 
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
@@ -40,7 +41,7 @@ nmap <F1> :vsplit $MYVIMRC<CR>
 
 set t_Co=256
 set background=light
-colorscheme solarized
+colorscheme monokai
 set cul
 set cursorcolumn
 " highlight Folded guibg=#111111 ctermbg=232
@@ -66,19 +67,19 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 let g:UltiSnipsExpandTrigger="<C-Tab>"
 
 " let g:airline_theme='powerlineish'
-let g:airline_powerline_fonts=1
+" let g:airline_powerline_fonts=1
 
-if (!exists("g:airline_symbols"))
-    let g:airline_symbols={}
-endif
-
-let g:airline_left_sep = '⮀'
-let g:airline_left_alt_sep = '⮁'
-let g:airline_right_sep = '⮂'
-let g:airline_right_alt_sep = '⮃'
-let g:airline_symbols.branch = '⭠'
-let g:airline_symbols.readonly = '⭤'
-let g:airline_symbols.linenr = '⭡'
+" if (!exists("g:airline_symbols"))
+"     let g:airline_symbols={}
+" endif
+" 
+" let g:airline_left_sep = '⮀'
+" let g:airline_left_alt_sep = '⮁'
+" let g:airline_right_sep = '⮂'
+" let g:airline_right_alt_sep = '⮃'
+" let g:airline_symbols.branch = '⭠'
+" let g:airline_symbols.readonly = '⭤'
+" let g:airline_symbols.linenr = '⭡'
 
 " this is incredibly useful
 set grepprg=ag
