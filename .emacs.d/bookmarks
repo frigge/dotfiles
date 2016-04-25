@@ -2,4 +2,9 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-()
+(("RTags_0"
+ (filename . "~/informatik_master/echtzeitcomputergrafik/ecg_ex01/gl/OGLShader.h")
+ (front-context-string . "loadVertexShader")
+ (rear-context-string . "rName);\n\n  bool ")
+ (position . 479))
+)
