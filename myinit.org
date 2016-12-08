@@ -1,0 +1,345 @@
+* c++
+** cmake-ide
+#+begin_src emacs-lisp
+  (use-package cmake-ide
+               :ensure t
+               :config (cmake-ide-setup))
+#+end_src
+
+** rtags
+#+begin_src emacs-lisp
+    (use-package rtags
+                 :ensure t
+                 :config (custom-set-variables
+                           '(rtags-autostart-diagnostics t)
+                           '(rtags-completions-enabled t)
+                           '(rtags-display-current-error-as-tooltip t)
+                           '(rtags-use-helm t))
+                 rtags-enable-standard-keybindings)
+#+end_src
+
+** TODO clang-format
+* evil
+#+begin_src emacs-lisp
+  (use-package evil
+	:ensure t
+	:config (evil-mode t))
+
+  (use-package evil-org
+	:ensure t)
+
+  (use-package evil-numbers
+	:ensure t
+	:bind (:map evil-normal-state-map
+				 ("+" . evil-numbers/inc-at-pt)
+				 ("-" . evil-numbers/dec-at-pt)
+           :map evil-visual-state-map
+				 ("+" . evil-numbers/inc-at-pt)
+				 ("-" . evil-numbers/dec-at-pt)))
+
+  (use-package evil-quickscope
+	:ensure t
+	:config (setq global-evil-quickscope-mode t))
+
+  (use-package evil-surround
+	:ensure t
+	:config (setq global-evil-surround-mode t))
+
+  (use-package evil-visualstar
+	:ensure t
+	:config (setq global-evil-visualstar-mode t))
+#+end_src
+  
+* gui
+** misc
+#+begin_src emacs-lisp
+  (custom-set-variables
+   '(blink-cursor-mode nil)
+   '(tab-width 4)
+   '(inhibit-startup-screen t)
+   '(line-number-mode t)
+   '(scroll-bar-mode nil)
+   '(show-paren-mode t)
+   '(tool-bar-mode nil)
+   '(menu-bar-mode nil)
+   '(custom-buffer-indent 4)
+   '(global-hl-line-mode t)
+   '(global-auto-revert-mode t)
+   '(indent-tabs-mode nil)
+   '(c-basic-offset 4)
+   '(c-default-style
+	 (quote
+      ((java-mode . "java")
+       (awk-mode . "awk")
+	   (python-mode . "python")
+       (other . "stroustrup")))))
+
+  (global-set-key (kbd "<f4>") 'ff-find-other-file)
+#+end_src
+
+*** beacon-mode
+#+begin_src emacs-lisp
+  (use-package beacon
+               :ensure t
+               :config (beacon-mode))
+#+end_src
+
+** helm
+#+begin_src emacs-lisp
+  (use-package helm
+               :ensure t
+               :bind ("M-x" . helm-M-x))
+#+end_src
+
+** ido
+#+begin_src emacs-lisp
+  (use-package ido
+    :ensure t
+    :config (ido-mode))
+
+  (global-set-key (kbd "C-x C-f") 'ido-find-file)
+  (global-set-key (kbd "C-x b") 'ido-switch-buffer)
+#+end_src
+
+** ace-window
+#+begin_src emacs-lisp
+  (use-package ace-window
+    :ensure t
+    :bind ("C-x o" . ace-window)
+    :config (custom-set-variables
+             '(ace-window-display-mode t)))
+#+end_src
+
+** font
+#+begin_src emacs-lisp
+(custom-set-faces
+ '(default ((t (:height 100 :foundry "DAMA" :family "Consolas for Powerline")))))
+#+end_src
+
+** theme
+#+begin_src emacs-lisp
+  (use-package solarized-theme
+    :ensure t
+    :config (load-theme 'solarized-dark t))
+#+end_src
+
+#+RESULTS:
+: t
+
+** company
+#+begin_src emacs-lisp
+  (use-package company
+               :ensure t
+               :config ((custom-set-variables
+                         '(completion-on-separator-character t)
+                         '(company-backends
+                           (quote
+                            (company-bbdb
+                             company-nxml
+                             company-css
+                             company-eclim
+                             company-semantic
+                             company-clang
+                             company-xcode
+                             company-cmake
+                             company-capf
+                             company-dabbrev-code
+                             company-gtags
+                             company-etags
+                             company-keywords
+                             company-oddmuse
+                             company-files
+                             company-dabbrev))))
+                        (global-company-mode))
+                        :bind (:map c-mode-base-map
+                                    ("<C-tab>" . company-complete)))
+#+end_src
+
+** which-key
+#+begin_src emacs-lisp
+  (use-package which-key
+    :ensure t
+    :config (setq which-key-mode t))
+#+end_src
+
+** git-gutter
+#+begin_src emacs-lisp
+  (use-package git-gutter
+    :ensure t
+    :config (setq global-git-gutter+-mode t))
+#+end_src
+
+* orgmode
+** org-ref
+#+begin_src emacs-lisp
+  (use-package org-ref
+	:ensure t)
+
+  (require 'doi-utils)
+  (require 'org-ref-pdf)
+  (require 'org-ref-url-utils)
+  (require 'org-ref-bibtex)
+  (require 'org-ref-latex)
+  (require 'org-ref-arxiv)
+  (require 'org-ref-isbn)
+  (require 'org-ref-wos)
+  (require 'org-ref-scopus)
+  (require 'x2bib)
+  (require 'nist-webbook)
+  (add-to-list 'load-path ".")
+  (require 'org-ref-citeproc)
+  (require 'unsrt)
+#+end_src
+
+** agenda
+#+begin_src emacs-lisp
+  (custom-set-variables
+   '(org-agenda-files
+     (quote
+      ("~/informatik_master/padi/notes.org"
+       "~/informatik_master/seminar/notes.org"
+       "~/informatik_master/algorithm_engineering/notes.org"
+       "~/informatik_master/echtzeitcomputergrafik/notes.org"
+       "~/informatik_master/multimedia_database/notes.org"
+       "~/informatik_master/3dcomputersehen/notes.org"
+       "~/my_agenda/agenda.org"))))
+#+end_src
+
+** export
+#+begin_src emacs-lisp
+(custom-set-variables
+ '(org-babel-load-languages (quote ((python . t) (emacs-lisp . t))))
+ '(org-latex-pdf-process
+   (quote
+    ("pdflatex -interaction nonstopmode -output-directory %o %f" "bibtex %b" "pdflatex -interaction nonstopmode -output-directory %o %f" "pdflatex -interaction nonstopmode -output-directory %o %f")))
+ '(org-src-fontify-natively t))
+
+(require 'ox-latex)
+(add-to-list
+ 'org-latex-classes
+ '("dinbrief"
+   "\\documentclass[12pt]{dinbrief}
+\[DEFAULT-PACKAGES]
+\[PACKAGES]
+\[EXTRA]"))
+#+end_src
+
+** caldav
+#+begin_src emacs-lisp
+  (use-package org-caldav
+	:ensure t
+	:config (custom-set-variables 
+			 '(org-caldav-url "http://frgcloud.selfhost.eu/owncloud/remote.php/caldav/calendars/piland")
+			 '(org-caldav-calendar-id "orgmode-agenda")
+			 '(org-caldav-select-tags '("AGENDA"))
+			 '(org-caldav-inbox "~/my_agenda/caldav.org")))
+#+end_src
+
+** misc
+#+begin_src emacs-lisp
+(plist-put org-format-latex-options :scale 1.5)
+#+end_src
+
+* email
+#+begin_src emacs-lisp
+(custom-set-variables
+ '(send-mail-function (quote smtpmail-send-it))
+ '(smtpmail-smtp-server "groupware.tu-bs.de")
+ '(smtpmail-smtp-service 465)
+ '(smtpmail-stream-type (quote ssl))
+ '(user-full-name "Sascha Fricke")
+ '(user-mail-address "Sascha Fricke <s.fricke@tu-bs.de>")
+)
+#+end_src
+** notmuch
+#+begin_src emacs-lisp
+  (use-package notmuch
+    :ensure t
+    :config (setq notmuch-address-command "notmuch-address"))
+#+end_src
+** offlineimap
+#+begin_src emacs-lisp
+  (use-package offlineimap
+    :ensure t)
+#+end_src
+* projectile
+#+begin_src emacs-lisp
+  (use-package projectile
+    :ensure t
+    :disabled t
+    :config (setq projectile-mode t))
+#+end_src
+
+* ag
+#+begin_src emacs-lisp
+  (use-package ag
+    :ensure t
+    :config (setq ag-group-matches nil))
+#+end_src
+
+* wgrep
+#+begin_src emacs-lisp
+  (use-package wgrep
+    :ensure t)
+  (use-package wgrep-ag
+    :ensure t)
+#+end_src
+
+* ctags
+#+begin_src emacs-lisp
+  (custom-set-variables
+   '(ctags-update-command "ctags")
+   '(ctags-update-delay-seconds 10)
+   '(ctags-update-other-options
+     (quote
+      ("--fields=+iaSt"
+       "--extra=+q"
+       "--exclude='*.elc'"
+       "--exclude='*.class'"
+       "--exclude='.git'"
+       "--exclude='.svn'"
+       "--exclude='SCCS'"
+       "--exclude='RCS'"
+       "--exclude='CVS'"
+       "--exclude='EIFGEN'"
+       "-R"
+       "-e"))))
+#+end_src
+
+* flycheck
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :ensure t
+    :config (custom-set-variables
+             '(global-flycheck-mode t)
+             '(flycheck-clang-language-standard "c++14")))
+#+end_src
+
+* magit
+#+begin_src emacs-lisp
+  (use-package magit
+    :ensure t)
+#+end_src 
+* extra file type modes
+** cuda-mode
+#+begin_src emacs-lisp
+  (use-package cuda-mode
+    :ensure t)
+#+end_src
+
+** opencl-mode
+#+begin_src emacs-lisp
+  (use-package opencl-mode
+    :ensure t)
+#+end_src
+
+** glsl-mode
+#+begin_src emacs-lisp
+  (use-package glsl-mode
+    :ensure t)
+#+end_src
+
+* start in eshell
+#+begin_src emacs-lisp
+(eshell)
+#+end_src
