@@ -8,17 +8,23 @@
 
 ** rtags
 #+begin_src emacs-lisp
-    (use-package rtags
-                 :ensure t
-                 :config (custom-set-variables
-                           '(rtags-autostart-diagnostics t)
-                           '(rtags-completions-enabled t)
-                           '(rtags-display-current-error-as-tooltip t)
-                           '(rtags-use-helm t))
-                 rtags-enable-standard-keybindings)
+  (use-package rtags
+               :ensure t
+               :config (custom-set-variables
+                         '(rtags-autostart-diagnostics t)
+                         '(rtags-completions-enabled t)
+                         '(rtags-display-current-error-as-tooltip t)
+                         '(rtags-use-helm t))
+               (rtags-enable-standard-keybindings))
 #+end_src
 
 ** TODO clang-format
+* helm
+#+begin_src emacs-lisp
+      (use-package helm
+                   :ensure t
+                   :bind ("M-x" . helm-M-x))
+#+end_src
 * evil
 #+begin_src emacs-lisp
   (use-package evil
@@ -49,7 +55,27 @@
 	:ensure t
 	:config (setq global-evil-visualstar-mode t))
 #+end_src
+
+** don't use SPC and RET as motion keys in normal mode
+#+begin_src emacs-lisp
+  (defun my-move-key (keymap-from keymap-to key)
+    "Moves key binding from one keymap to another, deleting from the old location. "
+    (define-key keymap-to key (lookup-key keymap-from key))
+    (define-key keymap-from key nil))
+  (my-move-key evil-motion-state-map evil-normal-state-map (kbd "RET"))
+  (my-move-key evil-motion-state-map evil-normal-state-map " ")
+#+end_src
   
+** SPC as leader key in evil normal mode
+
+#+begin_src emacs-lisp
+  (define-prefix-command 'space-map)
+  (define-key evil-normal-state-map (kbd "SPC") 'space-map)
+  (define-key space-map (kbd "x") 'helm-M-x)
+  (define-key space-map (kbd "b") 'ido-switch-buffer)
+  (define-key space-map (kbd "f") 'ido-find-file)
+#+end_src
+
 * gui
 ** misc
 #+begin_src emacs-lisp
@@ -82,13 +108,6 @@
   (use-package beacon
                :ensure t
                :config (beacon-mode))
-#+end_src
-
-** helm
-#+begin_src emacs-lisp
-  (use-package helm
-               :ensure t
-               :bind ("M-x" . helm-M-x))
 #+end_src
 
 ** ido
@@ -265,7 +284,6 @@
 * projectile
 #+begin_src emacs-lisp
   (use-package projectile
-    :ensure t
     :disabled t
     :config (setq projectile-mode t))
 #+end_src
