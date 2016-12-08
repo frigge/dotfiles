@@ -1,1 +1,0 @@
-("~/dotfiles/" "~/my_agenda/" "~/informatik_master/compiler1/" "~/code/mindtree/" "~/informatik_master/einfuehrung_in_die_logik/homework/" "~/.emacs.d/elpa/jedi-core-20150623.2335/" "~/informatik_master/bbm/exercises/" "~/informatik_master/technische_informatik/")
