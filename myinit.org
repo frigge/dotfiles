@@ -27,33 +27,34 @@
 #+end_src
 * evil
 #+begin_src emacs-lisp
-  (use-package evil
-	:ensure t
-	:config (evil-mode t))
+    (use-package evil
+      :ensure t
+      :config (evil-mode t))
 
-  (use-package evil-org
-	:ensure t)
+    (use-package evil-org
+      :ensure t)
 
-  (use-package evil-numbers
-	:ensure t
-	:bind (:map evil-normal-state-map
-				 ("+" . evil-numbers/inc-at-pt)
-				 ("-" . evil-numbers/dec-at-pt)
-           :map evil-visual-state-map
-				 ("+" . evil-numbers/inc-at-pt)
-				 ("-" . evil-numbers/dec-at-pt)))
+    (use-package evil-numbers
+      :ensure t
+      :bind (:map evil-normal-state-map
+			       ("+" . evil-numbers/inc-at-pt)
+			       ("-" . evil-numbers/dec-at-pt)
+             :map evil-visual-state-map
+			       ("+" . evil-numbers/inc-at-pt)
+			       ("-" . evil-numbers/dec-at-pt)))
 
-  (use-package evil-quickscope
-	:ensure t
-	:config (setq global-evil-quickscope-mode t))
+    (use-package evil-quickscope
+      :ensure t
+      :config (global-evil-quickscope-mode t))
 
-  (use-package evil-surround
-	:ensure t
-	:config (setq global-evil-surround-mode t))
+    (use-package evil-surround
+      :ensure t
+      :config (global-evil-surround-mode 1))
+  
 
-  (use-package evil-visualstar
-	:ensure t
-	:config (setq global-evil-visualstar-mode t))
+    (use-package evil-visualstar
+      :ensure t
+      :config (global-evil-visualstar-mode t))
 #+end_src
 
 ** don't use SPC and RET as motion keys in normal mode
@@ -71,6 +72,7 @@
 #+begin_src emacs-lisp
   (define-prefix-command 'space-map)
   (define-key evil-normal-state-map (kbd "SPC") 'space-map)
+  (define-key evil-motion-state-map (kbd "SPC") 'space-map)
   (define-key space-map (kbd "x") 'helm-M-x)
   (define-key space-map (kbd "b") 'ido-switch-buffer)
   (define-key space-map (kbd "f") 'ido-find-file)
