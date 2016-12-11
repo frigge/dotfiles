@@ -27,33 +27,33 @@
 #+end_src
 * evil
 #+begin_src emacs-lisp
-  (use-package evil
-	:ensure t
-	:config (evil-mode t))
+    (use-package evil
+	  :ensure t
+	  :config (evil-mode t))
 
-  (use-package evil-org
-	:ensure t)
+    (use-package evil-org
+	  :ensure t)
 
-  (use-package evil-numbers
-	:ensure t
-	:bind (:map evil-normal-state-map
-				 ("+" . evil-numbers/inc-at-pt)
-				 ("-" . evil-numbers/dec-at-pt)
-           :map evil-visual-state-map
-				 ("+" . evil-numbers/inc-at-pt)
-				 ("-" . evil-numbers/dec-at-pt)))
+    (use-package evil-numbers
+	  :ensure t
+	  :bind (:map evil-normal-state-map
+				   ("+" . evil-numbers/inc-at-pt)
+				   ("-" . evil-numbers/dec-at-pt)
+             :map evil-visual-state-map
+				   ("+" . evil-numbers/inc-at-pt)
+				   ("-" . evil-numbers/dec-at-pt)))
 
-  (use-package evil-quickscope
-	:ensure t
-	:config (setq global-evil-quickscope-mode t))
+    (use-package evil-quickscope
+	  :ensure t
+	  :config (setq global-evil-quickscope-mode t))
 
-  (use-package evil-surround
-	:ensure t
-	:config (setq global-evil-surround-mode t))
+    (use-package evil-surround
+	  :ensure t
+	  :config (setq global-evil-surround-mode t))
 
-  (use-package evil-visualstar
-	:ensure t
-	:config (setq global-evil-visualstar-mode t))
+    (use-package evil-visualstar
+	  :ensure t
+	  :config (setq global-evil-visualstar-mode t))
 #+end_src
 
 ** don't use SPC and RET as motion keys in normal mode
@@ -205,7 +205,6 @@
   (require 'org-ref-scopus)
   (require 'x2bib)
   (require 'nist-webbook)
-  (add-to-list 'load-path ".")
   (require 'org-ref-citeproc)
   (require 'unsrt)
 #+end_src
@@ -284,7 +283,6 @@
 * projectile
 #+begin_src emacs-lisp
   (use-package projectile
-    :disabled t
     :config (setq projectile-mode t))
 #+end_src
 
