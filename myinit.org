@@ -191,6 +191,13 @@
 #+end_src
 
 * orgmode
+** org-pomodoro
+#+begin_src emacs-lisp
+  (use-package org-pomodoro
+    :ensure t
+    :bind (:map evil-normal-state-map ("SPC o p" . org-pomodoro)))
+#+end_src
+
 ** org-ref
 #+begin_src emacs-lisp
   (use-package org-ref
@@ -207,11 +214,14 @@
   (require 'org-ref-scopus)
   (require 'x2bib)
   (require 'nist-webbook)
-  (add-to-list 'load-path ".")
   (require 'org-ref-citeproc)
   (require 'unsrt)
 #+end_src
 
+** capture
+#+begin_src emacs-lisp
+(define-key evil-normal-state-map (kbd "SPC c c") 'org-capture)
+#+end_src
 ** agenda
 #+begin_src emacs-lisp
   (custom-set-variables
@@ -286,8 +296,19 @@
 * projectile
 #+begin_src emacs-lisp
   (use-package projectile
-    :disabled t
+:ensure t
     :config (setq projectile-mode t))
+#+end_src
+
+** org-projectile
+#+begin_src emacs-lisp
+    (use-package org-projectile
+      :ensure t
+      :bind (:map evil-normal-state-map ("SPC c p" . org-projectile:project-todo-completing-read))
+                  :config (progn
+                            (org-projectile:per-repo)
+                            (setq org-projectile:per-repo-filename "project_todo.org")
+                            (setq org-agenda-files (append org-agenda-files (org-projectile:todo-files)))))
 #+end_src
 
 * ag
