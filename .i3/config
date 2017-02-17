@@ -169,7 +169,7 @@ mode "resize" {
         bindsym g mode "gaps"
 }
 
-bindsym $mod+t exec --no-startup-id ~/code/wacom/screen_mapper.py
+bindsym $mod+t exec --no-startup-id ~/src/wacom/screen_mapper.py
 
 mode "gaps" {
     bindsym o mode "gaps-outer"
@@ -211,7 +211,7 @@ bindsym $mod+r mode "resize"
 # finds out, if available)
 bar {
   status_command i3status
-        tray_output DVI-I-1
+        tray_output LVDS-1-1
   colors {
     separator #1d5a00
     background #0b2100

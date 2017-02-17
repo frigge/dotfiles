@@ -158,10 +158,7 @@
                             (company-bbdb
                              company-nxml
                              company-css
-                             company-eclim
                              company-semantic
-                             company-clang
-                             company-xcode
                              company-cmake
                              company-capf
                              company-dabbrev-code
@@ -273,14 +270,13 @@
 
 * email
 #+begin_src emacs-lisp
-(custom-set-variables
- '(send-mail-function (quote smtpmail-send-it))
- '(smtpmail-smtp-server "groupware.tu-bs.de")
- '(smtpmail-smtp-service 465)
- '(smtpmail-stream-type (quote ssl))
- '(user-full-name "Sascha Fricke")
- '(user-mail-address "Sascha Fricke <s.fricke@tu-bs.de>")
-)
+  (custom-set-variables
+   '(send-mail-function (quote smtpmail-send-it))
+   '(smtpmail-smtp-server "groupware.tu-bs.de")
+   '(smtpmail-smtp-service 465)
+   '(smtpmail-stream-type (quote ssl))
+   '(user-full-name "Sascha Fricke")
+   '(user-mail-address "Sascha Fricke <s.fricke@tu-bs.de>"))
 #+end_src
 ** notmuch
 #+begin_src emacs-lisp
