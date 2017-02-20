@@ -1,24 +1,3 @@
-* c++
-** cmake-ide
-#+begin_src emacs-lisp
-  (use-package cmake-ide
-               :ensure t
-               :config (cmake-ide-setup))
-#+end_src
-
-** rtags
-#+begin_src emacs-lisp
-  (use-package rtags
-               :ensure t
-               :config (custom-set-variables
-                         '(rtags-autostart-diagnostics t)
-                         '(rtags-completions-enabled t)
-                         '(rtags-display-current-error-as-tooltip t)
-                         '(rtags-use-helm t))
-               (rtags-enable-standard-keybindings))
-#+end_src
-
-** TODO clang-format
 * helm
 #+begin_src emacs-lisp
       (use-package helm
@@ -151,29 +130,27 @@
 #+begin_src emacs-lisp
   (use-package company
                :ensure t
-               :config ((custom-set-variables
-                         '(completion-on-separator-character t)
-                         '(company-backends
-                           (quote
-                            (company-bbdb
-                             company-nxml
-                             company-css
-                             company-eclim
-                             company-semantic
-                             company-clang
-                             company-xcode
-                             company-cmake
-                             company-capf
-                             company-dabbrev-code
-                             company-gtags
-                             company-etags
-                             company-keywords
-                             company-oddmuse
-                             company-files
-                             company-dabbrev))))
-                        (global-company-mode))
-                        :bind (:map c-mode-base-map
-                                    ("<C-tab>" . company-complete)))
+               :config (setq company-backends (quote
+                                                 (company-bbdb
+                                                  company-nxml
+                                                  company-css
+                                                  company-semantic
+                                                  company-cmake
+                                                  company-capf
+                                                  company-dabbrev-code
+                                                  company-gtags
+                                                  company-etags
+                                                  company-keywords
+                                                  company-oddmuse
+                                                  company-files
+                                                  company-dabbrev
+                                                  company-rtags)))
+                        :bind ("<C-tab>" . company-complete))
+
+  (require 'company)
+
+  (setq completion-on-separator-character t)
+  (add-hook 'after-init-hook 'global-company-mode)
 #+end_src
 
 ** which-key
@@ -362,6 +339,7 @@
     :ensure t)
 #+end_src 
 * extra file type modes
+
 ** cuda-mode
 #+begin_src emacs-lisp
   (use-package cuda-mode
@@ -380,7 +358,56 @@
     :ensure t)
 #+end_src
 
-* start in eshell
+* misc
+** start in eshell
+ #+begin_src emacs-lisp
+ (eshell)
+ #+end_src
+* c++
+** cmake-ide
 #+begin_src emacs-lisp
-(eshell)
+  (use-package cmake-ide
+               :ensure t
+               :config (cmake-ide-setup))
+#+end_src
+
+*set cmake-build-dir to current dir* 
+
+small helper function to quickly set the build dir for cmake-ide to
+the current directory from eshell.
+
+#+begin_src emacs-lisp
+    (defun set-cmake-ide-build-dir () 
+      "sets cmake-build-dir variable to default-directory
+      intended to be called from eshell to quickly set the cmake build directory"
+      (setq cmake-build-dir default-directory))
+#+end_src
+
+** rtags
+#+begin_src emacs-lisp
+  (use-package rtags
+               :ensure t
+               :config (custom-set-variables
+                         '(rtags-autostart-diagnostics t)
+                         '(rtags-completions-enabled t)
+                         '(rtags-display-current-error-as-tooltip t))
+               (rtags-enable-standard-keybindings evil-normal-state-map "SPC r"))
+#+end_src
+** TODO clang-format
+#+begin_src emacs-lisp
+  (use-package clang-format
+               :ensure t
+               :config (define-key evil-normal-state-map (kbd "SPC c f") 'clang-format-region))
+#+end_src
+* realgud
+#+begin_src emacs-lisp
+  (use-package realgud
+               :ensure t)
+#+end_src
+* pdftools
+#+begin_src emacs-lisp
+  (use-package pdf-tools
+               :ensure t
+               :config (pdf-tools-install))
+
 #+end_src

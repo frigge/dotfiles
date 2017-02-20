@@ -38,18 +38,12 @@ set splitbelow
 nmap <F1> :vsplit $MYVIMRC<CR>
 
 set t_Co=256
-set background=light
-colorscheme monokai
+set background=dark
 set cul
-set cursorcolumn
 " highlight Folded guibg=#111111 ctermbg=232
 " highlight ColorColumn term=none cterm=none guibg=#111111 ctermbg=232
 " highlight CursorLine term=none cterm=none ctermbg=232 guibg=#111111
 set guifont=Consolas\ for\ Powerline\ 9
-
-noremap <leader>n :bn<CR>
-noremap <leader>p :bp<CR>
-noremap <Leader>w :bw<CR>
 
 " jump to last position after reopening
 if has("autocmd")
@@ -63,21 +57,6 @@ let g:UltiSnipsEditSplit="vertical"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 let g:UltiSnipsExpandTrigger="<C-Tab>"
-
-" let g:airline_theme='powerlineish'
-" let g:airline_powerline_fonts=1
-
-" if (!exists("g:airline_symbols"))
-"     let g:airline_symbols={}
-" endif
-" 
-" let g:airline_left_sep = '⮀'
-" let g:airline_left_alt_sep = '⮁'
-" let g:airline_right_sep = '⮂'
-" let g:airline_right_alt_sep = '⮃'
-" let g:airline_symbols.branch = '⭠'
-" let g:airline_symbols.readonly = '⭤'
-" let g:airline_symbols.linenr = '⭡'
 
 " this is incredibly useful
 set grepprg=ag
@@ -123,7 +102,7 @@ set exrc
 
 set cino=(0
 
-execute "set colorcolumn=".join(range(80, 400), ',')
+" execute "set colorcolumn=".join(range(80, 400), ',')
 
 autocmd BufNewFile,BufRead *.glsl,*.geom,*.vert,*.frag,*.gsh,*.vsh,*.fsh,*.vs,*.fs set filetype=glsl
 
