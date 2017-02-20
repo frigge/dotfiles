@@ -25,8 +25,8 @@ syntax on
 
 set encoding=utf-8
 
-let mapleader=","
-let maplocalleader=","
+" let mapleader=","
+" let maplocalleader=","
 
 set hidden
 set undofile
@@ -38,8 +38,10 @@ set splitbelow
 nmap <F1> :vsplit $MYVIMRC<CR>
 
 set t_Co=256
-set background=dark
+" set background=light
+" colorscheme monokai
 set cul
+" set cursorcolumn
 " highlight Folded guibg=#111111 ctermbg=232
 " highlight ColorColumn term=none cterm=none guibg=#111111 ctermbg=232
 " highlight CursorLine term=none cterm=none ctermbg=232 guibg=#111111
