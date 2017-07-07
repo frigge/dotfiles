@@ -84,6 +84,18 @@
   (global-set-key (kbd "<f4>") 'ff-find-other-file)
 #+end_src
 
+*** indent tabs
+#+begin_src emacs-lisp
+  (use-package smart-tabs-mode
+    :ensure t)
+  (add-hook 'c-mode-common-hook (lambda () (setq indent-tabs-mode t)))
+#+end_src
+
+whitespace mode toggle
+#+begin_src emacs-lisp
+  (define-key space-map (kbd "w w") 'whitespace-mode)
+#+end_src
+
 *** beacon-mode
 #+begin_src emacs-lisp
   (use-package beacon
@@ -125,6 +137,24 @@
 
 #+RESULTS:
 : t
+
+switching between light and dark theme
+
+#+begin_src emacs-lisp
+  (defvar my-dark-theme 'solarized-dark "current dark theme")
+  (defvar my-light-theme 'solarized-light "current light theme")
+  (defvar my-current-theme (symbol-value 'my-dark-theme) "current theme in use")
+
+  (defun toggle-light-and-dark-theme ()
+    ""
+    (interactive)
+    (if (eq my-current-theme my-dark-theme)
+        (setq my-current-theme (symbol-value 'my-light-theme))
+      (setq my-current-theme (symbol-value 'my-dark-theme)))
+    (load-theme my-current-theme))
+
+  (define-key space-map (kbd "t t") 'toggle-light-and-dark-theme)
+#+end_src
 
 ** company
 #+begin_src emacs-lisp
@@ -215,21 +245,25 @@
 
 ** export
 #+begin_src emacs-lisp
-(custom-set-variables
- '(org-babel-load-languages (quote ((python . t) (emacs-lisp . t))))
- '(org-latex-pdf-process
-   (quote
-    ("pdflatex -interaction nonstopmode -output-directory %o %f" "bibtex %b" "pdflatex -interaction nonstopmode -output-directory %o %f" "pdflatex -interaction nonstopmode -output-directory %o %f")))
- '(org-src-fontify-natively t))
+  (custom-set-variables
+   '(org-babel-load-languages (quote ((python . t) (emacs-lisp . t) (latex . t))))
+   '(org-latex-prefer-user-labels t)
+   '(org-latex-pdf-process
+     (quote
+      ("pdflatex -interaction nonstopmode -output-directory %o %f" 
+       "bibtex %b" 
+       "pdflatex -interaction nonstopmode -output-directory %o %f" 
+       "pdflatex -interaction nonstopmode -output-directory %o %f")))
+   '(org-src-fontify-natively t))
 
-(require 'ox-latex)
-(add-to-list
- 'org-latex-classes
- '("dinbrief"
-   "\\documentclass[12pt]{dinbrief}
-\[DEFAULT-PACKAGES]
-\[PACKAGES]
-\[EXTRA]"))
+  (require 'ox-latex)
+  (add-to-list
+   'org-latex-classes
+   '("dinbrief"
+     "\\documentclass[12pt]{dinbrief}
+  \[DEFAULT-PACKAGES]
+  \[PACKAGES]
+  \[EXTRA]"))
 #+end_src
 
 ** caldav
@@ -327,8 +361,8 @@
 #+begin_src emacs-lisp
   (use-package flycheck
     :ensure t
+    :disabled t
     :config (custom-set-variables
-             '(global-flycheck-mode t)
              '(flycheck-clang-language-standard "c++14")))
 #+end_src
 
@@ -384,14 +418,28 @@ smerge
 
 * misc
 ** start in eshell
+
  #+begin_src emacs-lisp
  (eshell)
  #+end_src
+
+** bookmarks
+ #+begin_src emacs-lisp
+   (define-key space-map (kbd "b") 'helm-filtered-bookmarks)
+ #+end_src
+
 * c++
+** cmake-mode
+#+begin_src emacs-lisp
+  (use-package cmake-mode
+               :ensure t)
+#+end_src
+
 ** cmake-ide
 #+begin_src emacs-lisp
   (use-package cmake-ide
                :ensure t
+               :disabled t
                :config (cmake-ide-setup))
 #+end_src
 
@@ -423,6 +471,7 @@ the current directory from eshell.
                :ensure t
                :config (define-key evil-normal-state-map (kbd "SPC c f") 'clang-format-region))
 #+end_src
+
 * realgud
 #+begin_src emacs-lisp
   (use-package realgud
@@ -432,6 +481,7 @@ the current directory from eshell.
 #+begin_src emacs-lisp
   (use-package pdf-tools
                :ensure t
+               :disabled t
                :config (pdf-tools-install))
 
 #+end_src
