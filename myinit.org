@@ -84,11 +84,18 @@
   (global-set-key (kbd "<f4>") 'ff-find-other-file)
 #+end_src
 
+*** display inline images
+#+begin_src emacs-lisp
+  (auto-image-file-mode)
+#+end_src
+
 *** indent tabs
 #+begin_src emacs-lisp
   (use-package smart-tabs-mode
     :ensure t)
   (add-hook 'c-mode-common-hook (lambda () (setq indent-tabs-mode t)))
+  (smart-tabs-insinuate 'c 'c++)
+  (setq smart-tabs-mode t)
 #+end_src
 
 whitespace mode toggle
@@ -125,7 +132,7 @@ whitespace mode toggle
 ** font
 #+begin_src emacs-lisp
 (custom-set-faces
- '(default ((t (:height 100 :foundry "DAMA" :family "Consolas")))))
+ '(default ((t (:height 98 :foundry "DAMA" :family "Consolas for Powerline")))))
 #+end_src
 
 ** theme
@@ -159,42 +166,39 @@ switching between light and dark theme
 ** company
 #+begin_src emacs-lisp
   (use-package company
-               :ensure t
-               :config (setq company-backends (quote
-                                                 (company-bbdb
-                                                  company-nxml
-                                                  company-css
-                                                  company-semantic
-                                                  company-cmake
-                                                  company-capf
-                                                  company-dabbrev-code
-                                                  company-gtags
-                                                  company-etags
-                                                  company-keywords
-                                                  company-oddmuse
-                                                  company-files
-                                                  company-dabbrev
-                                                  company-rtags)))
-                        :bind ("<C-tab>" . company-complete))
-
-  (require 'company)
-
-  (setq completion-on-separator-character t)
-  (add-hook 'after-init-hook 'global-company-mode)
+    :ensure t
+    :config
+    (setq company-backends (quote
+                            (company-bbdb
+                             company-nxml
+                             company-css
+                             company-semantic
+                             company-cmake
+                             company-capf
+                             company-dabbrev-code
+                             company-gtags
+                             company-etags
+                             company-keywords
+                             company-oddmuse
+                             company-files
+                             company-dabbrev)))
+    (setq completion-on-separator-character t)
+    (add-hook 'after-init-hook 'global-company-mode)
+    :bind ("<C-tab>" . company-complete))
 #+end_src
 
 ** which-key
 #+begin_src emacs-lisp
   (use-package which-key
     :ensure t
-    :config (setq which-key-mode t))
+    :config (which-key-mode))
 #+end_src
 
 ** git-gutter
 #+begin_src emacs-lisp
   (use-package git-gutter
     :ensure t
-    :config (setq global-git-gutter+-mode t))
+    :config (global-git-gutter-mode))
 #+end_src
 
 * orgmode
@@ -233,20 +237,12 @@ switching between light and dark theme
 #+begin_src emacs-lisp
   (custom-set-variables
    '(org-agenda-files
-     (quote
-      ("~/informatik_master/padi/notes.org"
-       "~/informatik_master/seminar/notes.org"
-       "~/informatik_master/algorithm_engineering/notes.org"
-       "~/informatik_master/echtzeitcomputergrafik/notes.org"
-       "~/informatik_master/multimedia_database/notes.org"
-       "~/informatik_master/3dcomputersehen/notes.org"
-       "~/my_agenda/agenda.org"))))
+     (quote (""))))
 #+end_src
 
 ** export
 #+begin_src emacs-lisp
   (custom-set-variables
-   '(org-babel-load-languages (quote ((python . t) (emacs-lisp . t) (latex . t))))
    '(org-latex-prefer-user-labels t)
    '(org-latex-pdf-process
      (quote
@@ -268,18 +264,30 @@ switching between light and dark theme
 
 ** caldav
 #+begin_src emacs-lisp
-  (use-package org-caldav
-	:ensure t
-	:config (custom-set-variables 
-			 '(org-caldav-url "http://frgcloud.selfhost.eu/owncloud/remote.php/caldav/calendars/piland")
-			 '(org-caldav-calendar-id "orgmode-agenda")
-			 '(org-caldav-select-tags '("AGENDA"))
-			 '(org-caldav-inbox "~/my_agenda/caldav.org")))
+    (use-package org-caldav
+      :ensure t
+      :config (custom-set-variables 
+               '(org-caldav-url "http://cal.frotticloud.ydns.eu/frigge")
+               '(org-caldav-calendar-id "4780be13-a759-7f2b-21d9-c6df543aa5d7")
+               '(org-caldav-inbox "~/my_agenda/caldav.org")
+               '(org-caldav-files '("~/Documents/test.org"))))
 #+end_src
 
 ** misc
 #+begin_src emacs-lisp
 (plist-put org-format-latex-options :scale 1.5)
+#+end_src
+
+** babel
+*** languages
+#+begin_src emacs-lisp
+(setq org-babel-load-languages (quote ((python . t) (emacs-lisp . t) (latex . t) (ipython . t))))
+#+end_src
+
+*** IPython support
+#+begin_src emacs-lisp
+  (use-package ob-ipython
+    :ensure t)
 #+end_src
 
 * email
@@ -294,10 +302,25 @@ switching between light and dark theme
 #+end_src
 ** notmuch
 #+begin_src emacs-lisp
-  (use-package notmuch
-    :ensure t
-    :config (setq notmuch-address-command "notmuch-address"))
+(require 'notmuch)
 #+end_src
+
+use the same sender address
+
+#+begin_src emacs-lisp
+(defadvice notmuch-mua-reply (around notmuch-fix-sender)
+     (let ((sender "Sascha Fricke <s.fricke@tu-bs.de>"))
+       ad-do-it))
+   (ad-activate 'notmuch-mua-reply)
+#+end_src
+
+*** notmuch address autocomplete using helm
+#+begin_src emacs-lisp
+(setq notmuch-address-selection-function
+      (lambda (prompt collection initial-input)
+        (completing-read prompt (cons initial-input collection) nil t nil 'notmuch-address-history)))
+#+end_src
+
 ** offlineimap
 #+begin_src emacs-lisp
   (use-package offlineimap
@@ -306,19 +329,19 @@ switching between light and dark theme
 * projectile
 #+begin_src emacs-lisp
   (use-package projectile
-:ensure t
-    :config (setq projectile-mode t))
+    :ensure t
+    :config (setq projectile-mode t)
+    (define-key space-map (kbd "p") 'projectile-command-map))
 #+end_src
 
 ** org-projectile
 #+begin_src emacs-lisp
     (use-package org-projectile
       :ensure t
-      :bind (:map space-map ("c p" . org-projectile:project-todo-completing-read))
-                  :config (progn
-                            (org-projectile:per-repo)
-                            (setq org-projectile:per-repo-filename "project_todo.org")
-                            (setq org-agenda-files (append org-agenda-files (org-projectile:todo-files)))))
+      :bind (:map space-map ("c p" . org-projectile-project-todo-completing-read))
+                  :config (progn (org-projectile-per-project)
+                            (setq org-projectile-per-repo-filepath "project_todo.org")
+                            (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))))
 #+end_src
 
 * ag
@@ -361,9 +384,7 @@ switching between light and dark theme
 #+begin_src emacs-lisp
   (use-package flycheck
     :ensure t
-    :disabled t
-    :config (custom-set-variables
-             '(flycheck-clang-language-standard "c++14")))
+    :config (global-flycheck-mode))
 #+end_src
 
 * magit
@@ -372,7 +393,7 @@ switching between light and dark theme
     :ensure t)
 #+end_src 
 
-smerge
+* smerge
 #+begin_src emacs-lisp
   (require 'smerge-mode)
   (define-key space-map (kbd "s s") 'smerge-mode)
@@ -399,14 +420,24 @@ smerge
 * extra file type modes
 
 ** cuda-mode
+dont use cuda-mode for now as it doesnt work with smart-indent
+
 #+begin_src emacs-lisp
   (use-package cuda-mode
+  :disabled t
     :ensure t)
 #+end_src
+
+#+begin_src emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.cu\\'" . c++-mode))
+#+end_src
+
+*** TODO fix cuda-mode to work with smart-indent
 
 ** opencl-mode
 #+begin_src emacs-lisp
   (use-package opencl-mode
+  :disabled t
     :ensure t)
 #+end_src
 
@@ -439,7 +470,6 @@ smerge
 #+begin_src emacs-lisp
   (use-package cmake-ide
                :ensure t
-               :disabled t
                :config (cmake-ide-setup))
 #+end_src
 
@@ -458,30 +488,69 @@ the current directory from eshell.
 ** rtags
 #+begin_src emacs-lisp
   (use-package rtags
-               :ensure t
-               :config (custom-set-variables
-                         '(rtags-autostart-diagnostics t)
-                         '(rtags-completions-enabled t)
-                         '(rtags-display-current-error-as-tooltip t))
-               (rtags-enable-standard-keybindings evil-normal-state-map "SPC r"))
+    :ensure t
+    :config 
+    (setq rtags-display-current-error-as-tooltip t)
+    (rtags-enable-standard-keybindings evil-normal-state-map "SPC r"))
 #+end_src
-** TODO clang-format
+
+*** helm-rtags
+#+begin_src emacs-lisp
+  (use-package helm-rtags
+    :ensure t
+    :config (setq rtags-display-result-backend 'helm))
+#+end_src
+
+*** company-rtags
+#+begin_src emacs-lisp
+  (use-package company-rtags
+    :ensure t
+    :config 
+    (setq rtags-autostart-diagnostics t)
+    (setq rtags-completions-enabled t)
+    (push 'company-rtags company-backends))
+    #+end_src
+
+*** flycheck-rtags
+#+begin_src emacs-lisp
+  (use-package flycheck-rtags
+    :ensure t)
+    #+end_src
+
+** clang-format
 #+begin_src emacs-lisp
   (use-package clang-format
                :ensure t
                :config (define-key evil-normal-state-map (kbd "SPC c f") 'clang-format-region))
 #+end_src
 
+* Python
+#+begin_src emacs-lisp
+  (use-package python-mode
+    :ensure t
+    :config (setq py-shell-name "ipython3")
+
+  (setq python-shell-interpreter "ipython3")
+  (setq python-shell-interpreter-args "--simple-prompt -i")
+  (push "ipython3" python-shell-completion-native-disabled-interpreters)
+#hend_src
+
+** Jupyter / IPython notebooks
+#+begin_src emacs-lisp
+  (use-package ein
+    :ensure t)
+#+end_src
+
 * realgud
 #+begin_src emacs-lisp
   (use-package realgud
+  :disabled t
                :ensure t)
 #+end_src
 * pdftools
 #+begin_src emacs-lisp
   (use-package pdf-tools
                :ensure t
-               :disabled t
                :config (pdf-tools-install))
 
 #+end_src
