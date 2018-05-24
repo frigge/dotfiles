@@ -8,7 +8,8 @@ run_once () {
 dbus-send --session --print-reply=literal --dest=org.gnome.SessionManager "/org/gnome/SessionManager" org.gnome.SessionManager.RegisterClient "string:i3" "string:$DESKTOP_AUTOSTART_ID"
 
 run_once "compton --config /home/frigge/.config/compton.conf --glx-use-gpushader4"
-nitrogen --restore
+# nitrogen --restore
+wal -R
 run_once nm-applet
 
 #other settings
@@ -20,9 +21,9 @@ setxkbmap -layout us -variant altgr-intl
 xset r rate 200 60
 
 #wacom tabletpcbuttons (click and tap for secondary buttons)
-xsetwacom --set "Wacom Intuos3 6x8 stylus" TabletPCButton "on"
+xsetwacom --set "Wacom Intuos3 6x8 Pen stylus" TabletPCButton "on"
 
 xset dpms 600; xset s 600 600
-xrdb /home/frigge/dotfiles/.Xresources
+# xrdb /home/frigge/dotfiles/.Xresources
 
 # xmodmap -e 'clear Lock' -e 'keycode' 0x42 = 'Escape'

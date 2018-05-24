@@ -1,7 +1,27 @@
+* misc
+   Add ~/.emacs.d to load path
+#+begin_src emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/modules/")
+#+end_src
+
+** start in eshell
+
+ #+begin_src emacs-lisp
+ (eshell)
+ #+end_src
+
+** bookmarks
+## #+begin_src emacs-lisp
+##   (define-key space-map (kbd "b") 'helm-filtered-bookmarks)
+## #+end_src
+
+** CSV mode
+ #+begin_src emacs-lisp
+ (use-package csv-mode)
+ #+end_src
 * helm
 #+begin_src emacs-lisp
-      (use-package helm
-                   )
+      (use-package helm)
 #+end_src
 * evil
 #+begin_src emacs-lisp
@@ -64,24 +84,20 @@
   (show-paren-mode)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
-  (setq custom-buffer-indent 4)
   (setq global-hl-line-mode t)
   (setq global-auto-revert-mode t)
-  (setq indent-tabs-mode nil)
   (setq global-visual-line-mode t)
-  (custom-set-variables '(tab-width 4))
-  (defvaralias 'c-basic-offset 'tab-width)
-  (setq c-default-style
-        (quote
-         ((java-mode . "java")
-          (awk-mode . "awk")
-          (python-mode . "python")
-          (other . "stroustrup"))))
 
   (global-set-key (kbd "<f4>") 'ff-find-other-file)
   (recentf-mode)
 #+end_src
 
+*** rainbow mode
+#+begin_src emacs-lisp
+  (use-package rainbow-mode
+	:ensure t
+	:bind (:map space-map ("h h" . rainbow-mode)))
+#+end_src
 *** display inline images
 #+begin_src emacs-lisp
   (auto-image-file-mode)
@@ -91,8 +107,8 @@
 #+begin_src emacs-lisp
   (use-package smart-tabs-mode)
   (add-hook 'c-mode-common-hook (lambda () (setq indent-tabs-mode t)))
-  (smart-tabs-insinuate 'c 'c++)
-  (setq smart-tabs-mode t)
+  ;; (smart-tabs-insinuate 'c 'c++)
+  ;; (setq smart-tabs-mode t)
 #+end_src
 
 whitespace mode toggle
@@ -130,7 +146,8 @@ whitespace mode toggle
 
 ** theme
 #+begin_src emacs-lisp
-  (use-package solarized-theme)
+(use-package xresources-theme
+    :ensure t)
 #+end_src
 
 #+RESULTS:
@@ -138,7 +155,7 @@ whitespace mode toggle
 
 Toggle light and dark theme. Light and dark theme can be customized by setting ~my-dark-theme~ and ~my-light-theme~.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (defcustom my-dark-theme 'solarized-dark "current dark theme")
   (defcustom my-light-theme 'solarized-light "current light theme")
   (defcustom my-current-theme (symbol-value 'my-dark-theme) "current theme in use")
@@ -154,12 +171,12 @@ Toggle light and dark theme. Light and dark theme can be customized by setting ~
 #+end_src
 
 keyboard shortcut for toggle
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (define-key space-map (kbd "t t") 'toggle-light-and-dark-theme)
 #+end_src
 
 load current theme from custom variable
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (load-theme my-current-theme t nil)
 #+end_src
 
@@ -213,10 +230,19 @@ ivy
 #+end_src
 
 #+begin_src emacs-lisp
-      (use-package counsel
-        :bind 
-        ("M-x" . counsel-M-x)
-        ("C-x C-f" . counsel-find-file))
+  (use-package counsel
+	:bind 
+	("M-x" . counsel-M-x)
+	("C-x C-f" . counsel-find-file))
+
+  (use-package counsel-etags
+	:ensure t)
+#+end_src
+
+* htmlize
+#+begin_src emacs-lisp
+  (use-package htmlize
+	:ensure t)
 #+end_src
 
 * orgmode
@@ -224,11 +250,19 @@ ivy
   (use-package org)
 #+end_src
 
-* org-pdfview
-#+begin_src emacs-lisp
-    (use-package org-pdfview
-      :ensure t)
-#+end_src
+** org-reveal
+ #+begin_src emacs-lisp
+     (use-package ox-reveal
+       :ensure t)
+ #+end_src
+
+** org-pdfview
+ #+begin_src emacs-lisp
+     (use-package org-pdfview
+       :ensure t)
+	   
+(add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open))
+ #+end_src
 
 ** org-pomodoro
 #+begin_src emacs-lisp
@@ -253,6 +287,18 @@ ivy
   (require 'nist-webbook)
   (require 'org-ref-citeproc)
   (require 'unsrt)
+#+end_src
+
+** org-noter
+#+begin_src emacs-lisp
+  (use-package org-noter
+	:ensure t)
+#+end_src
+
+** org-download
+#+begin_src emacs-lisp
+  (use-package org-download
+	:ensure t)
 #+end_src
 
 ** capture
@@ -318,13 +364,14 @@ Function to insert paper bibliography entry and org-ref link
 #+begin_src emacs-lisp
   (use-package org-caldav
     :config
-    (setq org-caldav-url "http://cal.frotticloud.ydns.eu/frigge")
+    (setq org-caldav-url "http://cal.frotticloud.ydns.eu:22123/frigge")
     (setq org-caldav-calendar-id "4780be13-a759-7f2b-21d9-c6df543aa5d7")
     (setq org-caldav-inbox "~/my_agenda/caldav.org")
     (setq org-caldav-files '("~/Documents/test.org")))
 #+end_src
 
 ** misc
+make latex fragments a little bigger
 #+begin_src emacs-lisp
 (plist-put org-format-latex-options :scale 1.5)
 #+end_src
@@ -398,8 +445,9 @@ use the same sender address
 * projectile
 #+begin_src emacs-lisp
   (use-package projectile
-    :config (setq projectile-mode t)
-    (define-key space-map (kbd "p") 'projectile-command-map))
+	:config (setq projectile-mode t)
+	(define-key space-map (kbd "p") 'projectile-command-map)
+	(setq projectile-tags-command "ctags -Re -f '%s' --fields=+iaSt --extra=+q --exclude='.git' %s"))
 #+end_src
 
 ** org-projectile
@@ -425,22 +473,22 @@ use the same sender address
 
 * ctags
 #+begin_src emacs-lisp
-  (setq ctags-update-command "ctags")
+  (setq ctags-update-command "/usr/bin/ctags")
   (setq ctags-update-delay-seconds 10)
   (setq ctags-update-other-options
-        (quote
-         ("--fields=+iaSt"
-          "--extra=+q"
-          "--exclude='*.elc'"
-          "--exclude='*.class'"
-          "--exclude='.git'"
-          "--exclude='.svn'"
-          "--exclude='SCCS'"
-          "--exclude='RCS'"
-          "--exclude='CVS'"
-          "--exclude='EIFGEN'"
-          "-R"
-          "-e")))
+		(quote
+		 ("--fields=+iaSt"
+		  "--extra=+q"
+		  "--exclude='*.elc'"
+		  "--exclude='*.class'"
+		  "--exclude='.git'"
+		  "--exclude='.svn'"
+		  "--exclude='SCCS'"
+		  "--exclude='RCS'"
+		  "--exclude='CVS'"
+		  "--exclude='EIFGEN'"
+		  "-R"
+		  "-e")))
 #+end_src
 
 * flycheck
@@ -494,8 +542,6 @@ just load c++ mode for cuda files
   (add-to-list 'auto-mode-alist '("\\.cuh\\'" . c++-mode))
 #+end_src
 
-*** TODO fix cuda-mode to work with smart-indent
-
 ** opencl-mode
 #+begin_src emacs-lisp
   (use-package opencl-mode
@@ -507,23 +553,28 @@ just load c++ mode for cuda files
   (use-package glsl-mode)
 #+end_src
 
-* misc
-** start in eshell
-
- #+begin_src emacs-lisp
- (eshell)
- #+end_src
-
-** bookmarks
- #+begin_src emacs-lisp
-   (define-key space-map (kbd "b") 'helm-filtered-bookmarks)
- #+end_src
-
-** CSV mode
- #+begin_src emacs-lisp
- (use-package csv-mode)
- #+end_src
 * c++
+** C Style Formatting
+#+begin_src emacs-lisp
+	  (setq indent-tabs-mode nil)
+
+	  (defconst my-cc-style
+		'("user"
+		  (c-basic-offset . 4)
+		  (c-offsets-alist
+		   (innamespace . 0))))
+	  (c-add-style "my-cc-style" my-cc-style)
+
+	  (setq c-default-style
+			(quote
+			 ((java-mode . "java")
+			  (awk-mode . "awk")
+			  (python-mode . "python")
+			  (cc-mode . "my-cc-style")
+			  (other . "user"))))
+	  (setq-default tab-width 4)
+	  (setq-default default-tab-width 4)
+#+end_src
 ** cmake-mode
 #+begin_src emacs-lisp
   (use-package cmake-mode)
@@ -583,9 +634,6 @@ the current directory from eshell.
 
 * Python
 #+begin_src emacs-lisp
-  (use-package python-mode
-    :config (setq py-shell-name "ipython3"))
-
   (setq python-shell-interpreter "ipython3")
   (setq python-shell-interpreter-args "--simple-prompt -i")
   (push "ipython3" python-shell-completion-native-disabled-interpreters)
@@ -612,3 +660,4 @@ the current directory from eshell.
   (setq browse-url-generic-program "vivaldi")
   (setq browse-url-browser-function 'browse-url-generic)
 #+end_src
+

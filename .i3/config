@@ -9,6 +9,7 @@
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
+exec_always --no-startup-id ~/.config/polybar/launch.sh
 exec autostart
 set $mod Mod4
 
@@ -35,7 +36,7 @@ bindsym $mod+Shift+q kill
 bindsym $mod+F5 exec glxinfo
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec rofi -show run -fuzzy -show pass -modi pass:/home/frigge/src/clones/rofi-pass/rofi-pass
+bindsym $mod+d exec rofi -config .config/rofi/config -show run -fuzzy -show pass -modi pass:/home/frigge/src/clones/rofi-pass/rofi-pass
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
@@ -210,30 +211,43 @@ mode "gaps-inner" {
 
 bindsym $mod+r mode "resize"
 
+set_from_resource $fg i3wm.foreground
+set_from_resource $bg i3wm.background
+set_from_resource $color1 i3wm.color1
+set_from_resource $color2 i3wm.color2
+set_from_resource $color3 i3wm.color3
+set_from_resource $color4 i3wm.color4
+set_from_resource $color5 i3wm.color5
+set_from_resource $color6 i3wm.color6
+set_from_resource $color8 i3wm.color8
+
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-bar {
-  status_command i3status
-        tray_output DVI-I-1
-  colors {
-    separator #1d5a00
-    background #0b2100
-    statusline #e09a00
-    focused_workspace #fdf6e3 #e09a00 #fdf6e3
-    active_workspace #fdf6e3 #6c71c4 #fdf6e3
-    inactive_workspace #586e75 #93a1a1 #002b36
-    urgent_workspace #5affee #5affee #fdf6e3
-  }
-}
-
+# bar {
+#   status_command i3status
+#         tray_output DVI-I-1
+#   colors {
+#     separator $color5
+#     background $bg
+#     statusline $fg
+#     focused_workspace $color2 $color6 $fg
+#     active_workspace $color2 $color1 $fg
+#     inactive_workspace $color2 $color5 $fg
+#     urgent_workspace $color2 $fg $bg
+#   }
+# }
+# 
 #for_window [class="^.*$"] border 1px
 new_window pixel 3
+
+for_window [class="python cuda raytracer"] floating
 
 gaps inner 8
 smart_gaps on
 smart_borders on
 
-client.focused #e09a00 #e09a00 #fdf6e3 #e09a00
-client.focused_inactive #193333 #193333 #eee8d5 #6c71c4
-client.unfocused #193333 #193333 #93a1a1 #586e75
-client.urgent #5affee #5affee #fdf6e3 #dc322f
+#border background text indicator child_border
+client.focused $color6 $color6 $fg $bg $color6
+client.focused_inactive $color1 $color1 $fg $bg $color1
+client.unfocused $bg $bg $fg $bg $bg
+client.urgent $fg $fg $bg $fg $fg
