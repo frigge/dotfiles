@@ -1,0 +1,282 @@
+#!/bin/bash
+
+# urxvt-recolor --- change urxvt colours on the fly, without using xrdb + restart.
+#
+# I mostly use solarized or zenburn, where the colors are fairly well 
+# documented. The other color sets are not neccessarily correct as to their 
+# names, they're mainly ones I had lying around... 
+# The "default" scheme is taken from Debian's XTerm app-defaults.
+# Written to work with urxvt, may work on others.
+# (c) Neil Woods, 2017. Public domain.
+
+function usage ()
+{
+    echo "Usage: urxvt-recolor {arg}"
+    echo "       where {arg} is one of"
+    echo "\"1\" or \"solarized\" : apply solarized color theme"
+    echo "\"2\" or \"cyberpunk\" : apply cyberpunk color theme"    
+    echo "\"3\" or \"zenburn\"   : apply zenburn color theme"
+    echo "\"4\" or \"gotham\"    : apply gotham color theme"
+    echo "\"5\" or \"coolblue\"  : apply coolblue color theme"
+    echo "\"6\" or \"brownburn\" : apply brownburn color theme"
+    echo "\"7\" or \"neon\"      : apply neon color theme"
+    echo "\"8\" or \"monokai\"   : apply monokai color theme"
+    echo "\"9\" or \"material\"  : apply material color theme"
+    echo "\"r\",\"R\"            : reset to standard dark b/g"    
+    echo "\"-h\" or \"--help\"   : this help."
+    echo ""
+    echo "If no argument is provided then use standard input."
+    exit
+}
+
+function recolor ()
+{
+    tr -d ' \t' | sed -n '
+    s/.*background:/\x1b]11;/p
+    s/.*foreground:/\x1b]10;/p
+    s/.*color\([0-9][^:]*\):/\x1b]4;\1;/p
+    ' | tr \\n \\a
+}
+
+arg="$1"
+
+if [ -z "$arg" ]; then
+    recolor
+else
+    case $arg in
+	r|R)
+	    recolor <<EOF
+*.foreground:   gray90
+*.background:   black
+*.color0: 	black
+*.color1: 	red3
+*.color2: 	green3
+*.color3: 	yellow3
+*.color4: 	DodgerBlue1
+*.color5: 	magenta3
+*.color6: 	cyan3
+*.color7: 	gray90
+*.color8: 	gray50
+*.color9: 	red
+*.color10: 	green
+*.color11: 	yellow
+*.color12: 	SteelBlue1
+*.color13: 	magenta
+*.color14: 	cyan
+*.color15: 	white
+EOF
+	    ;;	
+	1|solarized)
+	    recolor <<EOF
+*.foreground:   #7d939b
+*.background:   #00232c
+*.color0: 	#073642
+*.color8: 	#002b36
+*.color1: 	#dc322f
+*.color9: 	#cb4b16
+*.color2: 	#859900
+*.color10: 	#586e75
+*.color3: 	#b58900
+*.color11: 	#657b83
+*.color4: 	#268bd2
+*.color12: 	#839496
+*.color5: 	#d33682
+*.color13: 	#6c71c4
+*.color6: 	#2aa198
+*.color14: 	#93a1a1
+*.color7: 	#eee8d5
+*.color15: 	#fdf6e3
+EOF
+	    ;;
+	2|cyberpunk)
+	    recolor <<EOF
+*.foreground:   #bcbcbc
+*.background:   [90]#000000
+*.color0: 	#181818
+*.color1: 	#604938
+*.color2: 	#9A6D50
+*.color3: 	#AA6640
+*.color4: 	#B1875F
+*.color5: 	#D09339
+*.color6: 	#4F9692
+*.color7: 	#d8d8d8
+*.color8: 	#585858
+*.color9: 	#675348
+*.color10: 	#282828
+*.color11: 	#383838
+*.color12: 	#b8b8b8
+*.color13: 	#e8e8e8
+*.color14: 	#DA9561
+*.color15: 	#f8f8f8
+EOF
+	    ;;
+	3|zenburn)
+	    recolor <<EOF
+*.foreground:   #dcdccc
+*.background:   #1f1f1f
+*.color0: 	#000d18
+*.color1: 	#e89393
+*.color2: 	#9ece9e
+*.color3: 	#f0dfaf
+*.color4: 	#8cd0d3
+*.color5: 	#c0bed1
+*.color6: 	#dfaf8f
+*.color7: 	#efefef
+*.color8: 	#000d18
+*.color9: 	#e89393
+*.color10: 	#9ece9e
+*.color11: 	#f0dfaf
+*.color12: 	#8cd0d3
+*.color13: 	#c0bed1
+*.color14: 	#dfaf8f
+*.color15: 	#efefef
+EOF
+	    ;;
+	4|gotham)
+	    recolor <<EOF
+*.foreground:   #98d1ce
+*.background:   #0a0f14
+*.color0:       #0a0f14
+*.color8:       #10151b
+*.color1:       #c33027
+*.color9:       #d26939
+*.color2:       #26a98b
+*.color10:      #081f2d
+*.color3:       #edb54b
+*.color11:      #245361
+*.color4:       #195465
+*.color12:      #093748
+*.color5:       #4e5165
+*.color13:      #888ba5
+*.color6:       #33859d
+*.color14:      #599caa
+*.color7:       #98d1ce
+*.color15:      #d3ebe9
+EOF
+	    ;;
+	5|coolblue)
+	    recolor <<EOF
+*.foreground:   #e8dfd6
+*.background:   #021b21
+*.color0:       #032c36
+*.color8:       #065f73
+*.color1:       #c2454e
+*.color9:       #ef5847
+*.color2:       #7cbf9e
+*.color10:      #a2d9b1
+*.color3:       #8a7a63
+*.color11:      #beb090
+*.color4:       #2e3340
+*.color12:      #61778d
+*.color5:       #ff5879
+*.color13:      #ff99a1
+*.color6:       #44b5b1
+*.color14:      #9ed9d8
+*.color7:       #f2f1b9
+*.color15:      #f6f6c9
+EOF
+	    ;;
+	6|brownburn)
+	    recolor <<EOF
+*.foreground:   #daba8b
+*.background:   #191716
+*.color0:       #0f0e0d
+*.color8:       #383332
+*.color1:       #845336
+*.color9:       #8c4f4a
+*.color2:       #57553c
+*.color10:      #898471
+*.color3:       #a17e3e
+*.color11:      #c8b491
+*.color4:       #43454f
+*.color12:      #65788f
+*.color5:       #604848
+*.color13:      #755e4a
+*.color6:       #5c6652
+*.color14:      #718062
+*.color7:       #a18b62
+*.color15:      #bc9d66
+EOF
+	    ;;
+	7|neon)
+	    recolor <<EOF
+*.foreground:   #f8f8f8
+*.background:   #171717
+*.cursorColor:  #f8f8f8
+*.color0:       #171717
+*.color8:       #38252c
+*.color1:       #d81765
+*.color9:       #ff0000
+*.color2:       #97d01a
+*.color10:      #76b639
+*.color3:       #ffa800
+*.color11:      #e1a126
+*.color4:       #16b1fb
+*.color12:      #289cd5
+*.color5:       #ff2491
+*.color13:      #ff2491
+*.color6:       #0fdcb6
+*.color14:      #0a9b81
+*.color7:       #ebebeb
+*.color15:      #f8f8f8
+EOF
+	    ;;
+	8|monokai)
+	    recolor <<EOF
+*.foreground:   #f1ebeb
+*.background:   #272822
+*.cursorColor:  #f1ebeb
+*.color0:       #48483e
+*.color8:       #76715e
+*.color1:       #dc2566
+*.color9:       #fa2772
+*.color2:       #8fc029
+*.color10:      #a7e22e
+*.color3:       #d4c96e
+*.color11:      #e7db75
+*.color4:       #55bcce
+*.color12:      #66d9ee
+*.color5:       #9358fe
+*.color13:      #ae82ff
+*.color6:       #56b7a5
+*.color14:      #66efd5
+*.color7:       #acada1
+*.color15:      #cfd0c2
+EOF
+	    ;;
+	9|material)
+	    recolor <<EOF
+*.foreground:   #eceff1
+*.background:   #263238
+*.color0:       #263238
+*.color8:       #37474f
+*.color1:       #ff9800
+*.color9:       #ffa74d
+*.color2:       #8bc34a
+*.color10:      #9ccc65
+*.color3:       #ffc107
+*.color11:      #ffa000
+*.color4:       #03a9f4
+*.color12:      #81d4fa
+*.color5:       #e91e63
+*.color13:      #ad1457
+*.color6:       #009688
+*.color14:      #26a69a
+*.color7:       #cfd8dc
+*.color15:      #eceff1
+EOF
+	    ;;
+	-h|--help)
+	    usage
+	    ;;
+	*)
+	    echo "usage: urxvt-recolor {number or theme name}"
+	    echo "       use -h for help"
+	    ;;
+    esac
+fi
+
+
+
+# 
+# urxvt-recolor ends here

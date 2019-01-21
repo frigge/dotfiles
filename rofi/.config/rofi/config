@@ -1,0 +1,4 @@
+# Light Theme
+
+rofi.font: Consolas for Powerline 10
+rofi.theme: ~/.cache/wal/colors-rofi-light.rasi

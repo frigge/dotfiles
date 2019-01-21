@@ -1,0 +1,41 @@
+#! /bin/bash
+
+function print_help {
+	echo "Small script to enable all monitors or only the primary one"
+	echo "Accepted Options:"
+	echo "    -a: enable all monitors (default)"
+	echo "    -p: enable only primary monitor"
+	exit 0
+}
+
+mode="all"
+
+while [ -n "$1" ]; do
+    case "$1" in
+        -*) case "$1" in
+            -a) shift; mode="all";;
+            -p) shift; mode="primary";;
+            -h) print_help ;;
+            -*) echo "unrecognized parameter: \"$opt\""; print_help ;;
+        esac ;;
+        *) name=$1 ;;
+    esac
+    shift
+done
+
+left=DVI-D-0
+middle=HDMI-0
+right=DVI-I-1
+
+if [ $mode == "all" ]; then
+    xrandr --output $left --auto
+    xrandr --output $middle --auto
+    xrandr --output $right --auto
+    xrandr --output $left --left-of $middle
+    xrandr --output $right --right-of $middle
+    xrandr --output $middle --left-of $right
+    xrandr --output $middle --primary
+elif [ $mode == "primary" ]; then
+    xrandr --output $left --off
+    xrandr --output $right --off
+fi

@@ -1,0 +1,1 @@
+xinput --set-prop "Logitech Unifying Device. Wireless PID:101a" "Device Accel Constant Deceleration" 2 

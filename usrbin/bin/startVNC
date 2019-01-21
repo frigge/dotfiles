@@ -1,0 +1,1 @@
+x11vnc -passwd bla -viewonly -clip xinerama0 -ncache 10 -scale .75

@@ -1,0 +1,18 @@
+SOLARIZED_THEME=$(cat ~/.solarized_theme || echo "LIGHT")
+
+echo "current theme is: $SOLARIZED_THEME"
+if [ -z $SOLARIZED_THEME ]; then
+    echo "switching to dark theme"
+    SOLARIZED_THEME="DARK"
+    urxvt-recolor 1
+elif [ $SOLARIZED_THEME = "LIGHT" ]; then
+    echo "switching to dark theme"
+    SOLARIZED_THEME="DARK"
+    urxvt-recolor 1
+else
+    echo "switching to light theme"
+    SOLARIZED_THEME="LIGHT"
+    urxvt-recolor < ~/solarized_light
+fi
+
+echo $SOLARIZED_THEME > ~/.solarized_theme

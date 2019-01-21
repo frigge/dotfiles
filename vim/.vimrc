@@ -25,9 +25,6 @@ syntax on
 
 set encoding=utf-8
 
-" let mapleader=","
-" let maplocalleader=","
-
 set hidden
 set undofile
 set undodir=$HOME/.vim/undo
@@ -38,13 +35,7 @@ set splitbelow
 nmap <F1> :vsplit $MYVIMRC<CR>
 
 set t_Co=256
-" set background=light
-" colorscheme monokai
-set cul
-" set cursorcolumn
-" highlight Folded guibg=#111111 ctermbg=232
-" highlight ColorColumn term=none cterm=none guibg=#111111 ctermbg=232
-" highlight CursorLine term=none cterm=none ctermbg=232 guibg=#111111
+" set cul
 set guifont=Consolas\ for\ Powerline\ 9
 
 " jump to last position after reopening
@@ -84,13 +75,6 @@ set autoindent
 set shiftwidth=4
 set softtabstop=4
 
-set guioptions-=T
-set guioptions-=l
-set guioptions-=L
-set guioptions-=r
-set guioptions-=R
-set guioptions-=m
-
 set laststatus=2
 set autoread
 set linebreak
@@ -127,24 +111,14 @@ au FileType java compiler ant
 au FileType java set makeprg=ant\ compile\ run
 au FileType java map <F5> :make!\|copen<CR>
 
-" configure tags - add additional tags here or comment out not-used ones
-" set tags+=~/.vim/tags/cpp
-" set tags+=~/.vim/tags/gl
-" set tags+=~/.vim/tags/sdl
-" set tags+=~/.vim/tags/qt4
-" set tags+=~/.vim/tags/java
 set tags=tags
 
 " build tags of your own project with Ctrl-F12
 map <F12> :!bash -c "ack -f \| grep -v build \| ctags --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q -L -"<CR>
-iabbr _> ->
-iabbr teh the
 
 " closing brackets "
 inoremap {<CR> {<CR>}<Esc>O
 inoremap {{ {
 inoremap {} {}
-
-set thesaurus+=~/ownCloud/thesaurus/openthesaurus.txt
 
 let g:tex_flavor='latex'

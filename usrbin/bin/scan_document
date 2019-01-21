@@ -1,0 +1,121 @@
+#! /bin/bash
+
+#first argument is output name
+#second argument is number of pages
+
+function print_help {
+	echo "Small Bash script to digitize documents. It does this by performing:"
+	echo "  - scanning of document using scanimage"
+	echo "  - contrast adjustment using imagemagick"
+	echo "  - postprocessing using unpaper"
+	echo "  - text recognition using tesseract"
+	echo "  - pdf document concatenation using pdfunite"
+	echo ""
+	echo "Usage:"
+	echo "    scan_document [options]"
+	echo ""
+	echo "Output:"
+	echo "    pdf file"
+	echo ""
+	echo "Accepted Options:"
+	echo "    -o: outputname (default: \"%Y%m%d%H%M%S.pdf\")"
+	echo "    -m: scanimage Color Mode (either Color or Lineart, default: Color)"
+	echo "    -b: Batch Count (default: 1)"
+	echo "    -l: Tesseract Language (e.g. deu, eng, default: deu)"
+	echo "    -r: rotate 90 degrees (lanscape)"
+	echo "    -h: Pring this help"
+	exit 0
+}
+
+mode_value=Color
+batch_count=1
+language=deu
+lanscape=0
+name="$(date +%Y%m%d%H%M%S)"
+
+run_dry=0
+function dry_run {
+	echo "mode: $mode_value"
+	echo "batch_count: $batch_count"
+	echo "language: $language"
+	echo "name: $name"
+	echo "lanscape: $lanscape"
+	exit 0
+}
+
+while [ -n "$1" ]; do
+    case "$1" in
+        -*) case "$1" in
+            -m) shift; mode_value=$1 ;;
+            -b) shift; batch_count=$1 ;;
+            -l) shift; language=$1 ;;
+            -o) shift; name=$1 ;;
+            -r) lanscape=1 ;;
+            -d) run_dry=1 ;;
+            -h) print_help ;;
+            -*) echo "unrecognized parameter: \"$opt\""; print_help ;;
+        esac ;;
+        *) name=$1 ;;
+    esac
+    shift
+done
+
+if [ $run_dry -eq 1 ]; then
+	dry_run
+fi
+
+mode="--mode $mode_value"
+
+if [ $batch_count -gt 1 ]; then
+	scanimage -p --resolution 300 $mode -b --batch-count=$batch_count --batch-prompt
+
+    for (( i=1; i<=$batch_count; i++ ))
+    do
+        echo "increasing contrast ..."
+        command="convert out$i.pnm -level 20% out$i.pnm"
+        echo $command
+        $command > /dev/null
+
+		if [ $lanscape -eq 1 ]; then
+			echo "rotating image ..."
+			command="convert out$i.pnm -rotate 90 out$i.pnm"
+			echo $command
+			$command > /dev/null
+		fi
+
+		echo "unpaper ..."
+        command="unpaper -ds 100 --overwrite out$i.pnm out$i.pnm"
+        echo $command
+        $command > /dev/null
+
+        echo "preforming text recognition ..."
+        command="tesseract out$i.pnm out$i -l $language pdf"
+        echo $command
+        $command > /dev/null
+    done
+
+    echo "combine pdf files"
+    command="pdfunite out*.pdf $name.pdf"
+    echo $command
+    $command > /dev/null
+
+    echo "remove temporary files"
+    command="rm out*.pdf"
+    echo $command
+    $command > /dev/null
+else
+	scanimage -p --resolution 300 $mode > out1.pnm
+    convert out1.pnm -level 20% out1.pnm
+
+	if [ $lanscape -eq 1 ]; then
+		echo "rotating image ..."
+		command="convert out$i.pnm -rotate 90 out$i.pnm"
+		echo $command
+		$command > /dev/null
+	fi
+
+    unpaper -ds 100 --overwrite out1.pnm out1.pnm
+    tesseract out1.pnm $name -l $language pdf
+fi
+
+rm out*.pnm

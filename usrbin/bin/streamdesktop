@@ -1,0 +1,19 @@
+#! /bin/bash
+
+echo "attach" > /etc/systemd/bind_usb_devices/fifo
+
+gst-launch-1.0 -v ximagesrc startx=0 starty=0 endx=1919 endy=1079 use-damage=0 !\
+    videoconvert !\
+    video/x-raw,framerate=$4/1,format=I420 !\
+    videoscale !\
+    video/x-raw,width=$2,height=$3 !\
+    x264enc speed-preset=ultrafast tune=zerolatency !\
+    rtph264pay !\
+    udpsink host=$1 port=1234
+
+
+finish() {
+    echo "detach" > /etc/systemd/bind_usb_devices/fifo
+}
+
+trap finish EXIT

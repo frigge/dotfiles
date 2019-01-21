@@ -1,0 +1,1 @@
+sshfs piland:/var/files /home/frigge/mount/pi

@@ -1,0 +1,4 @@
+echo "\\\\documentclass[preview]{standalone}\\\\begin{document}$1\\\\end{document}" > tmp.tex
+latex tmp.tex
+dvipng -D 300 -bg Transparent tmp.dvi -o $2
+rm tmp*

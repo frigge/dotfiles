@@ -95,4 +95,5 @@ antigen apply
 alias bc="bc -lq"
 alias tmux="tmux -2"
 export TERM=xterm-256color
-export IPFS_PATH=/home/ipfs/.ipfs
+export MPD_HOST=media.local
+export MPD_PORT=6600

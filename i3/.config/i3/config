@@ -10,24 +10,24 @@
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
 exec_always --no-startup-id ~/.config/polybar/launch.sh
-exec autostart
+exec_always ~/bin/autostart
 set $mod Mod4
 
 workspace_auto_back_and_forth yes
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below. ISO 10646 = Unicode
-font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+# font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 # The font above is very space-efficient, that is, it looks good, sharp and
 # clear in small sizes. However, if you need a lot of unicode glyphs or
 # right-to-left text rendering, you should instead use pango for rendering and
 # chose a FreeType font, such as:
-# font pango:DejaVu Sans Mono 10
+font pango:DejaVu Sans Mono 10
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec rxvt
+bindsym $mod+Return exec urxvt
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -36,7 +36,7 @@ bindsym $mod+Shift+q kill
 bindsym $mod+F5 exec glxinfo
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec rofi -config .config/rofi/config -show run -fuzzy -show pass -modi pass:/home/frigge/src/clones/rofi-pass/rofi-pass
+bindsym $mod+d exec "rofi -show-icons -config .config/rofi/config -show drun -fuzzy -modi drun,run,ssh,pass:/home/frigge/src/clones/rofi-pass/rofi-pass
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
@@ -240,7 +240,10 @@ set_from_resource $color8 i3wm.color8
 #for_window [class="^.*$"] border 1px
 new_window pixel 3
 
-for_window [class="python cuda raytracer"] floating
+# for_window [title="python cuda raytracer"] floating enable
+# for_window [title="Material Prediction"] floating enable
+# for_window [title="Nominal"] floating enable
+# for_window [title="predicted albedo"] floating enable
 
 gaps inner 8
 smart_gaps on
