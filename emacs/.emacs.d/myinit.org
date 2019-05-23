@@ -19,6 +19,12 @@
  #+begin_src emacs-lisp
  (use-package csv-mode)
  #+end_src
+* yasnippet
+#+begin_src emacs-lisp
+  (use-package yasnippet)
+  (use-package yasnippet-snippets)
+  (yas-global-mode 1)
+#+end_src
 * helm
 #+begin_src emacs-lisp
       (use-package helm)
@@ -135,9 +141,10 @@ whitespace mode toggle
 
 ** ace-window
 #+begin_src emacs-lisp
-  (use-package ace-window
-    :bind ("C-x o" . ace-window)
-    :config (setq ace-window-display-mode t))
+	(use-package ace-window
+	  :bind ("C-x o" . ace-window)
+	  :config (setq ace-window-display-mode t)
+	  (setq aw-scope 'frame))
 #+end_src
 
 ** font
@@ -185,24 +192,26 @@ load current theme from custom variable
 ** company
 #+begin_src emacs-lisp
   (use-package company
-    :config
-    (setq company-backends (quote
-                            (company-bbdb
-                             company-nxml
-                             company-css
-                             company-semantic
-                             company-cmake
-                             company-capf
-                             company-dabbrev-code
-                             company-gtags
-                             company-etags
-                             company-keywords
-                             company-oddmuse
-                             company-files
-                             company-dabbrev)))
-    (setq completion-on-separator-character t)
-    (add-hook 'after-init-hook 'global-company-mode)
-    :bind ("<C-tab>" . company-complete))
+	:config
+	(setq company-backends (quote
+							(company-bbdb
+							 company-nxml
+							 company-css
+							 company-semantic
+							 company-cmake
+							 company-capf
+							 company-dabbrev-code
+							 company-gtags
+							 company-etags
+							 company-keywords
+							 company-oddmuse
+							 company-files
+							 company-dabbrev)))
+	(setq completion-on-separator-character t)
+	(add-hook 'after-init-hook 'global-company-mode)
+	:bind ("<C-tab>" . company-complete))
+
+  (use-package company-box :hook (company-mode . company-box-mode))
 #+end_src
 
 ** which-key
@@ -545,7 +554,7 @@ use the same sender address
   (add-hook 'smerge-mode-hook 'my-smerge-bindings)
 #+end_src 
 * extaa file type modes
-
+  
 ** cuda-mode
 dont use cuda-mode for now as it doesnt work with smart-indent
 
@@ -571,17 +580,35 @@ just load c++ mode for cuda files
   (use-package glsl-mode)
 #+end_src
 
+* lsp-mode
+
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+	:hook (c++-mode . lsp) (c-mode . lsp) (pyhton-mode . lsp))
+  (use-package lsp-ui :commands lsp-ui-mode)
+  (use-package company-lsp :commands company-lsp)
+  (use-package helm-lsp :commands helm-lsp-workspace-symbol)
+#+end_src
+
+** dap-mode
+#+begin_src emacs-lisp
+  (use-package dap-mode)
+  (require 'dap-gdb-lldb)
+  (require 'dap-python)
+#+end_src
+
 * c++
 ** semantic-refactor
 #+begin_src emacs-lisp
   (use-package srefactor
+	:disabled t
 	:ensure t)
 
-  (require 'srefactor)
-  (require 'srefactor-lisp)
-  (semantic-mode 1)
-  (define-key space-map (kbd "SPC R") 'srefactor-refactor-at-point)
-  (define-key space-map (kbd "SPC R") 'srefactor-refactor-at-point)
+  ;; (require 'srefactor)
+  ;; (require 'srefactor-lisp)
+  ;; (semantic-mode 1)
+  ;; (define-key space-map (kbd "SPC R") 'srefactor-refactor-at-point)
+  ;; (define-key space-map (kbd "SPC R") 'srefactor-refactor-at-point)
 #+end_src
 
 ** C Style Formatting
@@ -630,33 +657,34 @@ the current directory from eshell.
 
 ** rtags
 #+begin_src emacs-lisp
-  (require 'rtags)
-  (setq rtags-display-current-error-as-tooltip t)
-  (rtags-enable-standard-keybindings evil-normal-state-map "SPC r")
+  ;; (require 'rtags
+  ;; 		 :disabled t)
+  ;; (setq rtags-display-current-error-as-tooltip t)
+  ;; (rtags-enable-standard-keybindings evil-normal-state-map "SPC r")
 #+end_src
 
 *** helm-rtags
 #+begin_src emacs-lisp
-  (require 'helm-rtags)
-  (setq rtags-display-result-backend 'helm)
+  ;; (require 'helm-rtags)
+  ;; (setq rtags-display-result-backend 'helm)
 #+end_src
 
 *** company-rtags
 #+begin_src emacs-lisp
-  (require 'company-rtags)
-  (setq rtags-autostart-diagnostics t)
-  (setq rtags-completions-enabled t)
-  (push 'company-rtags company-backends)
+  ;; (require 'company-rtags)
+  ;; (setq rtags-autostart-diagnostics t)
+  ;; (setq rtags-completions-enabled t)
+  ;; (push 'company-rtags company-backends)
 #+end_src
 
 *** flycheck-rtags
 #+begin_src emacs-lisp
-  (require 'flycheck-rtags)
+  ;; (require 'flycheck-rtags)
 #+end_src
 
 *** ivy-rtags
 #+BEGIN_SRC emacs-lisp
-(require 'ivy-rtags)
+  ;; (require 'ivy-rtags)
 #+END_SRC
 
 ** clang-format
@@ -665,6 +693,24 @@ the current directory from eshell.
                :config (define-key evil-normal-state-map (kbd "SPC c f") 'clang-format-region))
 #+end_src
 
+* rust
+** rust-mode
+#+begin_src emacs-lisp
+  (use-package rustic
+	:ensure t)
+#+end_src
+
+** cargo
+#+begin_src emacs-lisp
+  (use-package cargo
+	:ensure t)
+#+end_src
+
+** flycheck-rust
+#+begin_src emacs-lisp
+  (use-package flycheck-rust
+	:ensure t)
+#+end_src
 * Python
 #+begin_src emacs-lisp
   (setq python-shell-interpreter "ipython3")
@@ -677,11 +723,15 @@ the current directory from eshell.
   (use-package ein)
 #+end_src
 
-* realgud
-#+begin_src emacs-lisp
-  (use-package realgud
-  :disabled t)
-#+end_src
+* Debugging
+** GDB
+ #+begin_src emacs-lisp
+   (setq gdb-dispaly-io-nopopup t)
+ #+end_src
+** realgud
+ #+begin_src emacs-lisp
+   (use-package realgud)
+ #+end_src
 * pdftools
 #+begin_src emacs-lisp
   (use-package pdf-tools
