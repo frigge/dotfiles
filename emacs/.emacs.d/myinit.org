@@ -17,15 +17,18 @@
 
 ** CSV mode
  #+begin_src emacs-lisp
- (use-package csv-mode)
+ (use-package csv-mode
+:ensure t)
  #+end_src
 * helm
 #+begin_src emacs-lisp
-      (use-package helm)
+      (use-package helm
+:ensure t)
 #+end_src
 * evil
 #+begin_src emacs-lisp
   (use-package evil
+:ensure t
     :config (evil-mode t))
 
   (use-package evil-org)
@@ -135,9 +138,9 @@ whitespace mode toggle
 
 ** ace-window
 #+begin_src emacs-lisp
-  (use-package ace-window
-    :bind ("C-x o" . ace-window)
-    :config (setq ace-window-display-mode t))
+	(use-package ace-window
+	  :config (setq aw-scope 'frame)
+	  :bind ("C-x o" . ace-window))
 #+end_src
 
 ** font
@@ -574,14 +577,15 @@ just load c++ mode for cuda files
 * c++
 ** semantic-refactor
 #+begin_src emacs-lisp
-  (use-package srefactor
-	:ensure t)
+	(use-package srefactor
+	  :ensure t
+	  :disabled t)
 
-  (require 'srefactor)
-  (require 'srefactor-lisp)
-  (semantic-mode 1)
-  (define-key space-map (kbd "SPC R") 'srefactor-refactor-at-point)
-  (define-key space-map (kbd "SPC R") 'srefactor-refactor-at-point)
+	;; (require 'srefactor)
+	;; (require 'srefactor-lisp)
+	;; (semantic-mode 0)
+	;; (define-key space-map (kbd "SPC R") 'srefactor-refactor-at-point)
+	;; (define-key space-map (kbd "SPC R") 'srefactor-refactor-at-point)
 #+end_src
 
 ** C Style Formatting
@@ -630,20 +634,20 @@ the current directory from eshell.
 
 ** rtags
 #+begin_src emacs-lisp
-  (require 'rtags)
+  (use-package rtags)
   (setq rtags-display-current-error-as-tooltip t)
   (rtags-enable-standard-keybindings evil-normal-state-map "SPC r")
 #+end_src
 
 *** helm-rtags
 #+begin_src emacs-lisp
-  (require 'helm-rtags)
+  (use-package helm-rtags)
   (setq rtags-display-result-backend 'helm)
 #+end_src
 
 *** company-rtags
 #+begin_src emacs-lisp
-  (require 'company-rtags)
+  (use-package company-rtags)
   (setq rtags-autostart-diagnostics t)
   (setq rtags-completions-enabled t)
   (push 'company-rtags company-backends)
@@ -651,12 +655,12 @@ the current directory from eshell.
 
 *** flycheck-rtags
 #+begin_src emacs-lisp
-  (require 'flycheck-rtags)
+  (use-package flycheck-rtags)
 #+end_src
 
 *** ivy-rtags
 #+BEGIN_SRC emacs-lisp
-(require 'ivy-rtags)
+(use-package ivy-rtags)
 #+END_SRC
 
 ** clang-format
@@ -670,11 +674,6 @@ the current directory from eshell.
   (setq python-shell-interpreter "ipython3")
   (setq python-shell-interpreter-args "--simple-prompt -i")
   (push "ipython3" python-shell-completion-native-disabled-interpreters)
-#+end_src
-
-** Jupyter / IPython notebooks
-#+begin_src emacs-lisp
-  (use-package ein)
 #+end_src
 
 * realgud

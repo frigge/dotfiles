@@ -27,20 +27,11 @@
  '(mu4e-use-fancy-chars t)
  '(mu4e-view-show-address t)
  '(mu4e-view-show-images t)
- '(org-agenda-files
-   (quote
-	("/mnt/piland/sascha/documents/todo.org" "/home/frigge/src/cuda_raytracer/TODO.org" "/home/frigge/src/cuda_raytracer/task.org")))
  '(package-selected-packages
    (quote
-	(srefactor org-plus-contrib evil-string-inflection paperless mu4e xresources-theme which-key wgrep-ag use-package smart-tabs-mode rainbow-mode ox-reveal org-ref org-projectile org-pomodoro org-pdfview org-noter org-download org-caldav ob-ipython magit glsl-mode git-gutter flycheck evil-visualstar evil-surround evil-quickscope evil-org evil-numbers evil-commentary ein csv-mode counsel-etags company cmake-mode cmake-ide clang-format beacon ag ace-window)))
+	(paperless clang-format ivy-rtags flycheck-rtags company-rtags helm-rtags xresources-theme which-key wgrep-ag use-package srefactor smart-tabs-mode rtags rainbow-mode ox-reveal org-ref org-projectile org-pomodoro org-plus-contrib org-pdfview org-noter org-download org-caldav ob-ipython magit glsl-mode git-gutter flycheck evil-visualstar evil-surround evil-string-inflection evil-quickscope evil-org evil-numbers evil-commentary csv-mode counsel-etags company cmake-mode cmake-ide beacon ag ace-window)))
  '(paperless-capture-directory "~/Documents/capture")
- '(paperless-root-directory "/mnt/piland/sascha/documents/paperless")
- '(safe-local-variable-values
-   (quote
-	((eval setq cmake-ide-build-dir
-		   (concat
-			(projectile-project-root)
-			"build/"))))))
+ '(paperless-root-directory "/mnt/piland/sascha/documents/paperless"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
