@@ -703,3 +703,10 @@ the current directory from eshell.
   (setq browse-url-browser-function 'browse-url-generic)
 #+end_src
 
+* latex
+** reftex default bibliography
+   
+#+begin_src emacs-lisp
+  (setq reftex-default-bibliography '("bibliography.bib"))
+#+end_src
+
