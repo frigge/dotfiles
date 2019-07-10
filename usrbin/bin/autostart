@@ -15,7 +15,7 @@ run_once nm-applet
 #other settings
 
 #lower mouse sensitivity
-xinput --set-prop "Logitech Performance MX" "Device Accel Constant Deceleration" 2 
+xinput --set-prop 14 "Device Accel Constant Deceleration" 2 
 
 setxkbmap -layout us -variant altgr-intl
 xset r rate 200 60
@@ -25,6 +25,7 @@ xsetwacom --set "Wacom Intuos3 6x8 Pen stylus" TabletPCButton "on"
 
 xset dpms 600; xset s 600 600
 
+monitor
 nvidia-settings --load-config-only
 # xrdb /home/frigge/dotfiles/.Xresources
 

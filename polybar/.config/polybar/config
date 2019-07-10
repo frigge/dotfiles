@@ -47,7 +47,7 @@ font-3 = MaterialIcons-Regular:pixelsize=10;3
 
 modules-left = i3 xwindow
 modules-center = date
-modules-right = filesystem eth alsa memory cpu mouse powermenu
+modules-right = cputemperature filesystem eth alsa memory cpu mouse powermenu
 
 tray-position = right
 tray-padding = 2
@@ -508,6 +508,11 @@ menu-2-1-exec = menu-open-0
 label-active-font = 3
 type = custom/script
 exec = ~/.config/polybar/battery.sh
+
+[module/cputemperature]
+label-active-font = 3
+type = custom/script
+exec = ~/.config/polybar/temperature.sh
 
 [settings]
 screenchange-reload = true
