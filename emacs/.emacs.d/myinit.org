@@ -7,7 +7,7 @@
 ** start in eshell
 
  #+begin_src emacs-lisp
- (eshell)
+   (eshell)
  #+end_src
 
 ** bookmarks
@@ -20,6 +20,31 @@
  (use-package csv-mode
 :ensure t)
  #+end_src
+* yasnippet
+#+begin_src emacs-lisp
+  (use-package yasnippet
+	:config (yas-global-mode 1))
+
+  (use-package yasnippet-snippets)
+#+end_src
+* posframe
+#+begin_src emacs-lisp
+	  (use-package posframe
+		:ensure t)
+#+end_src
+** company posframe
+#+begin_src emacs-lisp
+	(use-package company-posframe
+		:config (company-posframe-mode 1))
+#+end_src
+
+** ivy posframe
+#+begin_src emacs-lisp
+  (use-package ivy-posframe
+	:config (setq ivy-display-function #'ivy-posframe-display-at-frame-center)
+			 (ivy-posframe-enable))
+#+end_src
+
 * helm
 #+begin_src emacs-lisp
       (use-package helm
@@ -94,7 +119,7 @@
   (setq global-visual-line-mode t)
 
   (global-set-key (kbd "<f4>") 'ff-find-other-file)
-  (recentf-mode)
+  ;; (recentf-mode)
 #+end_src
 
 *** rainbow mode
@@ -139,8 +164,9 @@ whitespace mode toggle
 ** ace-window
 #+begin_src emacs-lisp
 	(use-package ace-window
-	  :config (setq aw-scope 'frame)
-	  :bind ("C-x o" . ace-window))
+	  :bind ("C-x o" . ace-window)
+	  :config (setq ace-window-display-mode t)
+	  (setq aw-scope 'frame))
 #+end_src
 
 ** font
@@ -188,24 +214,26 @@ load current theme from custom variable
 ** company
 #+begin_src emacs-lisp
   (use-package company
-    :config
-    (setq company-backends (quote
-                            (company-bbdb
-                             company-nxml
-                             company-css
-                             company-semantic
-                             company-cmake
-                             company-capf
-                             company-dabbrev-code
-                             company-gtags
-                             company-etags
-                             company-keywords
-                             company-oddmuse
-                             company-files
-                             company-dabbrev)))
-    (setq completion-on-separator-character t)
-    (add-hook 'after-init-hook 'global-company-mode)
-    :bind ("<C-tab>" . company-complete))
+	:config
+	(setq company-backends (quote
+							(company-bbdb
+							 company-nxml
+							 company-css
+							 company-semantic
+							 company-cmake
+							 company-capf
+							 company-dabbrev-code
+							 company-gtags
+							 company-etags
+							 company-keywords
+							 company-oddmuse
+							 company-files
+							 company-dabbrev)))
+	(setq completion-on-separator-character t)
+	(add-hook 'after-init-hook 'global-company-mode)
+	:bind ("<C-tab>" . company-complete))
+
+  (use-package company-box :hook (company-mode . company-box-mode))
 #+end_src
 
 ** which-key
@@ -407,6 +435,7 @@ make latex fragments a little bigger
   (use-package ob-ipython)
 #+end_src
 
+* latex
 * email
 #+begin_src emacs-lisp
 	(defun set-tubs-smtp ()
@@ -450,17 +479,17 @@ make latex fragments a little bigger
 use the same sender address
 
 #+begin_src emacs-lisp
-(defadvice notmuch-mua-reply (around notmuch-fix-sender)
-     (let ((sender "Sascha Fricke <s.fricke@tu-bs.de>"))
-       ad-do-it))
-   (ad-activate 'notmuch-mua-reply)
+  ;; (defadvice notmuch-mua-reply (around notmuch-fix-sender)
+  ;;      (let ((sender "Sascha Fricke <s.fricke@tu-bs.de>"))
+  ;;        ad-do-it))
+  ;;    (ad-activate 'notmuch-mua-reply)
 #+end_src
 
 *** notmuch address autocomplete using helm
 #+begin_src emacs-lisp
-(setq notmuch-address-selection-function
-      (lambda (prompt collection initial-input)
-        (completing-read prompt (cons initial-input collection) nil t nil 'notmuch-address-history)))
+  ;; (setq notmuch-address-selection-function
+  ;;       (lambda (prompt collection initial-input)
+  ;;         (completing-read prompt (cons initial-input collection) nil t nil 'notmuch-address-history)))
 #+end_src
 
 * projectile
@@ -514,13 +543,14 @@ use the same sender address
 
 * flycheck
 #+begin_src emacs-lisp
-  (use-package flycheck
-    :config (global-flycheck-mode))
+  ;; (use-package flycheck
+  ;;   :config (global-flycheck-mode))
 #+end_src
 
 * magit
 #+begin_src emacs-lisp
-  (use-package magit)
+  (use-package magit
+	:defer t)
 #+end_src 
 
 * smerge
@@ -548,7 +578,7 @@ use the same sender address
   (add-hook 'smerge-mode-hook 'my-smerge-bindings)
 #+end_src 
 * extaa file type modes
-
+  
 ** cuda-mode
 dont use cuda-mode for now as it doesnt work with smart-indent
 
@@ -574,18 +604,35 @@ just load c++ mode for cuda files
   (use-package glsl-mode)
 #+end_src
 
+* lsp-mode
+
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+	:hook (c++-mode . lsp) (c-mode . lsp) (pyhton-mode . lsp))
+  (use-package lsp-ui :commands lsp-ui-mode)
+  (use-package company-lsp :commands company-lsp)
+  (use-package helm-lsp :commands helm-lsp-workspace-symbol)
+#+end_src
+
+** dap-mode
+#+begin_src emacs-lisp
+  (use-package dap-mode)
+  (require 'dap-gdb-lldb)
+  (require 'dap-python)
+#+end_src
+
 * c++
 ** semantic-refactor
 #+begin_src emacs-lisp
-	(use-package srefactor
-	  :ensure t
-	  :disabled t)
+  (use-package srefactor
+	:disabled t
+	:ensure t)
 
-	;; (require 'srefactor)
-	;; (require 'srefactor-lisp)
-	;; (semantic-mode 0)
-	;; (define-key space-map (kbd "SPC R") 'srefactor-refactor-at-point)
-	;; (define-key space-map (kbd "SPC R") 'srefactor-refactor-at-point)
+  ;; (require 'srefactor)
+  ;; (require 'srefactor-lisp)
+  ;; (semantic-mode 1)
+  ;; (define-key space-map (kbd "SPC R") 'srefactor-refactor-at-point)
+  ;; (define-key space-map (kbd "SPC R") 'srefactor-refactor-at-point)
 #+end_src
 
 ** C Style Formatting
@@ -616,8 +663,8 @@ just load c++ mode for cuda files
 
 ** cmake-ide
 #+begin_src emacs-lisp
-  (use-package cmake-ide
-               :config (cmake-ide-setup))
+  ;; (use-package cmake-ide
+  ;;              :config (cmake-ide-setup))
 #+end_src
 
 *set cmake-build-dir to current dir* 
@@ -626,41 +673,42 @@ small helper function to quickly set the build dir for cmake-ide to
 the current directory from eshell.
 
 #+begin_src emacs-lisp
-    (defun set-cmake-ide-build-dir () 
-      "sets cmake-build-dir variable to default-directory
-      intended to be called from eshell to quickly set the cmake build directory"
-      (setq cmake-build-dir default-directory))
+  ;; (defun set-cmake-ide-build-dir () 
+  ;;   "sets cmake-build-dir variable to default-directory
+  ;;   intended to be called from eshell to quickly set the cmake build directory"
+  ;;   (setq cmake-build-dir default-directory))
 #+end_src
 
 ** rtags
 #+begin_src emacs-lisp
-  (use-package rtags)
-  (setq rtags-display-current-error-as-tooltip t)
-  (rtags-enable-standard-keybindings evil-normal-state-map "SPC r")
+  ;; (require 'rtags
+  ;; 		 :disabled t)
+  ;; (setq rtags-display-current-error-as-tooltip t)
+  ;; (rtags-enable-standard-keybindings evil-normal-state-map "SPC r")
 #+end_src
 
 *** helm-rtags
 #+begin_src emacs-lisp
-  (use-package helm-rtags)
-  (setq rtags-display-result-backend 'helm)
+  ;; (require 'helm-rtags)
+  ;; (setq rtags-display-result-backend 'helm)
 #+end_src
 
 *** company-rtags
 #+begin_src emacs-lisp
-  (use-package company-rtags)
-  (setq rtags-autostart-diagnostics t)
-  (setq rtags-completions-enabled t)
-  (push 'company-rtags company-backends)
+  ;; (require 'company-rtags)
+  ;; (setq rtags-autostart-diagnostics t)
+  ;; (setq rtags-completions-enabled t)
+  ;; (push 'company-rtags company-backends)
 #+end_src
 
 *** flycheck-rtags
 #+begin_src emacs-lisp
-  (use-package flycheck-rtags)
+  ;; (require 'flycheck-rtags)
 #+end_src
 
 *** ivy-rtags
 #+BEGIN_SRC emacs-lisp
-(use-package ivy-rtags)
+  ;; (require 'ivy-rtags)
 #+END_SRC
 
 ** clang-format
@@ -669,6 +717,24 @@ the current directory from eshell.
                :config (define-key evil-normal-state-map (kbd "SPC c f") 'clang-format-region))
 #+end_src
 
+* rust
+** rust-mode
+#+begin_src emacs-lisp
+  (use-package rustic
+	:ensure t)
+#+end_src
+
+** cargo
+#+begin_src emacs-lisp
+  (use-package cargo
+	:ensure t)
+#+end_src
+
+** flycheck-rust
+#+begin_src emacs-lisp
+  ;; (use-package flycheck-rust
+  ;;   :ensure t)
+#+end_src
 * Python
 #+begin_src emacs-lisp
   (setq python-shell-interpreter "ipython3")
@@ -676,11 +742,20 @@ the current directory from eshell.
   (push "ipython3" python-shell-completion-native-disabled-interpreters)
 #+end_src
 
-* realgud
+** Jupyter / IPython notebooks
 #+begin_src emacs-lisp
-  (use-package realgud
-  :disabled t)
+  ;; (use-package ein)
 #+end_src
+
+* Debugging
+** GDB
+ #+begin_src emacs-lisp
+   (setq gdb-dispaly-io-nopopup t)
+ #+end_src
+** realgud
+ #+begin_src emacs-lisp
+   ;; (use-package realgud)
+ #+end_src
 * pdftools
 #+begin_src emacs-lisp
   (use-package pdf-tools
