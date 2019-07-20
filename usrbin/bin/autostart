@@ -11,6 +11,7 @@ run_once "compton --config /home/frigge/.config/compton.conf --glx-use-gpushader
 # nitrogen --restore
 wal -R
 run_once nm-applet
+run_once pasystray
 
 #other settings
 
