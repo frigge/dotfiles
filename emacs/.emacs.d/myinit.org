@@ -17,7 +17,8 @@
 
 ** CSV mode
  #+begin_src emacs-lisp
- (use-package csv-mode)
+ (use-package csv-mode
+:ensure t)
  #+end_src
 * yasnippet
 #+begin_src emacs-lisp
@@ -46,11 +47,13 @@
 
 * helm
 #+begin_src emacs-lisp
-      (use-package helm)
+      (use-package helm
+:ensure t)
 #+end_src
 * evil
 #+begin_src emacs-lisp
   (use-package evil
+:ensure t
     :config (evil-mode t))
 
   (use-package evil-org)
@@ -741,7 +744,7 @@ the current directory from eshell.
 
 ** Jupyter / IPython notebooks
 #+begin_src emacs-lisp
-  (use-package ein)
+  ;; (use-package ein)
 #+end_src
 
 * Debugging
@@ -775,7 +778,10 @@ the current directory from eshell.
   (setq browse-url-browser-function 'browse-url-generic)
 #+end_src
 
-* esup - Emacs Start Up Profiler
+* latex
+** reftex default bibliography
+   
 #+begin_src emacs-lisp
-  (use-package esup)
+  (setq reftex-default-bibliography '("bibliography.bib"))
 #+end_src
+
