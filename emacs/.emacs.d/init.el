@@ -27,6 +27,9 @@
  '(mu4e-use-fancy-chars t)
  '(mu4e-view-show-address t)
  '(mu4e-view-show-images t)
+ '(org-agenda-files
+   (quote
+	("/mnt/piland/sascha/documents/research/papers.org" "/mnt/piland/sascha/documents/todo.org" "/mnt/piland/sascha/documents/Inbox.org" "/mnt/piland/sascha/documents/todoshared/shared-todo.org" "/mnt/piland/sascha/documents/phd/phd.org")))
  '(package-selected-packages
    (quote
 	(esup ivy-posframe company-posframe yasnippet-snippets yasnippet company-box dap-mode helm-lsp company-lsp lsp-ui lsp-mode flycheck-rust cargo rustic srefactor org-plus-contrib evil-string-inflection paperless mu4e xresources-theme which-key wgrep-ag use-package smart-tabs-mode rainbow-mode ox-reveal org-ref org-projectile org-pomodoro org-pdfview org-noter org-download org-caldav ob-ipython magit glsl-mode git-gutter flycheck evil-visualstar evil-surround evil-quickscope evil-org evil-numbers evil-commentary ein csv-mode counsel-etags company cmake-mode cmake-ide clang-format beacon ag ace-window)))
