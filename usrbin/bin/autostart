@@ -22,12 +22,12 @@ setxkbmap -layout us -variant altgr-intl
 xset r rate 200 60
 
 #wacom tabletpcbuttons (click and tap for secondary buttons)
-# xsetwacom --set "Wacom Intuos3 6x8 Pen stylus" TabletPCButton "on"
+xsetwacom --set "Wacom Intuos3 6x8 Pen stylus" TabletPCButton "on"
 
 xset dpms 600; xset s 600 600
 
-# monitor
 nvidia-settings --load-config-only
+monitor
 # xrdb ~/.Xresources
 
 # xmodmap -e 'clear Lock' -e 'keycode' 0x42 = 'Escape'
