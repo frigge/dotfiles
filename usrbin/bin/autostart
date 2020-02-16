@@ -11,6 +11,7 @@ run_once "compton --config /afs/cg.cs.tu-bs.de/home/fricke/.config/compton.conf 
 wal -R
 nitrogen --restore
 run_once nm-applet
+run_once pasystray
 
 #other settings
 
