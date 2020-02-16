@@ -24,8 +24,8 @@ while [ -n "$1" ]; do
 done
 
 left=DVI-D-0
-middle=HDMI-0
-right=DVI-I-1
+middle=DVI-I-1
+right=HDMI-0
 
 if [ $mode == "all" ]; then
     xrandr --output $left --auto
@@ -35,6 +35,7 @@ if [ $mode == "all" ]; then
     xrandr --output $right --right-of $middle
     xrandr --output $middle --left-of $right
     xrandr --output $middle --primary
+    xrandr --output $middle --mode 1920x1080 --rate 144
 elif [ $mode == "primary" ]; then
     xrandr --output $left --off
     xrandr --output $right --off

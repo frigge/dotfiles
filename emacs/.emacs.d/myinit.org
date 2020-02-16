@@ -41,8 +41,9 @@
 ** ivy posframe
 #+begin_src emacs-lisp
   (use-package ivy-posframe
+	:disabled t
 	:config (setq ivy-display-function #'ivy-posframe-display-at-frame-center)
-			 (ivy-posframe-enable))
+	(ivy-posframe-enable))
 #+end_src
 
 * helm
@@ -99,8 +100,13 @@
   (define-key evil-normal-state-map (kbd "SPC") 'space-map)
   (define-key evil-motion-state-map (kbd "SPC") 'space-map)
   (define-key space-map (kbd "x") 'counsel-M-x)
-  (define-key space-map (kbd "b") 'ivy-switch-buffer)
+  ;; (define-key space-map (kbd "b") 'ivy-switch-buffer)
   (define-key space-map (kbd "f") 'counsel-find-file)
+  (define-key space-map (kbd "o") 'ace-window)
+  (define-key space-map (kbd "0") 'delete-window)
+  (define-key space-map (kbd "1") 'delete-other-windows)
+  (define-key space-map (kbd "2") 'split-window-below)
+  (define-key space-map (kbd "3") 'split-window-right)
   (define-key space-map (kbd "/") 'swiper)
 #+end_src
 
@@ -155,6 +161,7 @@ whitespace mode toggle
 ** ido
 #+begin_src emacs-lisp
   (use-package ido
+  :disabled t
     :config (ido-mode))
 
   ;; (global-set-key (kbd "C-x C-f") 'ido-find-file)
@@ -250,12 +257,14 @@ load current theme from custom variable
 
 ** swiper/ivy
 #+begin_src emacs-lisp
-  (use-package swiper)
+  (use-package swiper
+:disabled t)
 #+end_src
 
 ivy
 #+begin_src emacs-lisp
       (use-package ivy
+	  :disabled t
         :config 
         (ivy-mode)
         (setq ivy-use-virtual-buffers t)
@@ -264,11 +273,13 @@ ivy
 
 #+begin_src emacs-lisp
   (use-package counsel
+  :disabled t
 	:bind 
 	("M-x" . counsel-M-x)
 	("C-x C-f" . counsel-find-file))
 
   (use-package counsel-etags
+  :disabled t
 	:ensure t)
 #+end_src
 
@@ -306,6 +317,7 @@ ivy
 ** org-pomodoro
 #+begin_src emacs-lisp
   (use-package org-pomodoro
+	:disabled t
     :bind (:map space-map ("o p" . org-pomodoro)))
 #+end_src
 
@@ -608,17 +620,22 @@ just load c++ mode for cuda files
 
 #+begin_src emacs-lisp
   (use-package lsp-mode
-	:hook (c++-mode . lsp) (c-mode . lsp) (pyhton-mode . lsp))
-  (use-package lsp-ui :commands lsp-ui-mode)
-  (use-package company-lsp :commands company-lsp)
-  (use-package helm-lsp :commands helm-lsp-workspace-symbol)
+	:hook (c++-mode . lsp) (c-mode . lsp) (pyhton-mode . lsp)
+	:disabled t)
+  (use-package lsp-ui :commands lsp-ui-mode
+	:disabled t)
+  (use-package company-lsp :commands company-lsp
+	:disabled t)
+  (use-package helm-lsp :commands helm-lsp-workspace-symbol
+	:disabled t)
 #+end_src
 
 ** dap-mode
 #+begin_src emacs-lisp
-  (use-package dap-mode)
-  (require 'dap-gdb-lldb)
-  (require 'dap-python)
+  (use-package dap-mode
+	:disabled t)
+  ;; (require 'dap-gdb-lldb)
+  ;; (require 'dap-python)
 #+end_src
 
 * c++
@@ -663,8 +680,9 @@ just load c++ mode for cuda files
 
 ** cmake-ide
 #+begin_src emacs-lisp
-  ;; (use-package cmake-ide
-  ;;              :config (cmake-ide-setup))
+  (use-package cmake-ide
+	:config (cmake-ide-setup)
+	:disabled t)
 #+end_src
 
 *set cmake-build-dir to current dir* 
@@ -678,38 +696,6 @@ the current directory from eshell.
   ;;   intended to be called from eshell to quickly set the cmake build directory"
   ;;   (setq cmake-build-dir default-directory))
 #+end_src
-
-** rtags
-#+begin_src emacs-lisp
-  ;; (require 'rtags
-  ;; 		 :disabled t)
-  ;; (setq rtags-display-current-error-as-tooltip t)
-  ;; (rtags-enable-standard-keybindings evil-normal-state-map "SPC r")
-#+end_src
-
-*** helm-rtags
-#+begin_src emacs-lisp
-  ;; (require 'helm-rtags)
-  ;; (setq rtags-display-result-backend 'helm)
-#+end_src
-
-*** company-rtags
-#+begin_src emacs-lisp
-  ;; (require 'company-rtags)
-  ;; (setq rtags-autostart-diagnostics t)
-  ;; (setq rtags-completions-enabled t)
-  ;; (push 'company-rtags company-backends)
-#+end_src
-
-*** flycheck-rtags
-#+begin_src emacs-lisp
-  ;; (require 'flycheck-rtags)
-#+end_src
-
-*** ivy-rtags
-#+BEGIN_SRC emacs-lisp
-  ;; (require 'ivy-rtags)
-#+END_SRC
 
 ** clang-format
 #+begin_src emacs-lisp
@@ -744,7 +730,8 @@ the current directory from eshell.
 
 ** Jupyter / IPython notebooks
 #+begin_src emacs-lisp
-  ;; (use-package ein)
+  (use-package ein 
+	:disabled t)
 #+end_src
 
 * Debugging
