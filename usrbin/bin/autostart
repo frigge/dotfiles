@@ -8,8 +8,8 @@ run_once () {
 dbus-send --session --print-reply=literal --dest=org.gnome.SessionManager "/org/gnome/SessionManager" org.gnome.SessionManager.RegisterClient "string:i3" "string:$DESKTOP_AUTOSTART_ID"
 
 run_once "compton --config /afs/cg.cs.tu-bs.de/home/fricke/.config/compton.conf --glx-use-gpushader4"
-# nitrogen --restore
 wal -R
+nitrogen --restore
 run_once nm-applet
 
 #other settings
@@ -25,8 +25,8 @@ xset r rate 200 60
 
 xset dpms 600; xset s 600 600
 
-monitor
+# monitor
 nvidia-settings --load-config-only
-xrdb ~/.Xresources
+# xrdb ~/.Xresources
 
 # xmodmap -e 'clear Lock' -e 'keycode' 0x42 = 'Escape'
