@@ -103,6 +103,10 @@ bindsym $mod+a focus parent
 bindsym $mod+shift+d focus child
 
 # switch to workspace
+bindsym $mod+mod1+l workspace next_on_output
+bindsym $mod+mod1+h workspace prev_on_output
+bindsym $mod+mod1+j focus output left
+bindsym $mod+mod1+k focus output right
 bindsym $mod+1 workspace number 1
 bindsym $mod+2 workspace number 2
 bindsym $mod+3 workspace number 3
