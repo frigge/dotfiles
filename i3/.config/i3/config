@@ -35,8 +35,10 @@ bindsym $mod+Shift+q kill
 # quick hack to fix broken nvidia driver
 bindsym $mod+F5 exec glxinfo
 
+bindsym $mod+Ctrl+l exec --no-startup-id i3lock -i ~/Pictures/bg.png -t -c 000000
+
 # start dmenu (a program launcher)
-bindsym $mod+d exec "rofi -show-icons -config .config/rofi/config -show drun -fuzzy -modi drun,run,ssh,pass:/home/frigge/src/clones/rofi-pass/rofi-pass
+bindsym $mod+d exec "rofi -show-icons -config .config/rofi/config -show drun -fuzzy -modi window,drun,run,ssh,Pass:/usr/sbin/rofi-pass"
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
@@ -54,7 +56,7 @@ bindsym $mod+k focus up
 bindsym $mod+l focus right
 
 #rename workspace
-bindsym $mod+n exec i3-input -F 'rename workspace to "%s"' -P 'New Name: '
+bindsym $mod+n exec i3-input -F rename workspace to %s -P 'New Name: '
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -101,6 +103,10 @@ bindsym $mod+a focus parent
 bindsym $mod+shift+d focus child
 
 # switch to workspace
+bindsym $mod+mod1+l workspace next_on_output
+bindsym $mod+mod1+h workspace prev_on_output
+bindsym $mod+mod1+j focus output left
+bindsym $mod+mod1+k focus output right
 bindsym $mod+1 workspace number 1
 bindsym $mod+2 workspace number 2
 bindsym $mod+3 workspace number 3
@@ -110,7 +116,7 @@ bindsym $mod+6 workspace number 6
 bindsym $mod+7 workspace number 7
 bindsym $mod+8 workspace number 8
 bindsym $mod+9 workspace number 9
-bindsym $mod+0 mode "more_workspaces"
+bindsym $mod+0 mode more_workspaces"
 
 mode "more_workspaces" {
     bindsym 1 workspace number 10; mode "default"
@@ -221,22 +227,22 @@ set_from_resource $color5 i3wm.color5
 set_from_resource $color6 i3wm.color6
 set_from_resource $color8 i3wm.color8
 
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
-# bar {
-#   status_command i3status
-#         tray_output DVI-I-1
-#   colors {
-#     separator $color5
-#     background $bg
-#     statusline $fg
-#     focused_workspace $color2 $color6 $fg
-#     active_workspace $color2 $color1 $fg
-#     inactive_workspace $color2 $color5 $fg
-#     urgent_workspace $color2 $fg $bg
-#   }
-# }
-# 
+Start i3bar to display a workspace bar (plus the system information i3status
+finds out, if available)
+bar {
+  status_command i3status
+        tray_output DVI-I-1
+  colors {
+    separator $color5
+    background $bg
+    statusline $fg
+    focused_workspace $color2 $color6 $fg
+    active_workspace $color2 $color1 $fg
+    inactive_workspace $color2 $color5 $fg
+    urgent_workspace $color2 $fg $bg
+  }
+}
+
 #for_window [class="^.*$"] border 1px
 new_window pixel 3
 
@@ -245,9 +251,9 @@ new_window pixel 3
 # for_window [title="Nominal"] floating enable
 # for_window [title="predicted albedo"] floating enable
 
-gaps inner 8
-smart_gaps on
-smart_borders on
+#gaps inner 8
+#smart_gaps on
+#smart_borders on
 
 #border background text indicator child_border
 client.focused $color6 $color6 $fg $bg $color6

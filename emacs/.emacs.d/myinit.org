@@ -7,7 +7,7 @@
 ** start in eshell
 
  #+begin_src emacs-lisp
- (eshell)
+   (eshell)
  #+end_src
 
 ** bookmarks
@@ -19,11 +19,18 @@
  #+begin_src emacs-lisp
  (use-package csv-mode)
  #+end_src
+** Use gtklp as Printer
+#+begin_src emacs-lisp
+(setq lpr-command "gtklp")
+(setq ps-lpr-command "gtklp")
+#+end_src
+
 * yasnippet
 #+begin_src emacs-lisp
-  (use-package yasnippet)
+  (use-package yasnippet
+	:config (yas-global-mode 1))
+
   (use-package yasnippet-snippets)
-  (yas-global-mode 1)
 #+end_src
 * helm
 #+begin_src emacs-lisp
@@ -97,13 +104,12 @@
   (setq global-visual-line-mode t)
 
   (global-set-key (kbd "<f4>") 'ff-find-other-file)
-  (recentf-mode)
+  ;; (recentf-mode)
 #+end_src
 
 *** rainbow mode
 #+begin_src emacs-lisp
   (use-package rainbow-mode
-	:ensure t
 	:bind (:map space-map ("h h" . rainbow-mode)))
 #+end_src
 *** display inline images
@@ -133,10 +139,11 @@ whitespace mode toggle
 ** ido
 #+begin_src emacs-lisp
   (use-package ido
-    :config (ido-mode))
+	:config (ido-mode)
+	:disabled t)
 
-  ;; (global-set-key (kbd "C-x C-f") 'ido-find-file)
-  ;; (global-set-key (kbd "C-x b") 'ido-switch-buffer)
+	;; (global-set-key (kbd "C-x C-f") 'ido-find-file)
+	;; (global-set-key (kbd "C-x b") 'ido-switch-buffer)
 #+end_src
 
 ** ace-window
@@ -155,8 +162,8 @@ whitespace mode toggle
 
 ** theme
 #+begin_src emacs-lisp
-(use-package xresources-theme
-    :ensure t)
+(use-package xresources-theme)
+    :
 #+end_src
 
 #+RESULTS:
@@ -228,7 +235,8 @@ load current theme from custom variable
 
 ** swiper/ivy
 #+begin_src emacs-lisp
-  (use-package swiper)
+  (use-package swiper
+:disabled t)
 #+end_src
 
 ivy
@@ -237,23 +245,25 @@ ivy
         :config 
         (ivy-mode)
         (setq ivy-use-virtual-buffers t)
-        :bind ("C-x b" . ivy-switch-buffer))
+        :bind ("C-x b" . ivy-switch-buffer)
+:disabled t)
 #+end_src
 
 #+begin_src emacs-lisp
   (use-package counsel
+  :disabled t
 	:bind 
 	("M-x" . counsel-M-x)
 	("C-x C-f" . counsel-find-file))
 
   (use-package counsel-etags
-	:ensure t)
+  :disabled t)
+	:
 #+end_src
 
 * htmlize
 #+begin_src emacs-lisp
-  (use-package htmlize
-	:ensure t)
+  (use-package htmlize)
 #+end_src
 
 * orgmode
@@ -262,6 +272,14 @@ ivy
 	:ensure org-plus-contrib)
 #+end_src
 
+** org-mime
+#+begin_src emacs-lisp
+  (use-package org-mime
+	:config (setq org-mime-export-options '(:section-numbers nil
+											:with-author nil
+											:with-toc nil)))
+
+#+end_src
 ** koma
  #+begin_src emacs-lisp
    (eval-after-load 'ox '(require 'ox-koma-letter))
@@ -269,14 +287,12 @@ ivy
 
 ** org-reveal
  #+begin_src emacs-lisp
-     (use-package ox-reveal
-       :ensure t)
+     (use-package ox-reveal)
  #+end_src
 
 ** org-pdfview
  #+begin_src emacs-lisp
-     (use-package org-pdfview
-       :ensure t)
+     (use-package org-pdfview)
 	   
 (add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open))
  #+end_src
@@ -289,33 +305,62 @@ ivy
 
 ** org-ref
 #+begin_src emacs-lisp
-  (use-package org-ref)
+  (use-package org-ref
+	:bind (:map space-map ("r r" . org-ref-bibtex-hydra/body)))
 
-  (require 'doi-utils)
-  (require 'org-ref-pdf)
-  (require 'org-ref-url-utils)
-  (require 'org-ref-bibtex)
-  (require 'org-ref-latex)
-  (require 'org-ref-arxiv)
-  (require 'org-ref-isbn)
-  (require 'org-ref-wos)
-  (require 'org-ref-scopus)
-  (require 'x2bib)
-  (require 'nist-webbook)
-  (require 'org-ref-citeproc)
-  (require 'unsrt)
+	(require 'doi-utils)
+	(require 'org-ref-pdf)
+	(require 'org-ref-url-utils)
+	(require 'org-ref-bibtex)
+	(require 'org-ref-latex)
+	(require 'org-ref-arxiv)
+	(require 'org-ref-isbn)
+	(require 'org-ref-wos)
+	(require 'org-ref-scopus)
+	(require 'x2bib)
+	(require 'nist-webbook)
+	(require 'org-ref-citeproc)
+	(require 'unsrt)
+
+	;; see org-ref for use of these variables
+	(setq org-ref-bibliography-notes "/mnt/piland/sascha/documents/research/papers.org"
+		  org-ref-default-bibliography '("/mnt/piland/sascha/documents/research/bib.bib")
+		  org-ref-pdf-directory "/mnt/piland/sascha/documents/research/pdfs")
+
+	(setq bibtex-completion-bibliography "/mnt/piland/sascha/documents/research/bib.bib"
+		  bibtex-completion-library-path "/mnt/piland/sascha/documents/research/pdfs"
+		  bibtex-completion-notes-path "/mnt/piland/sascha/documents/research/")
+#+end_src
+
+set custom notes heading format
+
+#+begin_src emacs-lisp
+(setq org-ref-note-title-format
+"* PREPARE %t
+ :PROPERTIES:
+  :Custom_ID: %k
+  :Source: cite:%k
+  :PDF: 
+  :NOTER_DOCUMENT: 
+  :AUTHOR: %9a
+  :JOURNAL: %j
+  :YEAR: %y
+  :VOLUME: %v
+  :PAGES: %p
+  :DOI: %D
+  :URL: %U
+ :END:
+")
 #+end_src
 
 ** org-noter
 #+begin_src emacs-lisp
-  (use-package org-noter
-	:ensure t)
+  (use-package org-noter)
 #+end_src
 
 ** org-download
 #+begin_src emacs-lisp
-  (use-package org-download
-	:ensure t)
+  (use-package org-download)
 #+end_src
 
 ** capture
@@ -327,21 +372,25 @@ ivy
 
 Function to insert paper bibliography entry and org-ref link
 #+begin_src emacs-lisp
-  (defun org-capture-insert-orgref-link (keyword)
-      ""
-      (crossref-add-bibtex-entry keyword "/mnt/piland/sascha/documents/research/bib.bib")
-      keyword
-    )
+  (defun org-capture-insert-orgref-link ()
+	""
+	(interactive)
+	(helm-bibtex nil nil (substring-no-properties (car kill-ring)))
+	(org-set-property))
+
+  (define-key space-map (kbd "c t") 'org-capture-insert-orgref-link)
 #+end_src
 
 #+begin_src emacs-lisp
   (setq org-capture-templates 
-               '(("p" "Paper" entry (file+headline "/mnt/piland/sascha/documents/research/overview.org" "Unsorted") "* %x")))
+			   '(("p" "Paper" entry (file "/mnt/piland/sascha/documents/research/papers.org") "* PREPARE %x\n  :PROPERTIES:\n  :Source:\n  :End:")))
 #+end_src
 ** agenda
 #+begin_src emacs-lisp
-  (setq org-agenda-files
-     (quote ("")))
+  (setq org-agenda-custom-commands
+		'(("p" . "Papers search")
+		  ("pa" tags "+paper-notes")
+		  ("pd" tags "+paper+wave_optics+diffraction-notes")))
 #+end_src
 
 ** export
@@ -401,7 +450,8 @@ make latex fragments a little bigger
 								   (emacs-lisp . t)
 								   (latex . t)
 								   (ipython . t)
-								   (C . t)))
+								   (C . t)
+								   (org . t)))
 
   (setq org-latex-listings t)
   (add-to-list 'org-latex-packages-alist '("" "listings"))
@@ -411,6 +461,22 @@ make latex fragments a little bigger
 *** IPython support
 #+begin_src emacs-lisp
   (use-package ob-ipython)
+#+end_src
+
+* latex
+** biblatex
+   set default bibtex dialect
+#+begin_src emacs-lisp
+  (setq bibtex-dialect 'biblatex)
+#+end_src
+
+gscholar references  (as alternative to org-ref)
+#+begin_src emacs-lisp
+  (use-package gscholar-bibtex
+	:bind (:map space-map ("r g" . gscholar-bibtex))
+	:config (setq gscholar-bibtex-database-file
+				   "/mnt/piland/sascha/documents/research/bib.bib")
+			 (setq gscholar-bibtex-default-source "Google Scholar"))
 #+end_src
 
 * email
@@ -436,37 +502,39 @@ make latex fragments a little bigger
 #+end_src
 ** mu4e
 #+begin_src emacs-lisp
-  (require 'mu4e)
-  (custom-set-variables
-   '(mu4e-attachment-dir "/home/frigge/Downloads")
-   '(mu4e-compose-signature-auto-include nil)
-   '(mu4e-drafts-folder "/drafts")
-   '(mu4e-get-mail-command "mbsync -a")
-   '(mu4e-maildir "/home/frigge/.mail")
-   '(mu4e-refile-dir "/archive")
-   '(mu4e-sent-folder "/sent")
-   '(mu4e-trash-folder "/trash")
-   '(mu4e-update-interval 300)
-   '(mu4e-use-fancy-chars t)
-   '(mu4e-view-show-address t)
-   '(mu4e-view-show-images t))
-(add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+	(require 'mu4e)
+	(custom-set-variables
+	 '(mu4e-attachment-dir "~/Downloads")
+	 '(mu4e-compose-signature-auto-include nil)
+	 '(mu4e-drafts-folder "/drafts")
+	 '(mu4e-get-mail-command "mbsync -a")
+	 '(mu4e-maildir "~/.mail")
+	 '(mu4e-refile-dir "/archive")
+	 '(mu4e-sent-folder "/sent")
+	 '(mu4e-trash-folder "/trash")
+	 '(mu4e-update-interval 300)
+	 '(mu4e-use-fancy-chars t)
+	 '(mu4e-view-show-address t)
+	 '(mu4e-view-show-images t))
+  (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+
+  (require 'org-mu4e)
 #+end_src
 
 use the same sender address
 
 #+begin_src emacs-lisp
-(defadvice notmuch-mua-reply (around notmuch-fix-sender)
-     (let ((sender "Sascha Fricke <s.fricke@tu-bs.de>"))
-       ad-do-it))
-   (ad-activate 'notmuch-mua-reply)
+  ;; (defadvice notmuch-mua-reply (around notmuch-fix-sender)
+  ;;      (let ((sender "Sascha Fricke <s.fricke@tu-bs.de>"))
+  ;;        ad-do-it))
+  ;;    (ad-activate 'notmuch-mua-reply)
 #+end_src
 
 *** notmuch address autocomplete using helm
 #+begin_src emacs-lisp
-(setq notmuch-address-selection-function
-      (lambda (prompt collection initial-input)
-        (completing-read prompt (cons initial-input collection) nil t nil 'notmuch-address-history)))
+  ;; (setq notmuch-address-selection-function
+  ;;       (lambda (prompt collection initial-input)
+  ;;         (completing-read prompt (cons initial-input collection) nil t nil 'notmuch-address-history)))
 #+end_src
 
 * projectile
@@ -479,11 +547,11 @@ use the same sender address
 
 ** org-projectile
 #+begin_src emacs-lisp
-    (use-package org-projectile
-      :bind (:map space-map ("c p" . org-projectile-project-todo-completing-read))
-                  :config (progn (org-projectile-per-project)
-                            (setq org-projectile-per-repo-filepath "project_todo.org")
-                            (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))))
+  (use-package org-projectile
+	:bind (:map space-map ("c p" . org-projectile-project-todo-completing-read))
+	:config (progn (org-projectile-per-project)
+				   (setq org-projectile-per-repo-filepath "project_todo.org")
+				   (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))))
 #+end_src
 
 * ag
@@ -520,13 +588,14 @@ use the same sender address
 
 * flycheck
 #+begin_src emacs-lisp
-  (use-package flycheck
-    :config (global-flycheck-mode))
+  ;; (use-package flycheck
+  ;;   :config (global-flycheck-mode))
 #+end_src
 
 * magit
 #+begin_src emacs-lisp
-  (use-package magit)
+  (use-package magit
+	:defer t)
 #+end_src 
 
 * smerge
@@ -553,7 +622,7 @@ use the same sender address
 
   (add-hook 'smerge-mode-hook 'my-smerge-bindings)
 #+end_src 
-* extaa file type modes
+* extra file type modes
   
 ** cuda-mode
 dont use cuda-mode for now as it doesnt work with smart-indent
@@ -583,11 +652,11 @@ just load c++ mode for cuda files
 * lsp-mode
 
 #+begin_src emacs-lisp
-  (use-package lsp-mode
-	:hook (c++-mode . lsp) (c-mode . lsp) (pyhton-mode . lsp))
-  (use-package lsp-ui :commands lsp-ui-mode)
-  (use-package company-lsp :commands company-lsp)
-  (use-package helm-lsp :commands helm-lsp-workspace-symbol)
+  ;; (use-package lsp-mode
+  ;;   :hook (c++-mode . lsp) (c-mode . lsp) (pyhton-mode . lsp))
+  ;; (use-package lsp-ui :commands lsp-ui-mode)
+  ;; (use-package company-lsp :commands company-lsp)
+  ;; (use-package helm-lsp :commands helm-lsp-workspace-symbol)
 #+end_src
 
 ** dap-mode
@@ -601,8 +670,7 @@ just load c++ mode for cuda files
 ** semantic-refactor
 #+begin_src emacs-lisp
   (use-package srefactor
-	:disabled t
-	:ensure t)
+	:disabled t)
 
   ;; (require 'srefactor)
   ;; (require 'srefactor-lisp)
@@ -639,8 +707,8 @@ just load c++ mode for cuda files
 
 ** cmake-ide
 #+begin_src emacs-lisp
-  (use-package cmake-ide
-               :config (cmake-ide-setup))
+  ;; (use-package cmake-ide
+  ;;              :config (cmake-ide-setup))
 #+end_src
 
 *set cmake-build-dir to current dir* 
@@ -649,10 +717,10 @@ small helper function to quickly set the build dir for cmake-ide to
 the current directory from eshell.
 
 #+begin_src emacs-lisp
-    (defun set-cmake-ide-build-dir () 
-      "sets cmake-build-dir variable to default-directory
-      intended to be called from eshell to quickly set the cmake build directory"
-      (setq cmake-build-dir default-directory))
+  ;; (defun set-cmake-ide-build-dir () 
+  ;;   "sets cmake-build-dir variable to default-directory
+  ;;   intended to be called from eshell to quickly set the cmake build directory"
+  ;;   (setq cmake-build-dir default-directory))
 #+end_src
 
 ** rtags
@@ -693,24 +761,12 @@ the current directory from eshell.
                :config (define-key evil-normal-state-map (kbd "SPC c f") 'clang-format-region))
 #+end_src
 
-* rust
-** rust-mode
+* tabify/untabify shortcuts
 #+begin_src emacs-lisp
-  (use-package rustic
-	:ensure t)
+  (define-key space-map (kbd "t t") 'tabify)
+  (define-key space-map (kbd "t u") 'untabify)
 #+end_src
 
-** cargo
-#+begin_src emacs-lisp
-  (use-package cargo
-	:ensure t)
-#+end_src
-
-** flycheck-rust
-#+begin_src emacs-lisp
-  (use-package flycheck-rust
-	:ensure t)
-#+end_src
 * Python
 #+begin_src emacs-lisp
   (setq python-shell-interpreter "ipython3")
@@ -720,7 +776,7 @@ the current directory from eshell.
 
 ** Jupyter / IPython notebooks
 #+begin_src emacs-lisp
-  (use-package ein)
+  ;; (use-package ein)
 #+end_src
 
 * Debugging
@@ -730,7 +786,7 @@ the current directory from eshell.
  #+end_src
 ** realgud
  #+begin_src emacs-lisp
-   (use-package realgud)
+   ;; (use-package realgud)
  #+end_src
 * pdftools
 #+begin_src emacs-lisp
@@ -752,5 +808,12 @@ the current directory from eshell.
 #+begin_src emacs-lisp
   (setq browse-url-generic-program "vivaldi-stable")
   (setq browse-url-browser-function 'browse-url-generic)
+#+end_src
+
+* latex
+** reftex default bibliography
+   
+#+begin_src emacs-lisp
+(setq reftex-default-bibliography '("/mnt/piland/sascha/documents/research/bib.bib"))
 #+end_src
 
