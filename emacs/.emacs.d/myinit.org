@@ -390,8 +390,8 @@ set custom notes heading format
 				 ("n i" . org-roam-insert)
 				 ("n g" . org-roam-show-graph))))
   (setq org-roam-graph-viewer "/usr/bin/vivaldi-stable")
-  (setq org-roam-graph-max-title-length 100)
-  (setq org-roam-graph-node-shape "ellipse")
+  (setq org-roam-graph-max-title-length 15)
+  (setq org-roam-graph-node-shape "box")
 #+end_src
 
 ** capture
@@ -512,33 +512,38 @@ gscholar references  (as alternative to org-ref)
 
 * email
 #+begin_src emacs-lisp
-	(defun set-tubs-smtp ()
-	  (setq send-mail-function (quote smtpmail-send-it))
-	  (setq smtpmail-smtp-server "groupware.tu-braunschweig.de")
-	  (setq smtpmail-smtp-service 465)
-	  (setq smtpmail-stream-type 'ssl)
-	  (setq user-full-name "Sascha Fricke")
-	  (setq user-mail-address "s.fricke@tu-bs.de"))
+	  (defun set-tubs-smtp ()
+		(setq send-mail-function (quote smtpmail-send-it))
+		(setq smtpmail-smtp-server "groupware.tu-braunschweig.de")
+		(setq smtpmail-smtp-service 465)
+		(setq smtpmail-stream-type 'ssl)
+		(setq user-full-name "Sascha Fricke")
+		(setq user-mail-address "s.fricke@tu-bs.de"))
 
-	(defun set-icg-smtp ()
-	  (setq send-mail-function (quote smtpmail-send-it))
-	  (setq smtpmail-smtp-server "europa.cg.cs.tu-bs.de")
-	  (setq smtpmail-smtp-service 465)
-	  (setq smtpmail-stream-type 'ssl)
-	  (setq user-full-name "Sascha Fricke")
-	  (setq user-mail-address "fricke@cg.cs.tu-bs.de"))
+	  (defun set-icg-smtp ()
+		(setq send-mail-function (quote smtpmail-send-it))
+		(setq smtpmail-smtp-server "europa.cg.cs.tu-bs.de")
+		(setq smtpmail-smtp-service 465)
+		(setq smtpmail-stream-type 'ssl)
+		(setq user-full-name "Sascha Fricke")
+		(setq user-mail-address "fricke@cg.cs.tu-bs.de"))
 
-	(defun set-gmail-smtp ()
-	  (setq send-mail-function (quote smtpmail-send-it))
-	  (setq smtpmail-smtp-server "smtp.gmail.com")
-	  (setq smtpmail-smtp-service 465)
-	  (setq smtpmail-stream-type 'ssl)
-	  (setq user-full-name "Sascha Fricke")
-	  (setq user-mail-address "sascha.frigge@gmail.com"))
+	  (defun set-gmail-smtp ()
+		(setq send-mail-function (quote smtpmail-send-it))
+		(setq smtpmail-smtp-server "smtp.gmail.com")
+		(setq smtpmail-smtp-service 465)
+		(setq smtpmail-stream-type 'ssl)
+		(setq user-full-name "Sascha Fricke")
+		(setq user-mail-address "sascha.frigge@gmail.com"))
 
-  ;; (set-tubs-smtp)
-  (set-icg-smtp)
-  ;; (set-gmail-smtp)
+	(add-to-list 'mu4e-bookmarks
+				 (make-mu4e-bookmark
+				  :name "PhoenixD"
+				  :query "subject:phoenixd OR from:phoenixd"
+				  :key ?h))
+	;; (set-tubs-smtp)
+	(set-icg-smtp)
+	;; (set-gmail-smtp)
 #+end_src
 ** mu4e
 #+begin_src emacs-lisp
@@ -578,20 +583,12 @@ gscholar references  (as alternative to org-ref)
 
 #+end_src
 
-use the same sender address
-
+* mu4e-alert
 #+begin_src emacs-lisp
-  ;; (defadvice notmuch-mua-reply (around notmuch-fix-sender)
-  ;;      (let ((sender "Sascha Fricke <s.fricke@tu-bs.de>"))
-  ;;        ad-do-it))
-  ;;    (ad-activate 'notmuch-mua-reply)
-#+end_src
-
-*** notmuch address autocomplete using helm
-#+begin_src emacs-lisp
-  ;; (setq notmuch-address-selection-function
-  ;;       (lambda (prompt collection initial-input)
-  ;;         (completing-read prompt (cons initial-input collection) nil t nil 'notmuch-address-history)))
+  (use-package mu4e-alert
+  :hook ((after-init . mu4e-alert-enable-mode-line-display))
+	:config (mu4e-alert-set-default-style 'libnotify)
+			 (mu4e-alert-enable-notifications))
 #+end_src
 
 * projectile
