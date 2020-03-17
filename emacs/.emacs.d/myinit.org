@@ -536,50 +536,50 @@ gscholar references  (as alternative to org-ref)
 		(setq user-full-name "Sascha Fricke")
 		(setq user-mail-address "sascha.frigge@gmail.com"))
 
-	(add-to-list 'mu4e-bookmarks
-				 (make-mu4e-bookmark
-				  :name "PhoenixD"
-				  :query "subject:phoenixd OR from:phoenixd"
-				  :key ?h))
 	;; (set-tubs-smtp)
 	(set-icg-smtp)
 	;; (set-gmail-smtp)
 #+end_src
 ** mu4e
 #+begin_src emacs-lisp
-	(require 'mu4e)
-	(custom-set-variables
-	 '(mu4e-attachment-dir "~/Downloads")
-	 '(mu4e-compose-signature-auto-include t)
-	 '(mu4e-drafts-folder "/drafts")
-	 '(mu4e-get-mail-command "mbsync -a")
-	 '(mu4e-maildir "~/.mail")
-	 '(mu4e-refile-dir "/archive")
-	 '(mu4e-sent-folder "/sent")
-	 '(mu4e-trash-folder "/trash")
-	 '(mu4e-update-interval 300)
-	 '(mu4e-use-fancy-chars t)
-	 '(mu4e-view-show-address t)
-	 '(org-mu4e-convert-to-html t)
-	 '(mu4e-view-show-images t))
+  (require 'mu4e)
+  (custom-set-variables
+   '(mu4e-attachment-dir "~/Downloads")
+   '(mu4e-compose-signature-auto-include t)
+   '(mu4e-drafts-folder "/drafts")
+   '(mu4e-get-mail-command "mbsync -a")
+   '(mu4e-maildir "~/.mail")
+   '(mu4e-refile-dir "/archive")
+   '(mu4e-sent-folder "/sent")
+   '(mu4e-trash-folder "/trash")
+   '(mu4e-update-interval 300)
+   '(mu4e-use-fancy-chars t)
+   '(mu4e-view-show-address t)
+   '(org-mu4e-convert-to-html t)
+   '(mu4e-view-show-images t))
   (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
 
+  (add-to-list 'mu4e-bookmarks
+	       (make-mu4e-bookmark
+		:name "PhoenixD"
+		:query "subject:phoenixd OR from:phoenixd"
+		:key ?h))
   (require 'org-mu4e)
   (defalias 'org-mail 'org-mu4e-compose-org-mode)
 
   (add-hook 'mu4e-compose-post-hook
-	  (defun do-compose-stuff ()
-		  "My settings for message composition."
-		  (org-mu4e-compose-org-mode)))
+	    (defun do-compose-stuff ()
+	      "My settings for message composition."
+	      (org-mu4e-compose-org-mode)))
 
   (defun htmlize-and-send ()
-	"When in an org-mu4e-compose-org-mode message, htmlize and send it."
-	(interactive)
-	(when (member 'org~mu4e-mime-switch-headers-or-body post-command-hook)
-	  (org-mime-htmlize)
-	  (org-mu4e-compose-org-mode)
-	  (mu4e-compose-mode)
-	  (message-send-and-exit)))
+    "When in an org-mu4e-compose-org-mode message, htmlize and send it."
+    (interactive)
+    (when (member 'org~mu4e-mime-switch-headers-or-body post-command-hook)
+      (org-mime-htmlize)
+      (org-mu4e-compose-org-mode)
+      (mu4e-compose-mode)
+      (message-send-and-exit)))
 
 #+end_src
 
