@@ -589,7 +589,6 @@ make latex fragments a little bigger
 		(setq smtpmail-stream-type 'ssl)
 		(setq user-full-name "Sascha Fricke")
 		(setq user-mail-address "sascha.frigge@gmail.com"))
-
 	;; (set-tubs-smtp)
 	(set-icg-smtp)
 	;; (set-gmail-smtp)
