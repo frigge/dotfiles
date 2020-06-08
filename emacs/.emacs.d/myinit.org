@@ -565,34 +565,6 @@ make latex fragments a little bigger
 #+end_src
 
 * email
-#+begin_src emacs-lisp
-	  (defun set-tubs-smtp ()
-		(setq send-mail-function (quote smtpmail-send-it))
-		(setq smtpmail-smtp-server "groupware.tu-braunschweig.de")
-		(setq smtpmail-smtp-service 465)
-		(setq smtpmail-stream-type 'ssl)
-		(setq user-full-name "Sascha Fricke")
-		(setq user-mail-address "s.fricke@tu-bs.de"))
-
-	  (defun set-icg-smtp ()
-		(setq send-mail-function (quote smtpmail-send-it))
-		(setq smtpmail-smtp-server "europa.cg.cs.tu-bs.de")
-		(setq smtpmail-smtp-service 465)
-		(setq smtpmail-stream-type 'ssl)
-		(setq user-full-name "Sascha Fricke")
-		(setq user-mail-address "fricke@cg.cs.tu-bs.de"))
-
-	  (defun set-gmail-smtp ()
-		(setq send-mail-function (quote smtpmail-send-it))
-		(setq smtpmail-smtp-server "smtp.gmail.com")
-		(setq smtpmail-smtp-service 465)
-		(setq smtpmail-stream-type 'ssl)
-		(setq user-full-name "Sascha Fricke")
-		(setq user-mail-address "sascha.frigge@gmail.com"))
-	;; (set-tubs-smtp)
-	(set-icg-smtp)
-	;; (set-gmail-smtp)
-#+end_src
 ** mu4e
 #+begin_src emacs-lisp
   (require 'mu4e)
@@ -633,16 +605,69 @@ make latex fragments a little bigger
       (org-mu4e-compose-org-mode)
       (mu4e-compose-mode)
       (message-send-and-exit)))
+
+	(defun set-tubs-smtp ()
+	  (setq send-mail-function (quote smtpmail-send-it))
+	  (setq smtpmail-smtp-server "groupware.tu-bs.de")
+	  (setq smtpmail-smtp-user "sasfrick")
+	  (setq smtpmail-smtp-service 465)
+	  (setq smtpmail-stream-type 'ssl)
+	  (setq user-full-name "Sascha Fricke")
+	  (setq user-mail-address "s.fricke@tu-bs.de"))
+
+	(defun set-icg-smtp ()
+	  (setq send-mail-function (quote smtpmail-send-it))
+	  (setq smtpmail-smtp-server "europa.cg.cs.tu-bs.de")
+	  (setq smtpmail-smtp-user "fricke")
+	  (setq smtpmail-smtp-service 465)
+	  (setq smtpmail-stream-type 'ssl)
+	  (setq user-full-name "Sascha Fricke")
+	  (setq user-mail-address "fricke@cg.cs.tu-bs.de"))
+
+	(defun set-gmail-smtp ()
+	  (setq send-mail-function (quote smtpmail-send-it))
+	  (setq smtpmail-smtp-server "smtp.gmail.com")
+	  (setq smtpmail-smtp-service 465)
+	  (setq smtpmail-stream-type 'ssl)
+	  (setq user-full-name "Sascha Fricke")
+	  (setq user-mail-address "sascha.frigge@gmail.com"))
+  ;; (set-tubs-smtp)
+  (set-icg-smtp)
+  ;; (set-gmail-smtp)
+
+  (setq mu4e-contexts
+		`(,(make-mu4e-context
+		   :name "ICG"
+		   :enter-func (lambda () (mu4e-message "Entering ICG context"))
+		   :leave-func (lambda () (mu4e-message "Leaving ICG context"))
+		   :vars '((user-mail-address . "fricke@cg.cs.tu-bs.de" )
+				   (user-full-name . "Sascha Fricke")
+				   (smtpmail-smtp-server . "europa.cg.cs.tu-bs.de")
+				   (smtpmail-smtp-user . "fricke")
+				   (smtpmail-smtp-service . 465)
+				   (smtpmail-stream-type . ssl)
+				   )),
+		  (make-mu4e-context
+		   :name "TUBS"
+		   :enter-func (lambda () (mu4e-message "Entering TUBS context"))
+		   :leave-func (lambda () (mu4e-message "Leaving TUBS context"))
+		   :vars '((user-mail-address . "s.fricke@tu-bs.de" )
+				   (user-full-name . "Sascha Fricke")
+				   (smtpmail-smtp-server . "groupware.tu-bs.de")
+				   (smtpmail-smtp-user . "sasfrick")
+				   (smtpmail-smtp-service . 465)
+				   (smtpmail-stream-type . ssl)
+				   ))))
 #+end_src
 
-* mu4e-alert
-#+begin_src emacs-lisp
-  (use-package mu4e-alert
-  :ensure t
-  :hook ((after-init . mu4e-alert-enable-mode-line-display))
-	:config (mu4e-alert-set-default-style 'libnotify)
-			 (mu4e-alert-enable-notifications))
-#+end_src
+** mu4e-alert
+ #+begin_src emacs-lisp
+   (use-package mu4e-alert
+   :ensure t
+   :hook ((after-init . mu4e-alert-enable-mode-line-display))
+	 :config (mu4e-alert-set-default-style 'libnotify)
+			  (mu4e-alert-enable-notifications))
+ #+end_src
 
 * projectile
 #+begin_src emacs-lisp
