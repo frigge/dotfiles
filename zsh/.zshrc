@@ -71,13 +71,6 @@ antigen apply
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
@@ -95,5 +88,54 @@ antigen apply
 alias bc="bc -lq"
 alias tmux="tmux -2"
 export TERM=xterm-256color
-export MPD_HOST=media.local
-export MPD_PORT=6600
+
+function ecmd {
+	command=$1
+	args=""
+	shift
+	for arg in $@; do
+		args=$args' "'$arg'"'
+	done
+	command=$(echo '('$command $args')')
+	emacsclient -e $command
+}
+
+function ff {
+	ecmd find-file $1
+}
+
+function man {
+	ecmd man "$1"
+}
+
+function magit-status {
+	ecmd magit-status
+}
+
+function current_project {
+	cwd=$PWD
+	while [ ! -d ".git" ]; do
+		cd ..
+	done
+	projectname=$(pwd | xargs basename)
+	cd $cwd
+
+	echo $projectname
+}
+
+function eninja {
+	projectname=$(current_project)
+	buildfolder=$(pwd | xargs basename)
+	ecmd compile-and-rename ninja "*$projectname-$buildfolder-compilation*"
+}
+
+function ggdb {
+	ecmd gud-gdb "gdb $@"
+}
+
+# Preferred editor for local and remote sessions
+if [[ -n $SSH_CONNECTION ]]; then
+	export EDITOR='kak'
+else
+	export EDITOR='ff'
+fi

@@ -10,6 +10,11 @@
    (eshell)
  #+end_src
 
+** single window with i3
+ #+begin_src emacs-lisp
+   (setq pop-up-frames 'graphic-only)
+ #+end_src
+
 ** bookmarks
 ## #+begin_src emacs-lisp
 ##   (define-key space-map (kbd "b") 'helm-filtered-bookmarks)
@@ -23,6 +28,17 @@
 #+begin_src emacs-lisp
 (setq lpr-command "gtklp")
 (setq ps-lpr-command "gtklp")
+#+end_src
+
+** create compilation buffer with custom name
+#+begin_src emacs-lisp
+  (defun compile-and-rename (cmd name) ""
+		 (if (get-buffer name)
+			 (progn (set-buffer name)
+					(recompile))
+		   (progn (compile cmd)
+				  (set-buffer "*compilation*")
+				  (rename-buffer name))))
 #+end_src
 
 * yasnippet
@@ -482,6 +498,7 @@ make latex fragments a little bigger
 								   (latex . t)
 								   (ipython . t)
 								   (C . t)
+								   (cpp . t)
 								   (org . t)))
 
   (setq org-latex-listings t)
@@ -492,22 +509,6 @@ make latex fragments a little bigger
 *** IPython support
 #+begin_src emacs-lisp
   (use-package ob-ipython)
-#+end_src
-
-* latex
-** biblatex
-   set default bibtex dialect
-#+begin_src emacs-lisp
-  (setq bibtex-dialect 'biblatex)
-#+end_src
-
-gscholar references  (as alternative to org-ref)
-#+begin_src emacs-lisp
-  (use-package gscholar-bibtex
-	:bind (:map space-map ("r g" . gscholar-bibtex))
-	:config (setq gscholar-bibtex-database-file
-				   "/mnt/piland/sascha/documents/research/bib.bib")
-			 (setq gscholar-bibtex-default-source "Google Scholar"))
 #+end_src
 
 * email
@@ -580,7 +581,6 @@ gscholar references  (as alternative to org-ref)
       (org-mu4e-compose-org-mode)
       (mu4e-compose-mode)
       (message-send-and-exit)))
-
 #+end_src
 
 * mu4e-alert
@@ -701,6 +701,13 @@ just load c++ mode for cuda files
 ** glsl-mode
 #+begin_src emacs-lisp
   (use-package glsl-mode)
+
+  (add-to-list 'auto-mode-alist '("\\.comp\\'" . glsl-mode))
+  (add-to-list 'auto-mode-alist '("\\.rgen\\'" . glsl-mode))
+  (add-to-list 'auto-mode-alist '("\\.rchit\\'" . glsl-mode))
+  (add-to-list 'auto-mode-alist '("\\.rahit\\'" . glsl-mode))
+  (add-to-list 'auto-mode-alist '("\\.rmiss\\'" . glsl-mode))
+ 
 #+end_src
 
 * lsp-mode
@@ -840,6 +847,30 @@ the current directory from eshell.
 #+end_src
 
 * latex
+** auctex
+#+begin_src emacs-lisp
+  (use-package tex :ensure auctex)
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+		TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
+		TeX-source-correlate-start-server t)
+  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
+#+end_src
+
+** biblatex
+   set default bibtex dialect
+#+begin_src emacs-lisp
+  (setq bibtex-dialect 'biblatex)
+#+end_src
+
+gscholar references  (as alternative to org-ref)
+#+begin_src emacs-lisp
+  (use-package gscholar-bibtex
+	:bind (:map space-map ("r g" . gscholar-bibtex))
+	:config (setq gscholar-bibtex-database-file
+				   "/mnt/piland/sascha/documents/research/bib.bib")
+			 (setq gscholar-bibtex-default-source "Google Scholar"))
+#+end_src
+
 ** reftex default bibliography
    
 #+begin_src emacs-lisp

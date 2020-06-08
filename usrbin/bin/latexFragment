@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-echo "\\documentclass[preview]{standalone}\\usepackage{xcolor}\\begin{document}$1\\end{document}" > tmp.tex
+echo "\\documentclass[preview]{standalone}
+\\usepackage{xcolor}
+\\usepackage{amsfonts}
+\\usepackage{amsmath}
+\\begin{document}
+$1
+\\end{document}" > tmp.tex
 latex tmp.tex
 dvipng -D 1200 -bg Transparent tmp.dvi -o $2
 # dvisvgm tmp.dvi -o $2

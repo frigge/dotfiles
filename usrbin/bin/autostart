@@ -7,7 +7,7 @@ run_once () {
 
 dbus-send --session --print-reply=literal --dest=org.gnome.SessionManager "/org/gnome/SessionManager" org.gnome.SessionManager.RegisterClient "string:i3" "string:$DESKTOP_AUTOSTART_ID"
 
-run_once "compton --config /afs/cg.cs.tu-bs.de/home/fricke/.config/compton.conf --glx-use-gpushader4"
+#run_once "compton --config /home/frigge/.config/compton.conf --glx-use-gpushader4"
 wal -R
 nitrogen --restore
 run_once nm-applet
