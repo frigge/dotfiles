@@ -23,8 +23,8 @@ while [ -n "$1" ]; do
     shift
 done
 
-left=DVI-D-0
-middle=DVI-I-1
+left=DP-5
+middle=DP-0
 right=HDMI-0
 
 if [ $mode == "all" ]; then
