@@ -22,6 +22,7 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 (straight-use-package 'use-package)
+(setq use-package-always-ensure t)
 
 (org-babel-load-file (expand-file-name "~/.emacs.d/myinit.org"))
 (custom-set-variables
