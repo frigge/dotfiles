@@ -295,7 +295,7 @@ ivy
 
 ** org-mime
 #+begin_src emacs-lisp
-  (use-package org-mime)
+  (use-package org-mime :ensure t)
   (setq org-mime-export-options '(:section-numbers nil
 								  :with-author nil
 								  :with-toc nil))
@@ -347,13 +347,12 @@ ivy
 	(require 'unsrt)
 
 	;; see org-ref for use of these variables
-	(setq org-ref-bibliography-notes "/mnt/piland/sascha/documents/org/papers.org"
-		  org-ref-default-bibliography '("/mnt/piland/sascha/documents/research/bib.bib")
-		  org-ref-pdf-directory "/mnt/piland/sascha/documents/research/pdfs")
+	(setq org-ref-default-bibliography '("/mnt/piland/sascha/documents/research/bib.bib")
+		  org-ref-pdf-directory "/mnt/piland/sascha/documents/research/pdfs/")
 
 	(setq bibtex-completion-bibliography "/mnt/piland/sascha/documents/research/bib.bib"
-		  bibtex-completion-library-path "/mnt/piland/sascha/documents/research/pdfs"
-		  bibtex-completion-notes-path "/mnt/piland/sascha/documents/research/")
+		  bibtex-completion-library-path "/mnt/piland/sascha/documents/research/pdfs/"
+		  bibtex-completion-notes-path "/mnt/piland/sascha/documents/org/")
 #+end_src
 
 set custom notes heading format
@@ -362,8 +361,6 @@ set custom notes heading format
 (setq org-ref-note-title-format
 "* PREPARE %t
  :PROPERTIES:
-  :Custom_ID: %k
-  :PDF: 
   :AUTHOR: %9a
   :JOURNAL: %j
   :YEAR: %y
@@ -392,22 +389,66 @@ set custom notes heading format
 #+begin_src emacs-lisp
   (use-package org-roam
 	:after org
+	:ensure t
 	:hook 
-	((org-mode . org-roam-mode)
-	 (after-init . org-roam--build-cache-async) ;; optional!
-	 )
-	:straight (:host github :repo "jethrokuan/org-roam" :branch "develop")
+	((after-init . org-roam-mode))
 	:custom
-	(org-roam-directory "/mnt/piland/sascha/documents/org")
+	(org-roam-directory "/mnt/piland/sascha/documents/org/")
 	:bind (:map space-map
 				(("n l" . org-roam)
 				 ("n t" . org-roam-today)
 				 ("n f" . org-roam-find-file)
 				 ("n i" . org-roam-insert)
 				 ("n g" . org-roam-show-graph))))
+
   (setq org-roam-graph-viewer "/usr/bin/vivaldi-stable")
   (setq org-roam-graph-max-title-length 15)
   (setq org-roam-graph-node-shape "box")
+
+  (use-package org-roam-bibtex
+	:after org-roam
+	:ensure t
+	:hook (org-roam-mode . org-roam-bibtex-mode)
+	:bind (:map org-mode-map
+				(("C-c n a" . orb-note-actions))))
+
+  (use-package org-roam-server
+	:ensure t
+	:config
+	(setq org-roam-server-host "127.0.0.1"
+		  org-roam-server-port 8080
+		  org-roam-server-export-inline-images t
+		  org-roam-server-authenticate nil
+		  org-roam-server-label-truncate t
+		  org-roam-server-label-truncate-length 60
+		  org-roam-server-label-wrap-length 20))
+
+  (setq orb-preformat-keywords
+		'(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords"))
+
+  (setq orb-templates
+		'(("r" "ref" plain (function org-roam-capture--get-point) 
+		   ""
+		   :file-name "${citekey}"
+		   :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}
+
+	- tags ::
+	- keywords :: ${keywords}
+
+	,* ${title}
+	:PROPERTIES:
+	:Custom_ID: ${citekey}
+	:URL: ${url}
+	:AUTHOR: ${author-or-editor}
+	:JOURNAL: ${journal}
+	:YEAR: ${year} 
+	:VOLUME: ${volume} 
+	:PAGES: ${pages}
+	:DOI: ${doi}
+	:URL: ${url}
+	:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")
+	:END:" 
+		   :unnarrowed t)))
 #+end_src
 
 ** capture
@@ -586,6 +627,7 @@ make latex fragments a little bigger
 * mu4e-alert
 #+begin_src emacs-lisp
   (use-package mu4e-alert
+  :ensure t
   :hook ((after-init . mu4e-alert-enable-mode-line-display))
 	:config (mu4e-alert-set-default-style 'libnotify)
 			 (mu4e-alert-enable-notifications))
@@ -865,6 +907,7 @@ the current directory from eshell.
 gscholar references  (as alternative to org-ref)
 #+begin_src emacs-lisp
   (use-package gscholar-bibtex
+	:ensure t
 	:bind (:map space-map ("r g" . gscholar-bibtex))
 	:config (setq gscholar-bibtex-database-file
 				   "/mnt/piland/sascha/documents/research/bib.bib")

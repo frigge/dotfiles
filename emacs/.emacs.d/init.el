@@ -29,11 +29,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(mu4e-attachment-dir "/home/frigge/Downloads")
+ '(mu4e-attachment-dir "/var/local/fricke/Downloads")
  '(mu4e-compose-signature-auto-include nil)
  '(mu4e-drafts-folder "/drafts")
  '(mu4e-get-mail-command "mbsync -a")
- '(mu4e-maildir "/home/frigge/.mail")
+ '(mu4e-maildir "/var/local/fricke/.mail")
  '(mu4e-refile-dir "/archive")
  '(mu4e-sent-folder "/sent")
  '(mu4e-trash-folder "/trash")
@@ -43,7 +43,8 @@
  '(mu4e-view-show-images t)
  '(org-agenda-files
    (quote
-	("/mnt/piland/sascha/documents/research/papers.org" "/mnt/piland/sascha/documents/todo.org" "/mnt/piland/sascha/documents/Inbox.org" "/mnt/piland/sascha/documents/todoshared/shared-todo.org" "/mnt/piland/sascha/documents/phd/phd.org")))
+	("/mnt/piland/sascha/documents/org/kajiya1985anisotropic.org" "/mnt/piland/sascha/documents/org/phd.org" "/mnt/piland/sascha/documents/org/20200222160247_a_lowdimensional_function_space_for_efficient_spectral_upsampling.org" "/mnt/piland/sascha/documents/todo.org" "/mnt/piland/sascha/documents/Inbox.org" "/mnt/piland/sascha/documents/todoshared/shared-todo.org")))
+ '(org-mu4e-convert-to-html t t)
  '(package-selected-packages
    (quote
 	(esup ivy-posframe company-posframe yasnippet-snippets yasnippet company-box dap-mode helm-lsp company-lsp lsp-ui lsp-mode flycheck-rust cargo rustic srefactor org-plus-contrib evil-string-inflection paperless mu4e xresources-theme which-key wgrep-ag use-package smart-tabs-mode rainbow-mode ox-reveal org-ref org-projectile org-pomodoro org-pdfview org-noter org-download org-caldav ob-ipython magit glsl-mode git-gutter flycheck evil-visualstar evil-surround evil-quickscope evil-org evil-numbers evil-commentary ein csv-mode counsel-etags company cmake-mode cmake-ide clang-format beacon ag ace-window)))
