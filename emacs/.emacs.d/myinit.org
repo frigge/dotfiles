@@ -451,6 +451,10 @@ set custom notes heading format
 		   :unnarrowed t)))
 #+end_src
 
+** helm-org
+#+begin_src emacs-lisp
+  (use-package helm-org :ensure t)
+#+end_src
 ** capture
 #+begin_src emacs-lisp
 (define-key space-map (kbd "c c") 'org-capture)
@@ -534,10 +538,12 @@ make latex fragments a little bigger
 *** languages
 #+begin_src emacs-lisp
   (require 'ob-C)
+  (require 'ob-gnuplot)
   (setq org-babel-load-languages '((python . t)
 								   (emacs-lisp . t)
 								   (latex . t)
 								   (ipython . t)
+								   (gnuplot . t)
 								   (C . t)
 								   (cpp . t)
 								   (org . t)))
@@ -550,6 +556,12 @@ make latex fragments a little bigger
 *** IPython support
 #+begin_src emacs-lisp
   (use-package ob-ipython)
+#+end_src
+
+* gnuplot
+#+begin_src emacs-lisp
+  (use-package gnuplot
+	:ensure t)
 #+end_src
 
 * email
@@ -658,10 +670,17 @@ make latex fragments a little bigger
 
 * wgrep
 #+begin_src emacs-lisp
-  (use-package wgrep)
-  (use-package wgrep-ag)
+  (use-package wgrep :ensure t)
+  (use-package wgrep-ag :ensure t)
 #+end_src
 
+* calfw
+#+begin_src emacs-lisp
+  (straight-use-package '(emacs-calfw :type git :host github :repo "zemaye/emacs-calfw"))
+  (require 'calfw)
+  (require 'calfw-org)
+  (setq cfw:org-overwrite-default-keybinding t)
+#+end_src
 * ctags
 #+begin_src emacs-lisp
   (setq ctags-update-command "/usr/bin/ctags")
