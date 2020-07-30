@@ -424,7 +424,7 @@ set custom notes heading format
 		  org-roam-server-label-wrap-length 20))
 
   (setq orb-preformat-keywords
-		'(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords"))
+		'(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords" "year" "volume" "doi" "journal" "pages"))
 
   (setq orb-templates
 		'(("r" "ref" plain (function org-roam-capture--get-point) 
