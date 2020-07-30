@@ -108,8 +108,12 @@ function man {
 	ecmd man "$1"
 }
 
-function magit-status {
+function mgs {
 	ecmd magit-status
+}
+
+function eag {
+	ecmd ag "$@" $PWD
 }
 
 function current_project {
