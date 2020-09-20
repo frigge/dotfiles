@@ -1,0 +1,20 @@
+#! /usr/bin/env bash
+
+window_name=$1
+workspace=3
+
+container_placeholder='
+{
+	"name": "double_slit_experiment",
+	"type": "con",
+	"swallows": [{"title": "^'$window_name'$"}]
+}'
+
+container_placeholder_node_file=$(mktemp)
+echo "$container_placeholder" > $container_placeholder_node_file
+
+i3-msg "workspace 1; workspace $workspace; append_layout $container_placeholder_node_file"
+sleep .1
+command="[title=\"^$window_name$\"] focus; move left"
+echo $command
+i3-msg $command
