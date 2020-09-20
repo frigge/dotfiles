@@ -23,7 +23,7 @@ function print_help {
 	echo "    -b: Batch Count (default: 1)"
 	echo "    -l: Tesseract Language (e.g. deu, eng, default: deu)"
     echo "    -e: Brightness Level adjustment (default: 20%)"
-	echo "    -r: rotate 90 degrees (lanscape)"
+	echo "    -r: rotate 90 degrees (landscape)"
 	echo "    -h: Pring this help"
 	exit 0
 }
@@ -31,7 +31,7 @@ function print_help {
 mode_value=Color
 batch_count=1
 language=deu
-lanscape=0
+landscape=0
 level=20%
 name="$(date +%Y%m%d%H%M%S)"
 
@@ -41,7 +41,7 @@ function dry_run {
 	echo "batch_count: $batch_count"
 	echo "language: $language"
 	echo "name: $name"
-	echo "lanscape: $lanscape"
+	echo "landscape: $landscape"
 	exit 0
 }
 
@@ -53,7 +53,7 @@ while [ -n "$1" ]; do
             -l) shift; language=$1 ;;
             -e) shift; level=$1 ;;
             -o) shift; name=$1 ;;
-            -r) lanscape=1 ;;
+            -r) landscape=1 ;;
             -d) run_dry=1 ;;
             -h) print_help ;;
             -*) echo "unrecognized parameter: \"$opt\""; print_help ;;
@@ -70,7 +70,7 @@ fi
 mode="--mode $mode_value"
 
 if [ $batch_count -gt 1 ]; then
-	scanimage -p --resolution 300 $mode -b --batch-count=$batch_count --batch-prompt
+	scanimage -d pixma:MG5300_192.168.2.103 -p --resolution 300 $mode -b --batch-count=$batch_count --batch-prompt
 
     for (( i=1; i<=$batch_count; i++ ))
     do
@@ -79,7 +79,7 @@ if [ $batch_count -gt 1 ]; then
         echo $command
         $command > /dev/null
 
-		if [ $lanscape -eq 1 ]; then
+		if [ $landscape -eq 1 ]; then
 			echo "rotating image ..."
 			command="convert out$i.pnm -rotate 90 out$i.pnm"
 			echo $command
@@ -107,10 +107,10 @@ if [ $batch_count -gt 1 ]; then
     echo $command
     $command > /dev/null
 else
-	scanimage -p --resolution 300 $mode > out1.pnm
+	scanimage -d pixma:MG5300_192.168.2.103 -p --resolution 300 $mode > out1.pnm
     convert out1.pnm -level $level out1.pnm
 
-	if [ $lanscape -eq 1 ]; then
+	if [ $landscape -eq 1 ]; then
 		echo "rotating image ..."
 		command="convert out$i.pnm -rotate 90 out$i.pnm"
 		echo $command

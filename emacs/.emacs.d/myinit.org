@@ -771,6 +771,13 @@ just load c++ mode for cuda files
  
 #+end_src
 
+** conf-mode for mtstudio files
+#+begin_src emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.rg\\'" . conf-mode))
+  (add-to-list 'auto-mode-alist '("\\.scn\\'" . conf-mode))
+
+#+end_src
+
 * lsp-mode
 
 #+begin_src emacs-lisp
