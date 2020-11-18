@@ -28,6 +28,8 @@
 #+begin_src emacs-lisp
 (setq lpr-command "gtklp")
 (setq ps-lpr-command "gtklp")
+(setq pdf-misc-print-programm "gtklp")
+(setq pdf-misc-print-programm-args "")
 #+end_src
 
 ** create compilation buffer with custom name
@@ -806,22 +808,18 @@ just load c++ mode for cuda files
 
 #+begin_src emacs-lisp
   (use-package lsp-mode
-	:hook (c++-mode . lsp) (c-mode . lsp) (pyhton-mode . lsp)
-	:disabled t)
-  (use-package lsp-ui :commands lsp-ui-mode
-	:disabled t)
-  (use-package company-lsp :commands company-lsp
-	:disabled t)
-  (use-package helm-lsp :commands helm-lsp-workspace-symbol
-	:disabled t)
+	:hook (c++-mode . lsp) (c-mode . lsp) (pyhton-mode . lsp))
+  (use-package lsp-ui :commands lsp-ui-mode)
+  (use-package company-lsp :commands company-lsp)
+  (use-package helm-lsp :commands helm-lsp-workspace-symbol)
 #+end_src
 
 ** dap-mode
 #+begin_src emacs-lisp
-  (use-package dap-mode
-	:disabled t)
+  (use-package dap-mode :disabled t)
   ;; (require 'dap-gdb-lldb)
   ;; (require 'dap-python)
+  ;; (require 'dap-launch)
 #+end_src
 
 * c++
@@ -912,6 +910,15 @@ the current directory from eshell.
  #+begin_src emacs-lisp
    (setq gdb-dispaly-io-nopopup t)
  #+end_src
+ ** gdb-mi
+ #+begin_src emacs-lisp
+   (use-package gdb-mi
+	 :straight (:host github :repo "weirdNox/emacs-gdb" :files ("*.el" "*.c" "*.h" "Makefile"))
+	 :disabled t
+	 :init
+	 (fmakunbound 'gdb)
+	 (fmakunbound 'gdb-enable-debug))
+#+end_src
 ** realgud
  #+begin_src emacs-lisp
    ;; (use-package realgud)
