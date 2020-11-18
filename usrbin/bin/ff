@@ -1,0 +1,8 @@
+#!/bin/bash
+
+function ff {
+	ecmd make-frame
+	ecmd find-file $1
+}
+
+ff $@

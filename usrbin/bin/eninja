@@ -1,0 +1,20 @@
+#!/bin/bash
+
+function current_project {
+	cwd=$PWD
+	while [ ! -d ".git" ]; do
+		cd ..
+	done
+	projectname=$(pwd | xargs basename)
+	cd $cwd
+
+	echo $projectname
+}
+
+function eninja {
+	projectname=$(current_project)
+	buildfolder=$(pwd | xargs basename)
+	ecmd compile-and-rename ninja "*$projectname-$buildfolder-compilation*"
+}
+
+eninja

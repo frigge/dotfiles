@@ -1,0 +1,14 @@
+#!/bin/bash
+
+function ecmd {
+	command=$1
+	args=""
+	shift
+	for arg in $@; do
+		args=$args' "'$arg'"'
+	done
+	command=$(echo '('$command $args')')
+	emacsclient -e "$command"
+}
+
+ecmd $@
