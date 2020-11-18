@@ -22,7 +22,8 @@
 
 ** CSV mode
  #+begin_src emacs-lisp
- (use-package csv-mode)
+ (use-package csv-mode
+:ensure t)
  #+end_src
 ** Use gtklp as Printer
 #+begin_src emacs-lisp
@@ -46,22 +47,28 @@
 * yasnippet
 #+begin_src emacs-lisp
   (use-package yasnippet
-	:config (yas-global-mode 1))
+	:config (yas-global-mode 1)
+	:ensure t)
 
-  (use-package yasnippet-snippets)
+  (use-package yasnippet-snippets
+  :ensure t)
 #+end_src
 * helm
 #+begin_src emacs-lisp
-      (use-package helm)
+      (use-package helm
+      :ensure t)
 #+end_src
 * evil
 #+begin_src emacs-lisp
   (use-package evil
-    :config (evil-mode t))
+    :config (evil-mode t)
+    :ensure t)
 
-  (use-package evil-org)
+  (use-package evil-org
+  :ensure t)
 
   (use-package evil-numbers
+    :ensure t
     :bind (:map evil-normal-state-map
                  ("+" . evil-numbers/inc-at-pt)
                  ("-" . evil-numbers/dec-at-pt)
@@ -70,19 +77,24 @@
                  ("-" . evil-numbers/dec-at-pt)))
 
   (use-package evil-quickscope
+    :ensure t
     :config (global-evil-quickscope-mode t))
 
   (use-package evil-surround
+    :ensure t
     :config (global-evil-surround-mode 1))
 
 
   (use-package evil-visualstar
+    :ensure t
     :config (global-evil-visualstar-mode t))
 
   (use-package evil-commentary
+    :ensure t
     :config (evil-commentary-mode t))
 
-  (use-package evil-string-inflection)
+  (use-package evil-string-inflection
+  :ensure t)
 #+end_src
 
 ** don't use SPC and RET as motion keys in normal mode
@@ -133,7 +145,8 @@
 *** rainbow mode
 #+begin_src emacs-lisp
   (use-package rainbow-mode
-	:bind (:map space-map ("h h" . rainbow-mode)))
+    :ensure t
+    :bind (:map space-map ("h h" . rainbow-mode)))
 #+end_src
 *** display inline images
 #+begin_src emacs-lisp
@@ -142,7 +155,8 @@
 
 *** indent tabs
 #+begin_src emacs-lisp
-  (use-package smart-tabs-mode)
+  (use-package smart-tabs-mode
+  :ensure t)
   (add-hook 'c-mode-common-hook (lambda () (setq indent-tabs-mode t)))
   ;; (smart-tabs-insinuate 'c 'c++)
   ;; (setq smart-tabs-mode t)
@@ -156,7 +170,8 @@ whitespace mode toggle
 *** beacon-mode
 #+begin_src emacs-lisp
   (use-package beacon
-               :config (beacon-mode))
+  :config (beacon-mode)
+  :ensure t)
 #+end_src
 
 ** ido
@@ -185,8 +200,8 @@ whitespace mode toggle
 
 ** theme
 #+begin_src emacs-lisp
-(use-package xresources-theme)
-    :
+(use-package xresources-theme
+:ensure t)
 #+end_src
 
 #+RESULTS:
@@ -222,6 +237,7 @@ load current theme from custom variable
 ** company
 #+begin_src emacs-lisp
   (use-package company
+  :ensure t
 	:config
 	(setq company-backends (quote
 							(company-bbdb
@@ -241,19 +257,22 @@ load current theme from custom variable
 	(add-hook 'after-init-hook 'global-company-mode)
 	:bind ("<C-tab>" . company-complete))
 
-  (use-package company-box :hook (company-mode . company-box-mode))
+  (use-package company-box :hook (company-mode . company-box-mode)
+  :ensure t)
 #+end_src
 
 ** which-key
 #+begin_src emacs-lisp
   (use-package which-key
+    :ensure t
     :config (which-key-mode))
 #+end_src
 
-** git-gutter
+** diff-hl
 #+begin_src emacs-lisp
-  (use-package git-gutter
-    :config (global-git-gutter-mode))
+  (use-package diff-hl
+    :ensure t
+    :config (global-diff-hl-mode))
 #+end_src
 
 ** swiper/ivy
@@ -286,7 +305,8 @@ ivy
 
 * htmlize
 #+begin_src emacs-lisp
-  (use-package htmlize)
+  (use-package htmlize
+    :ensure t)
 #+end_src
 
 * orgmode
@@ -297,7 +317,8 @@ ivy
 
 ** org-mime
 #+begin_src emacs-lisp
-  (use-package org-mime :ensure t)
+  (use-package org-mime 
+    :ensure t)
   (setq org-mime-export-options '(:section-numbers nil
 								  :with-author nil
 								  :with-toc nil))
@@ -312,12 +333,14 @@ ivy
 
 ** org-reveal
  #+begin_src emacs-lisp
-     (use-package ox-reveal)
+     (use-package ox-reveal
+    :ensure t)
  #+end_src
 
 ** org-pdfview
  #+begin_src emacs-lisp
-     (use-package org-pdfview)
+     (use-package org-pdftools
+    :ensure t)
 	   
 (add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open))
  #+end_src
@@ -332,6 +355,7 @@ ivy
 ** org-ref
 #+begin_src emacs-lisp
   (use-package org-ref
+  :ensure t
 	:bind (:map space-map ("r r" . org-ref-bibtex-hydra/body)))
 
 	(require 'doi-utils)
@@ -376,12 +400,14 @@ set custom notes heading format
 
 ** org-noter
 #+begin_src emacs-lisp
-  (use-package org-noter)
+  (use-package org-noter
+    :ensure t)
 #+end_src
 
 ** org-download
 #+begin_src emacs-lisp
   (use-package org-download
+  :ensure t
 	:after org
 	:bind (:map space-map (("d s" . org-download-screenshot)
 						   ("d y" . org-download-yank))))
@@ -523,6 +549,7 @@ Function to insert paper bibliography entry and org-ref link
 ** caldav
 #+begin_src emacs-lisp
   (use-package org-caldav
+  :ensure t
     :config
     (setq org-caldav-url "https://cal.frotticloud.ydns.eu:22123/frigge")
     (setq org-caldav-calendar-id "4780be13-a759-7f2b-21d9-c6df543aa5d7")
@@ -557,7 +584,8 @@ make latex fragments a little bigger
 
 *** IPython support
 #+begin_src emacs-lisp
-  (use-package ob-ipython)
+  (use-package ob-ipython
+:ensure t)
 #+end_src
 
 * gnuplot
@@ -608,72 +636,25 @@ make latex fragments a little bigger
       (mu4e-compose-mode)
       (message-send-and-exit)))
 
-	(defun set-tubs-smtp ()
-	  (setq send-mail-function (quote smtpmail-send-it))
-	  (setq smtpmail-smtp-server "groupware.tu-bs.de")
-	  (setq smtpmail-smtp-user "sasfrick")
-	  (setq smtpmail-smtp-service 465)
-	  (setq smtpmail-stream-type 'ssl)
-	  (setq user-full-name "Sascha Fricke")
-	  (setq user-mail-address "s.fricke@tu-bs.de"))
-
-	(defun set-icg-smtp ()
-	  (setq send-mail-function (quote smtpmail-send-it))
-	  (setq smtpmail-smtp-server "europa.cg.cs.tu-bs.de")
-	  (setq smtpmail-smtp-user "fricke")
-	  (setq smtpmail-smtp-service 465)
-	  (setq smtpmail-stream-type 'ssl)
-	  (setq user-full-name "Sascha Fricke")
-	  (setq user-mail-address "fricke@cg.cs.tu-bs.de"))
-
-	(defun set-gmail-smtp ()
-	  (setq send-mail-function (quote smtpmail-send-it))
-	  (setq smtpmail-smtp-server "smtp.gmail.com")
-	  (setq smtpmail-smtp-service 465)
-	  (setq smtpmail-stream-type 'ssl)
-	  (setq user-full-name "Sascha Fricke")
-	  (setq user-mail-address "sascha.frigge@gmail.com"))
-  ;; (set-tubs-smtp)
-  (set-icg-smtp)
-  ;; (set-gmail-smtp)
-
-  (setq mu4e-contexts
-		`(,(make-mu4e-context
-		   :name "ICG"
-		   :enter-func (lambda () (mu4e-message "Entering ICG context"))
-		   :leave-func (lambda () (mu4e-message "Leaving ICG context"))
-		   :vars '((user-mail-address . "fricke@cg.cs.tu-bs.de" )
-				   (user-full-name . "Sascha Fricke")
-				   (smtpmail-smtp-server . "europa.cg.cs.tu-bs.de")
-				   (smtpmail-smtp-user . "fricke")
-				   (smtpmail-smtp-service . 465)
-				   (smtpmail-stream-type . ssl)
-				   )),
-		  (make-mu4e-context
-		   :name "TUBS"
-		   :enter-func (lambda () (mu4e-message "Entering TUBS context"))
-		   :leave-func (lambda () (mu4e-message "Leaving TUBS context"))
-		   :vars '((user-mail-address . "s.fricke@tu-bs.de" )
-				   (user-full-name . "Sascha Fricke")
-				   (smtpmail-smtp-server . "groupware.tu-bs.de")
-				   (smtpmail-smtp-user . "sasfrick")
-				   (smtpmail-smtp-service . 465)
-				   (smtpmail-stream-type . ssl)
-				   ))))
+*** mu4e-views (xwidget-webkit support)
+#+begin_src emacs-lisp
+(use-package mu4e-views
+  :straight (mu4e-views :type git :host github :repo "lordpretzel/mu4e-views"))
 #+end_src
 
-** mu4e-alert
- #+begin_src emacs-lisp
-   (use-package mu4e-alert
-   :ensure t
-   :hook ((after-init . mu4e-alert-enable-mode-line-display))
-	 :config (mu4e-alert-set-default-style 'libnotify)
-			  (mu4e-alert-enable-notifications))
- #+end_src
+* mu4e-alert
+#+begin_src emacs-lisp
+  (use-package mu4e-alert
+  :ensure t
+  :hook ((after-init . mu4e-alert-enable-mode-line-display))
+	:config (mu4e-alert-set-default-style 'libnotify)
+			 (mu4e-alert-enable-notifications))
+#+end_src
 
 * projectile
 #+begin_src emacs-lisp
   (use-package projectile
+  :ensure t
 	:config (setq projectile-mode t)
 	(define-key space-map (kbd "p") 'projectile-command-map)
 	(setq projectile-tags-command "ctags -Re -f '%s' --fields=+iaSt --extra=+q --exclude='.git' %s"))
@@ -682,6 +663,7 @@ make latex fragments a little bigger
 ** org-projectile
 #+begin_src emacs-lisp
   (use-package org-projectile
+  :ensure t
 	:bind (:map space-map ("c p" . org-projectile-project-todo-completing-read))
 	:config (progn (org-projectile-per-project)
 				   (setq org-projectile-per-repo-filepath "project_todo.org")
@@ -691,6 +673,7 @@ make latex fragments a little bigger
 * ag
 #+begin_src emacs-lisp
   (use-package ag
+  :ensure t
     :config (setq ag-group-matches nil))
 #+end_src
 
@@ -729,13 +712,15 @@ make latex fragments a little bigger
 
 * flycheck
 #+begin_src emacs-lisp
-  ;; (use-package flycheck
-  ;;   :config (global-flycheck-mode))
+  (use-package flycheck
+	:ensure t
+	:config (global-flycheck-mode))
 #+end_src
 
 * magit
 #+begin_src emacs-lisp
   (use-package magit
+  :ensure t
 	:defer t)
 #+end_src 
 
@@ -787,7 +772,8 @@ just load c++ mode for cuda files
 
 ** glsl-mode
 #+begin_src emacs-lisp
-  (use-package glsl-mode)
+  (use-package glsl-mode
+:ensure t)
 
   (add-to-list 'auto-mode-alist '("\\.comp\\'" . glsl-mode))
   (add-to-list 'auto-mode-alist '("\\.rgen\\'" . glsl-mode))
@@ -808,10 +794,14 @@ just load c++ mode for cuda files
 
 #+begin_src emacs-lisp
   (use-package lsp-mode
-	:hook (c++-mode . lsp) (c-mode . lsp) (pyhton-mode . lsp))
-  (use-package lsp-ui :commands lsp-ui-mode)
-  (use-package company-lsp :commands company-lsp)
-  (use-package helm-lsp :commands helm-lsp-workspace-symbol)
+	:hook (c++-mode . lsp) (c-mode . lsp) (pyhton-mode . lsp)
+	:ensure t)
+  (use-package lsp-ui :commands lsp-ui-mode
+	:ensure t)
+  (use-package company-lsp :commands company-lsp
+	:ensure t)
+  (use-package helm-lsp :commands helm-lsp-workspace-symbol
+	:ensure t)
 #+end_src
 
 ** dap-mode
@@ -858,7 +848,8 @@ just load c++ mode for cuda files
 #+end_src
 ** cmake-mode
 #+begin_src emacs-lisp
-  (use-package cmake-mode)
+  (use-package cmake-mode
+:ensure t)
 #+end_src
 
 ** cmake-ide
@@ -883,6 +874,7 @@ the current directory from eshell.
 ** clang-format
 #+begin_src emacs-lisp
   (use-package clang-format
+  :ensure t
                :config (define-key evil-normal-state-map (kbd "SPC c f") 'clang-format-region))
 #+end_src
 
@@ -926,16 +918,18 @@ the current directory from eshell.
 * pdftools
 #+begin_src emacs-lisp
   (use-package pdf-tools
+  :ensure t
                :config (pdf-tools-install))
 
 #+end_src
 * Paperless
 #+begin_src emacs-lisp
-  (use-package paperless
-	:config (custom-set-variables '(paperless-capture-directory "~/Documents/capture")
-								  '(paperless-root-directory "/mnt/piland/sascha/documents/paperless")))
+	(use-package paperless
+	:disabled t
+	  :config (custom-set-variables '(paperless-capture-directory "~/Documents/capture")
+									'(paperless-root-directory "/mnt/piland/sascha/documents/paperless")))
 			
-(require 'org-paperless)
+  ;; (require 'org-paperless)
 
 #+end_src
 
