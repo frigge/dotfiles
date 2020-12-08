@@ -1,0 +1,65 @@
+# IMAPAccount gmail
+# Host imap.gmail.com
+# User sascha.frigge@googlemail.com
+# PassCmd "gpg -dq --for-your-eyes-only --no-tty ~/.pwgmail.gpg"
+# SSLType IMAPS
+# CertificateFile /etc/ssl/certs/ca-certificates.crt
+# 
+# IMAPStore gmail-remote
+# Account gmail
+# 
+# MaildirStore gmail-local
+# Subfolders Verbatim
+# Path ~/.mail/gmail/
+# Inbox ~/.mail/gmail/inbox
+# 
+# Channel gmail
+# Master :gmail-remote:
+# Slave :gmail-local:
+# Patterns *
+# Create Both
+# SyncState *
+
+IMAPAccount tubs
+Host groupware.tu-bs.de
+User sasfrick
+PassCmd "gpg -dq --for-your-eyes-only --no-tty ~/.pwtubs.gpg"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore tubs-remote
+Account tubs
+
+MaildirStore tubs-local
+Subfolders Verbatim
+Path ~/.mail/tubs/
+Inbox ~/.mail/tubs/inbox
+
+Channel tubs
+Master :tubs-remote:
+Slave :tubs-local:
+Patterns *
+Create Both
+SyncState *
+
+IMAPAccount icg
+Host europa.cg.cs.tu-bs.de
+User fricke
+PassCmd "gpg -dq --for-your-eyes-only --no-tty ~/.pwicg.gpg"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore icg-remote
+Account icg
+
+MaildirStore icg-local
+Subfolders Verbatim
+Path ~/.mail/icg/
+Inbox ~/.mail/icg/inbox
+
+Channel icg
+Master :icg-remote:
+Slave :icg-local:
+Patterns *
+Create Both
+SyncState *
