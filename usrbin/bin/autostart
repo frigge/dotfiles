@@ -5,29 +5,51 @@ run_once () {
     pgrep "$1" || $1 &
 }
 
-dbus-send --session --print-reply=literal --dest=org.gnome.SessionManager "/org/gnome/SessionManager" org.gnome.SessionManager.RegisterClient "string:i3" "string:$DESKTOP_AUTOSTART_ID"
 
-run_once "picom -b --backend xrender"
-wal -R
-nitrogen --restore
-run_once nm-applet
-run_once pasystray
+set_keyboard()
+{
+	setxkbmap -layout us -variant altgr-intl
+	xset r rate 200 60
+}
 
-#other settings
+set_everythin_else()
+{
+	xset dpms 600; xset s 600 600
+	dbus-send --session --print-reply=literal --dest=org.gnome.SessionManager "/org/gnome/SessionManager" org.gnome.SessionManager.RegisterClient "string:i3" "string:$DESKTOP_AUTOSTART_ID"
 
-#lower mouse sensitivity
-xinput --set-prop 14 "Device Accel Constant Deceleration" 2 
+	run_once "picom -b --backend xrender"
+	wal -R
+	nitrogen --restore
+	run_once nm-applet
+	run_once pasystray
 
-setxkbmap -layout us -variant altgr-intl
-xset r rate 200 60
+	#other settings
 
-#wacom tabletpcbuttons (click and tap for secondary buttons)
-xsetwacom --set "Wacom Intuos3 6x8 Pen stylus" TabletPCButton "on"
+	#lower mouse sensitivity
+	xinput --set-prop 14 "Device Accel Constant Deceleration" 2 
 
-xset dpms 600; xset s 600 600
 
-nvidia-settings --load-config-only
-monitor
-# xrdb ~/.Xresources
+	#wacom tabletpcbuttons (click and tap for secondary buttons)
+	xsetwacom --set "Wacom Intuos3 6x8 Pen stylus" TabletPCButton "on"
 
-# xmodmap -e 'clear Lock' -e 'keycode' 0x42 = 'Escape'
+
+	nvidia-settings --load-config-only
+	monitor
+	# xrdb ~/.Xresources
+
+	# xmodmap -e 'clear Lock' -e 'keycode' 0x42 = 'Escape'
+}
+
+set_all ()
+{
+	set_keyboard
+	set_everythin_else
+}
+
+if [ -e $@ ]; then
+	set_all
+fi
+
+if [ "$1" == "keyboard" ]; then
+	set_keyboard
+fi
