@@ -89,54 +89,6 @@ alias bc="bc -lq"
 alias tmux="tmux -2"
 export TERM=xterm-256color
 
-function ecmd {
-	command=$1
-	args=""
-	shift
-	for arg in $@; do
-		args=$args' "'$arg'"'
-	done
-	command=$(echo '('$command $args')')
-	emacsclient -e $command
-}
-
-function ff {
-	ecmd find-file $1
-}
-
-function man {
-	ecmd man "$1"
-}
-
-function mgs {
-	ecmd magit-status
-}
-
-function eag {
-	ecmd ag "$@" $PWD
-}
-
-function current_project {
-	cwd=$PWD
-	while [ ! -d ".git" ]; do
-		cd ..
-	done
-	projectname=$(pwd | xargs basename)
-	cd $cwd
-
-	echo $projectname
-}
-
-function eninja {
-	projectname=$(current_project)
-	buildfolder=$(pwd | xargs basename)
-	ecmd compile-and-rename ninja "*$projectname-$buildfolder-compilation*"
-}
-
-function ggdb {
-	ecmd gud-gdb "gdb $@"
-}
-
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
 	export EDITOR='kak'
