@@ -2233,9 +2233,7 @@ class StringPrinter:
         try:
             return str(self.val['data_'])
         except:
-            print("Couldn't print data of {}".format(self.typename))
-            print(self.val)
-            import pdb; pdb.set_trace()
+            return str(self.val.cast(self.val.type.fields()[0].type)['data_'])
 
 class StringViewPrinter:
     def __init__(self, val, typename):
