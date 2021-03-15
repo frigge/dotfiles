@@ -1,0 +1,20 @@
+#!/bin/bash
+
+function current_project {
+	cwd=$PWD
+	while [ ! -d ".git" ]; do
+		cd ..
+	done
+	projectname=$(pwd | xargs basename)
+	cd $cwd
+
+	echo $projectname
+}
+
+function emake {
+	projectname=$(current_project)
+	buildfolder=$(pwd | xargs basename)
+	ecmd "compile-and-rename" '"make -j13"' '"*$projectname-$buildfolder-compilation*"'
+}
+
+emake
