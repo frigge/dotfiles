@@ -2,7 +2,8 @@
 
 function ff {
 	ecmd make-frame
-	ecmd find-file $1
+	filename=$1
+	ecmd find-file '"'$filename'"'
 }
 
 ff $@
