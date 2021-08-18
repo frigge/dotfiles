@@ -93,9 +93,13 @@ export TERM=xterm-256color
 if [[ -n $SSH_CONNECTION ]]; then
 	export EDITOR='kak'
 else
-	export EDITOR='ff'
+	export EDITOR='nvim'
 fi
 
-#apply pywal theme
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+eval $(/opt/homebrew/bin/brew shellenv)
+export PATH=/opt/homebrew/bin:/opt/homebrew/sbin:/Users/frigge/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/Users/frigge/.local/bin:/Users/frigge/.antigen/bundles/robbyrussell/oh-my-zsh/lib:/Users/frigge/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/git:/Users/frigge/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/pip:/Users/frigge/.antigen/bundles/zsh-users/zsh-syntax-highlighting:/usr/local/opt/fzf/bin:/opt/local/bin:/Library/TeX/texbin
+
 (cat ~/.cache/wal/sequences &)
 source ~/.cache/wal/colors-tty.sh

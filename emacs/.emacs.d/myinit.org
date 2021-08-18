@@ -1,9 +1,24 @@
+#+Title: Emacs Configuration
+
+
 * misc
    Add ~/.emacs.d to load path
 #+begin_src emacs-lisp
 (add-to-list 'load-path "~/.emacs.d/modules/")
 #+end_src
 
+
+** undo-tree
+#+begin_src emacs-lisp
+(use-package undo-tree
+  :config (global-undo-tree-mode))
+#+end_src
+   
+** pixel scrolling
+ #+begin_src emacs-lisp
+   (pixel-scroll-mode)
+ #+end_src
+   
 ** start in eshell
 
  #+begin_src emacs-lisp
@@ -16,15 +31,16 @@
  #+end_src
 
 ** bookmarks
-## #+begin_src emacs-lisp
-##   (define-key space-map (kbd "b") 'helm-filtered-bookmarks)
-## #+end_src
+ # #+begin_src emacs-lisp
+ #     (define-key space-map (kbd "b") 'helm-filtered-bookmarks)
+ # #+end_src
 
 ** CSV mode
  #+begin_src emacs-lisp
- (use-package csv-mode
-:ensure t)
+(use-package csv-mode
+  :ensure t)
  #+end_src
+ 
 ** Use gtklp as Printer
 #+begin_src emacs-lisp
 (setq lpr-command "gtklp")
@@ -35,74 +51,84 @@
 
 ** create compilation buffer with custom name
 #+begin_src emacs-lisp
-  (defun compile-and-rename (cmd name) ""
-		 (if (get-buffer name)
-			 (progn (set-buffer name)
-					(recompile))
-		   (progn (compile cmd)
-				  (set-buffer "*compilation*")
-				  (rename-buffer name))))
+(defun compile-and-rename (cmd name) ""
+       (if (get-buffer name)
+           (progn (set-buffer name)
+                  (recompile))
+         (progn (compile cmd)
+                (set-buffer "*compilation*")
+                (rename-buffer name))))
+#+end_src
+
+** hide mode line
+#+begin_src emacs-lisp
+(use-package hide-mode-line
+  :config (add-hook 'completion-list-mode-hook #'hide-mode-line-mode))
 #+end_src
 
 * yasnippet
 #+begin_src emacs-lisp
-  (use-package yasnippet
-	:config (yas-global-mode 1)
-	:ensure t)
+(use-package yasnippet
+  :config (yas-global-mode 1)
+  :ensure t)
 
-  (use-package yasnippet-snippets
+(use-package yasnippet-snippets
   :ensure t)
 #+end_src
+
 * helm
 #+begin_src emacs-lisp
-      (use-package helm
-      :ensure t)
+(use-package helm
+  :ensure t)
 #+end_src
+
 * evil
 #+begin_src emacs-lisp
-  (use-package evil
-    :config (evil-mode t)
-    :ensure t)
-
-  (use-package evil-org
+(use-package evil
+  :config (evil-mode t)
   :ensure t)
 
-  (use-package evil-numbers
-    :ensure t
-    :bind (:map evil-normal-state-map
-                 ("+" . evil-numbers/inc-at-pt)
-                 ("-" . evil-numbers/dec-at-pt)
-           :map evil-visual-state-map
-                 ("+" . evil-numbers/inc-at-pt)
-                 ("-" . evil-numbers/dec-at-pt)))
+(use-package evil-org
+  :ensure t
+  :after org
+  :hook (org-mode . evil-org-mode))
 
-  (use-package evil-quickscope
-    :ensure t
-    :config (global-evil-quickscope-mode t))
+(use-package evil-numbers
+  :ensure t
+  :bind (:map evil-normal-state-map
+			  ("+" . evil-numbers/inc-at-pt)
+			  ("-" . evil-numbers/dec-at-pt)
+			  :map evil-visual-state-map
+			  ("+" . evil-numbers/inc-at-pt)
+			  ("-" . evil-numbers/dec-at-pt)))
 
-  (use-package evil-surround
-    :ensure t
-    :config (global-evil-surround-mode 1))
+(use-package evil-quickscope
+  :ensure t
+  :config (global-evil-quickscope-mode t))
+
+(use-package evil-surround
+  :ensure t
+  :config (global-evil-surround-mode 1))
 
 
-  (use-package evil-visualstar
-    :ensure t
-    :config (global-evil-visualstar-mode t))
+(use-package evil-visualstar
+  :ensure t
+  :config (global-evil-visualstar-mode t))
 
-  (use-package evil-commentary
-    :ensure t
-    :config (evil-commentary-mode t))
+(use-package evil-commentary
+  :ensure t
+  :config (evil-commentary-mode t))
 
-  (use-package evil-string-inflection
+(use-package evil-string-inflection
   :ensure t)
 #+end_src
 
 ** don't use SPC and RET as motion keys in normal mode
 #+begin_src emacs-lisp
   (defun my-move-key (keymap-from keymap-to key)
-    "Moves key binding from one keymap to another, deleting from the old location. "
-    (define-key keymap-to key (lookup-key keymap-from key))
-    (define-key keymap-from key nil))
+	"Moves key binding from one keymap to another, deleting from the old location. "
+	(define-key keymap-to key (lookup-key keymap-from key))
+	(define-key keymap-from key nil))
   (my-move-key evil-motion-state-map evil-normal-state-map (kbd "RET"))
   (my-move-key evil-motion-state-map evil-normal-state-map " ")
 #+end_src
@@ -127,26 +153,28 @@
 * gui
 ** misc
 #+begin_src emacs-lisp
-  (setq blink-cursor-mode nil)
-  (setq inhibit-startup-screen t)
-  (setq line-number-mode t)
-  (scroll-bar-mode -1)
-  (show-paren-mode)
-  (tool-bar-mode -1)
-  (menu-bar-mode -1)
-  (setq global-hl-line-mode t)
-  (setq global-auto-revert-mode t)
-  (setq global-visual-line-mode t)
+(setq blink-cursor-mode nil)
+(setq inhibit-startup-screen t)
+(setq line-number-mode t)
+(scroll-bar-mode -1)
+(show-paren-mode)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(set-fringe-mode 10)
+(column-number-mode)
+(setq global-hl-line-mode t)
+(setq global-auto-revert-mode t)
+(setq global-visual-line-mode t)
 
-  (global-set-key (kbd "<f4>") 'ff-find-other-file)
-  ;; (recentf-mode)
+(global-set-key (kbd "<f4>") 'ff-find-other-file)
+;; (recentf-mode)
 #+end_src
 
 *** rainbow mode
 #+begin_src emacs-lisp
   (use-package rainbow-mode
-    :ensure t
-    :bind (:map space-map ("h h" . rainbow-mode)))
+	:ensure t
+	:bind (:map space-map ("h h" . rainbow-mode)))
 #+end_src
 *** display inline images
 #+begin_src emacs-lisp
@@ -176,12 +204,12 @@ whitespace mode toggle
 
 ** ido
 #+begin_src emacs-lisp
-  (use-package ido
-	:config (ido-mode)
-	:disabled t)
+(use-package ido
+  :config (ido-mode)
+  :disabled t)
 
-	;; (global-set-key (kbd "C-x C-f") 'ido-find-file)
-	;; (global-set-key (kbd "C-x b") 'ido-switch-buffer)
+;; (global-set-key (kbd "C-x C-f") 'ido-find-file)
+;; (global-set-key (kbd "C-x b") 'ido-switch-buffer)
 #+end_src
 
 ** ace-window
@@ -198,10 +226,21 @@ whitespace mode toggle
  '(default ((t (:height 98 :foundry "DAMA" :family "Consolas for Powerline")))))
 #+end_src
 
+** visual-column-fill
+#+begin_src emacs-lisp
+(defun efs/org-mode-visual-fill ()
+  (setq visual-fill-column-width 100
+		visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
+
+(use-package visual-fill-column
+  :hook (org-mode . efs/org-mode-visual-fill))
+  #+end_src
+
 ** theme
 #+begin_src emacs-lisp
 (use-package xresources-theme
-:ensure t)
+  :disabled t)
 #+end_src
 
 #+RESULTS:
@@ -210,18 +249,18 @@ whitespace mode toggle
 Toggle light and dark theme. Light and dark theme can be customized by setting ~my-dark-theme~ and ~my-light-theme~.
 
 #+begin_src emacs-lisp :tangle no
-  (defcustom my-dark-theme 'solarized-dark "current dark theme")
-  (defcustom my-light-theme 'solarized-light "current light theme")
-  (defcustom my-current-theme (symbol-value 'my-dark-theme) "current theme in use")
+(defcustom my-dark-theme 'solarized-dark "current dark theme")
+(defcustom my-light-theme 'solarized-light "current light theme")
+(defcustom my-current-theme (symbol-value 'my-light-theme) "current theme in use")
 
-  (defun toggle-light-and-dark-theme ()
-    ""
-    (interactive)
-    (if (eq my-current-theme my-dark-theme)
-        (custom-set-variables my-current-theme (symbol-value 'my-light-theme))
-      (custom-set-variables my-current-theme (symbol-value 'my-dark-theme)))
-    (load-theme my-current-theme t nil)
-    (customize-save-variable my-current-theme my-current-theme))
+(defun toggle-light-and-dark-theme ()
+  ""
+  (interactive)
+  (if (eq my-current-theme my-dark-theme)
+      (custom-set-variables my-current-theme (symbol-value 'my-light-theme))
+    (custom-set-variables my-current-theme (symbol-value 'my-dark-theme)))
+  (load-theme my-current-theme t nil)
+  (customize-save-variable my-current-theme my-current-theme))
 #+end_src
 
 keyboard shortcut for toggle
@@ -230,34 +269,75 @@ keyboard shortcut for toggle
 #+end_src
 
 load current theme from custom variable
-#+begin_src emacs-lisp :tangle no
-  (load-theme my-current-theme t nil)
+#+begin_src emacs-lisp
+  ;; (load-theme my-current-theme t nil)
+#+end_src
+
+** doom modeline
+#+begin_src elisp
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1)
+  :custom (doom-modeline-height 15))
+#+end_src
+** use pywal and spacemaces theme
+#+begin_src emacs-lisp
+(use-package ewal
+  :init (setq ewal-use-built-in-always-p nil
+			  ewal-use-built-in-on-failure-p t
+			  ewal-built-in-palette "sexy-material"))
+
+(use-package ewal-spacemacs-themes
+  :init (progn
+		  (setq spacemacs-theme-underline-parens t
+				my:rice:font (font-spec
+							  :family "Monaco"
+							  :weight 'semi-bold
+							  :size 11.0))
+		  (show-paren-mode +1)
+		  (global-hl-line-mode)
+		  (set-frame-font my:rice:font nil t)
+		  (add-to-list  'default-frame-alist
+						`(font . ,(font-xlfd-name my:rice:font))))
+  :config (progn
+			(load-theme 'ewal-spacemacs-modern t)
+			(enable-theme 'ewal-spacemacs-modern)))
+
+(use-package ewal-evil-cursors
+  :after (ewal-spacemacs-themes)
+  :config (ewal-evil-cursors-get-colors
+		   :apply t :spaceline t))
+
+(use-package spaceline
+  :after (ewal-evil-cursors winum)
+  :init (setq powerline-default-separator nil)
+  :config (spaceline-spacemacs-theme))
 #+end_src
 
 ** company
 #+begin_src emacs-lisp
-  (use-package company
+(use-package company
   :ensure t
-	:config
-	(setq company-backends (quote
-							(company-bbdb
-							 company-nxml
-							 company-css
-							 company-semantic
-							 company-cmake
-							 company-capf
-							 company-dabbrev-code
-							 company-gtags
-							 company-etags
-							 company-keywords
-							 company-oddmuse
-							 company-files
-							 company-dabbrev)))
-	(setq completion-on-separator-character t)
-	(add-hook 'after-init-hook 'global-company-mode)
-	:bind ("<C-tab>" . company-complete))
+  :config
+  (setq company-backends (quote
+						  (company-bbdb
+						   company-nxml
+						   company-css
+						   company-semantic
+						   company-cmake
+						   company-capf
+						   company-dabbrev-code
+						   company-gtags
+						   company-etags
+						   company-keywords
+						   company-oddmuse
+						   company-files
+						   company-dabbrev)))
+  (setq completion-on-separator-character t)
+  (add-hook 'after-init-hook 'global-company-mode)
+  :bind ("<C-tab>" . company-complete))
 
-  (use-package company-box :hook (company-mode . company-box-mode)
+(use-package company-box :hook (company-mode . company-box-mode)
   :ensure t)
 #+end_src
 
@@ -277,30 +357,26 @@ load current theme from custom variable
 
 ** swiper/ivy
 #+begin_src emacs-lisp
-  (use-package swiper
-:disabled t)
+(use-package swiper
+  :ensure t)
 #+end_src
 
 ivy
 #+begin_src emacs-lisp
-      (use-package ivy
-	  :disabled t
-        :config 
-        (ivy-mode)
-        (setq ivy-use-virtual-buffers t)
-        :bind ("C-x b" . ivy-switch-buffer)
-:disabled t)
+(use-package ivy
+  :config 
+  (ivy-mode)
+  (setq ivy-use-virtual-buffers t)
+  :bind ("C-x b" . ivy-switch-buffer))
 #+end_src
 
 #+begin_src emacs-lisp
-  (use-package counsel
-  :disabled t
-	:bind 
-	("M-x" . counsel-M-x)
-	("C-x C-f" . counsel-find-file))
+(use-package counsel
+  :bind 
+  ("M-x" . counsel-M-x)
+  ("C-x C-f" . counsel-find-file))
 
-  (use-package counsel-etags
-  :disabled t)
+(use-package counsel-etags)
 #+end_src
 
 * htmlize
@@ -310,9 +386,50 @@ ivy
 #+end_src
 
 * orgmode
+  make orgmode a little more beautiful
 #+begin_src emacs-lisp
-  (use-package org
-	:ensure org-plus-contrib)
+(defun efs/org-mode-setup ()
+  (org-indent-mode)
+  (variable-pitch-mode 1)
+  (visual-line-mode 1))
+
+(defun efs/org-font-setup ()
+  ;; Replace list hyphen with dot
+  (font-lock-add-keywords 'org-mode
+						  '(("^ *\\([-]\\) "
+							 (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+  ;; Set faces for heading levels
+  (dolist (face '((org-level-1 . 1.2)
+				  (org-level-2 . 1.1)
+				  (org-level-3 . 1.05)
+				  (org-level-4 . 1.0)
+				  (org-level-5 . 1.1)
+				  (org-level-6 . 1.1)
+				  (org-level-7 . 1.1)
+				  (org-level-8 . 1.1)))
+	(set-face-attribute (car face) nil :font "Helvetica Neue" :weight 'regular :height (cdr face)))
+
+  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-block-begin-line nil :inherit 'org-block)
+  (set-face-attribute 'org-block-end-line nil :inherit 'org-block)
+  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package org
+  :hook ((org-mode . org-indent-mode)
+		 (org-mode . efs/org-mode-setup))
+  :config ((efs/org-font-setup)
+		   (setq org-src-fontify-natively t)
+		   (setq org-hide-emphasis-markers t))
+  :ensure org-plus-contrib)
 #+end_src
 
 ** org-mime
@@ -326,6 +443,7 @@ ivy
   (setq org-html-with-latex 'dvipng)
 
 #+end_src
+
 ** koma
  #+begin_src emacs-lisp
    (eval-after-load 'ox '(require 'ox-koma-letter))
@@ -348,8 +466,7 @@ ivy
 ** org-pomodoro
 #+begin_src emacs-lisp
   (use-package org-pomodoro
-	:disabled t
-    :bind (:map space-map ("o p" . org-pomodoro)))
+	:ensure t)
 #+end_src
 
 ** org-ref
@@ -415,74 +532,141 @@ set custom notes heading format
 
 ** org-roam
 #+begin_src emacs-lisp
-  (use-package org-roam
-	:after org
-	:ensure t
-	:hook 
-	((after-init . org-roam-mode))
-	:custom
-	(org-roam-directory "/mnt/piland/sascha/documents/org/")
-	:bind (:map space-map
-				(("n l" . org-roam)
-				 ("n t" . org-roam-today)
-				 ("n f" . org-roam-find-file)
-				 ("n i" . org-roam-insert)
-				 ("n g" . org-roam-show-graph))))
+	;;   (org-roam-directory "~/syncthing/documents/org/")
+	;; (setq org-roam-graph-viewer "/Applications/Safari.app/Contens/MacOS/Safari")
+(use-package org-roam
+  :after org
+  :ensure t
+  :hook 
+  ((after-init . org-roam-mode))
+  :custom
+  :bind (:map space-map
+			  (("n l" . org-roam)
+			   ("n t" . org-roam-dailies-find-today)
+			   ("n y" . org-roam-dailies-find-yesterday)
+			   ("n d" . org-roam-dailies-find-date)
+			   ("n p" . org-roam-dailies-find-previous-note)
+			   ("n f" . org-roam-node-find)
+			   ("n i" . org-roam-node-insert)
+			   ("n g" . org-roam-show-graph))))
 
-  (setq org-roam-graph-viewer "/usr/bin/vivaldi-stable")
-  (setq org-roam-graph-max-title-length 15)
-  (setq org-roam-graph-node-shape "box")
+(setq org-roam-graph-max-title-length 15)
+(setq org-roam-graph-node-shape "box")
+(setq org-roam-v2-ack t)
 
-  (use-package org-roam-bibtex
-	:after org-roam
-	:ensure t
-	:hook (org-roam-mode . org-roam-bibtex-mode)
-	:bind (:map org-mode-map
-				(("C-c n a" . orb-note-actions))))
+(use-package org-roam-bibtex
+  :after org-roam
+  :ensure t
+  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :bind (:map org-mode-map
+			  (("C-c n a" . orb-note-actions))))
 
-  (use-package org-roam-server
-	:ensure t
-	:config
-	(setq org-roam-server-host "127.0.0.1"
-		  org-roam-server-port 8080
-		  org-roam-server-export-inline-images t
-		  org-roam-server-authenticate nil
-		  org-roam-server-label-truncate t
-		  org-roam-server-label-truncate-length 60
-		  org-roam-server-label-wrap-length 20))
+(use-package org-roam-server
+  :disabled t
+  :config
+  (setq org-roam-server-host "127.0.0.1"
+        org-roam-server-port 8080
+        org-roam-server-export-inline-images t
+        org-roam-server-authenticate nil
+        org-roam-server-label-truncate t
+        org-roam-server-label-truncate-length 60
+        org-roam-server-label-wrap-length 20))
 
-  (setq orb-preformat-keywords
-		'(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords" "year" "volume" "doi" "journal" "pages"))
+(setq orb-preformat-keywords
+      '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords" "year" "volume" "doi" "journal" "pages"))
 
-  (setq orb-templates
-		'(("r" "ref" plain (function org-roam-capture--get-point) 
-		   ""
-		   :file-name "${citekey}"
-		   :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}
+(setq orb-templates
+	  '(("r" "ref" plain (function org-roam-capture--get-point) 
+		 ""
+		 :file-name "${citekey}"
+		 :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n${ref}
 
-	- tags ::
-	- keywords :: ${keywords}
+	  - tags ::
+	  - keywords :: ${keywords}
 
-	,* ${title}
-	:PROPERTIES:
-	:Custom_ID: ${citekey}
-	:URL: ${url}
-	:AUTHOR: ${author-or-editor}
-	:JOURNAL: ${journal}
-	:YEAR: ${year} 
-	:VOLUME: ${volume} 
-	:PAGES: ${pages}
-	:DOI: ${doi}
-	:URL: ${url}
-	:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")
-	:END:" 
-		   :unnarrowed t)))
+	  ,* ${title}
+	  :PROPERTIES:
+	  :Custom_ID: ${citekey}
+	  :URL: ${url}
+	  :AUTHOR: ${author-or-editor}
+	  :JOURNAL: ${journal}
+	  :YEAR: ${year} 
+	  :VOLUME: ${volume} 
+	  :PAGES: ${pages}
+	  :DOI: ${doi}
+	  :URL: ${url}
+	  :NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")
+	  :END:" 
+		 :unnarrowed t)))
 #+end_src
 
+** org-appear
+This shows markup elemenst when the cursor is on them
+#+begin_src emacs-lisp
+(use-package org-appear
+  :ensure t
+  :hook (org-mode . org-appear-mode))
+#+end_src
+
+** org-presenter
+#+begin_src emacs-lisp
+(defun dw/org-present-prepare-slide ()
+  (org-overview)
+  (org-show-entry)
+  (org-show-children))
+
+(defun dw/org-present-hook ()
+  (setq-local face-remapping-alist '((default (:height 1.5) variable-pitch)
+									 (header-line (:height 4.5) variable-pitch)
+									 (org-document-title (:height 1.75) org-document-title)
+									 (org-code (:height 1.55) org-code)
+									 (org-verbatim (:height 1.55) org-verbatim)
+									 (org-block (:height 1.25) org-block)
+									 (org-block-begin-line (:height 0.7) org-block)))
+  (setq header-line-format " ")
+  (org-appear-mode -1)
+  (org-display-inline-images)
+  (dw/org-present-prepare-slide))
+
+(defun dw/org-present-quit-hook ()
+  (setq-local face-remapping-alist '((default variable-pitch default)))
+  (setq header-line-format nil)
+  (org-present-small)
+  (org-remove-inline-images)
+  (org-appear-mode 1))
+
+(defun dw/org-present-prev ()
+  (interactive)
+  (org-present-prev)
+  (dw/org-present-prepare-slide))
+
+(defun dw/org-present-next ()
+  (interactive)
+  (org-present-next)
+  (dw/org-present-prepare-slide))
+
+(use-package org-present
+  :ensure t
+  :bind (:map org-present-mode-keymap
+			  ("C-c C-j" . dw/org-present-next)
+			  ("C-c C-k" . dw/org-present-prev))
+  :hook ((org-present-mode . dw/org-present-hook)
+		 (org-present-mode-quit . dw/org-present-quit-hook)))
+#+end_src
+#+begin_src emacs-lisp
+(use-package org-superstar
+  :ensure t
+  :after org
+  :custom (org-superstar-remove-leading-stars t)
+  :hook (org-mode . org-superstar-mode))
+#+end_src
+
+** org-visualstar
 ** helm-org
 #+begin_src emacs-lisp
   (use-package helm-org :ensure t)
 #+end_src
+
 ** capture
 #+begin_src emacs-lisp
 (define-key space-map (kbd "c c") 'org-capture)
@@ -522,7 +706,6 @@ Function to insert paper bibliography entry and org-ref link
            "biber %b" 
            "pdflatex -interaction nonstopmode -output-directory %o %f" 
            "pdflatex -interaction nonstopmode -output-directory %o %f")))
-  (setq org-src-fontify-natively t)
 
   (require 'ox-latex)
   (add-to-list
@@ -566,22 +749,24 @@ make latex fragments a little bigger
 ** babel
 *** languages
 #+begin_src emacs-lisp
-  (require 'ob-C)
-  (require 'ob-gnuplot)
-  (require 'ob-shell)
-  (setq org-babel-load-languages '((python . t)
-								   (emacs-lisp . t)
-								   (latex . t)
-								   (ipython . t)
-								   (shell . t)
-								   (gnuplot . t)
-								   (C . t)
-								   (cpp . t)
-								   (org . t)))
+(require 'ob-C)
+(require 'ob-gnuplot)
+(require 'ob-shell)
+(setq org-babel-load-languages '((python . t)
+								 (emacs-lisp . t)
+								 (latex . t)
+								 (shell . t)
+								 (sh . t)
+								 (ipython . t)
+								 (gnuplot . t)
+								 (C . t)
+								 (cpp . t)
+								 (org . t)))
 
-  (setq org-latex-listings t)
-  (add-to-list 'org-latex-packages-alist '("" "listings"))
-  (add-to-list 'org-latex-packages-alist '("" "color"))
+(setq org-src-preserve-indentation t)
+(setq org-latex-listings t)
+(add-to-list 'org-latex-packages-alist '("" "listings"))
+(add-to-list 'org-latex-packages-alist '("" "color"))
 #+end_src
 
 *** IPython support
@@ -599,44 +784,99 @@ make latex fragments a little bigger
 * email
 ** mu4e
 #+begin_src emacs-lisp
-  (require 'mu4e)
-  (custom-set-variables
-   '(mu4e-attachment-dir "~/Downloads")
-   '(mu4e-compose-signature-auto-include t)
-   '(mu4e-drafts-folder "/drafts")
-   '(mu4e-get-mail-command "mbsync -a")
-   '(mu4e-maildir "~/.mail")
-   '(mu4e-refile-dir "/archive")
-   '(mu4e-sent-folder "/sent")
-   '(mu4e-trash-folder "/trash")
-   '(mu4e-update-interval 300)
-   '(mu4e-use-fancy-chars t)
-   '(mu4e-view-show-address t)
-   '(org-mu4e-convert-to-html t)
-   '(mu4e-view-show-images t))
-  (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+  (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu/mu4e")
+(require 'mu4e)
+(custom-set-variables
+ '(mu4e-attachment-dir "~/Downloads")
+ '(mu4e-compose-signature-auto-include t)
+ '(mu4e-drafts-folder "/drafts")
+ '(mu4e-get-mail-command "mbsync -a")
+ '(mu4e-maildir "~/.mail")
+ '(mu4e-refile-dir "/archive")
+ '(mu4e-sent-folder "/sent")
+ '(mu4e-trash-folder "/trash")
+ '(mu4e-update-interval 300)
+ '(mu4e-use-fancy-chars t)
+ '(mu4e-view-show-address t)
+ '(org-mu4e-convert-to-html t)
+ '(mu4e-view-show-images t))
+(add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
 
-  (add-to-list 'mu4e-bookmarks
-	       (make-mu4e-bookmark
-		:name "PhoenixD"
-		:query "subject:phoenixd OR from:phoenixd"
-		:key ?h))
-  (require 'org-mu4e)
-  (defalias 'org-mail 'org-mu4e-compose-org-mode)
+(add-to-list 'mu4e-bookmarks
+			 (make-mu4e-bookmark
+			  :name "PhoenixD"
+			  :query "subject:phoenixd OR from:phoenixd"
+			  :key ?h))
+(require 'org-mu4e)
+(defalias 'org-mail 'org-mu4e-compose-org-mode)
 
-  (add-hook 'mu4e-compose-post-hook
-	    (defun do-compose-stuff ()
-	      "My settings for message composition."
-	      (org-mu4e-compose-org-mode)))
+(add-hook 'mu4e-compose-post-hook
+		  (defun do-compose-stuff ()
+			"My settings for message composition."
+			(org-mu4e-compose-org-mode)))
 
-  (defun htmlize-and-send ()
-    "When in an org-mu4e-compose-org-mode message, htmlize and send it."
-    (interactive)
-    (when (member 'org~mu4e-mime-switch-headers-or-body post-command-hook)
-      (org-mime-htmlize)
-      (org-mu4e-compose-org-mode)
-      (mu4e-compose-mode)
-      (message-send-and-exit)))
+(defun htmlize-and-send ()
+  "When in an org-mu4e-compose-org-mode message, htmlize and send it."
+  (interactive)
+  (when (member 'org~mu4e-mime-switch-headers-or-body post-command-hook)
+	(org-mime-htmlize)
+	(org-mu4e-compose-org-mode)
+	(mu4e-compose-mode)
+	(message-send-and-exit)))
+
+(defun set-tubs-smtp ()
+  (setq send-mail-function (quote smtpmail-send-it))
+  (setq smtpmail-smtp-server "groupware.tu-bs.de")
+  (setq smtpmail-smtp-user "sasfrick")
+  (setq smtpmail-smtp-service 465)
+  (setq smtpmail-stream-type 'ssl)
+  (setq user-full-name "Sascha Fricke")
+  (setq user-mail-address "s.fricke@tu-bs.de"))
+
+(defun set-icg-smtp ()
+  (setq send-mail-function (quote smtpmail-send-it))
+  (setq smtpmail-smtp-server "europa.cg.cs.tu-bs.de")
+  (setq smtpmail-smtp-user "fricke")
+  (setq smtpmail-smtp-service 587)
+  (setq smtpmail-stream-type 'starttls)
+  (setq user-full-name "Sascha Fricke")
+  (setq user-mail-address "fricke@cg.cs.tu-bs.de"))
+
+(defun set-gmail-smtp ()
+  (setq send-mail-function (quote smtpmail-send-it))
+  (setq smtpmail-smtp-server "smtp.gmail.com")
+  (setq smtpmail-smtp-service 465)
+  (setq smtpmail-stream-type 'ssl)
+  (setq user-full-name "Sascha Fricke")
+  (setq user-mail-address "sascha.frigge@gmail.com"))
+;; (set-tubs-smtp)
+(set-icg-smtp)
+;; (set-gmail-smtp)
+
+(setq mu4e-contexts
+	      `(,(make-mu4e-context
+		 :name "ICG"
+		 :enter-func (lambda () (mu4e-message "Entering ICG context"))
+		 :leave-func (lambda () (mu4e-message "Leaving ICG context"))
+		 :vars '((user-mail-address . "fricke@cg.cs.tu-bs.de" )
+				 (user-full-name . "Sascha Fricke")
+				 (smtpmail-smtp-server . "europa.cg.cs.tu-bs.de")
+				 (smtpmail-smtp-user . "fricke")
+				 (smtpmail-smtp-service . 465)
+				 (smtpmail-stream-type . ssl)
+				 )),
+		(make-mu4e-context
+		 :name "TUBS"
+		 :enter-func (lambda () (mu4e-message "Entering TUBS context"))
+		 :leave-func (lambda () (mu4e-message "Leaving TUBS context"))
+		 :vars '((user-mail-address . "s.fricke@tu-bs.de" )
+				 (user-full-name . "Sascha Fricke")
+				 (smtpmail-smtp-server . "groupware.tu-bs.de")
+				 (smtpmail-smtp-user . "sasfrick")
+				 (smtpmail-smtp-service . 465)
+				 (smtpmail-stream-type . ssl)
+				 ))))
+
 #+end_src
 
 *** mu4e-views (xwidget-webkit support)
@@ -656,11 +896,11 @@ make latex fragments a little bigger
 
 * projectile
 #+begin_src emacs-lisp
-  (use-package projectile
+(use-package projectile
   :ensure t
-	:config (setq projectile-mode t)
-	(define-key space-map (kbd "p") 'projectile-command-map)
-	(setq projectile-tags-command "ctags -Re -f '%s' --fields=+iaSt --extra=+q --exclude='.git' %s"))
+  :config (setq projectile-mode t)
+  (define-key space-map (kbd "p") 'projectile-command-map)
+  (setq projectile-tags-command "ctags -Re -f '%s' --fields=+iaSt --extra=+q --exclude='.git' %s"))
 #+end_src
 
 ** org-projectile
@@ -675,9 +915,9 @@ make latex fragments a little bigger
 
 * ag
 #+begin_src emacs-lisp
-  (use-package ag
+(use-package ag
   :ensure t
-    :config (setq ag-group-matches nil))
+  :config (setq ag-group-matches nil))
 #+end_src
 
 * wgrep
@@ -693,6 +933,7 @@ make latex fragments a little bigger
   (require 'calfw-org)
   (setq cfw:org-overwrite-default-keybinding t)
 #+end_src
+
 * ctags
 #+begin_src emacs-lisp
   (setq ctags-update-command "/usr/bin/ctags")
@@ -722,9 +963,9 @@ make latex fragments a little bigger
 
 * magit
 #+begin_src emacs-lisp
-  (use-package magit
+(use-package magit
   :ensure t
-	:defer t)
+  :defer t)
 #+end_src 
 
 * smerge
@@ -751,13 +992,14 @@ make latex fragments a little bigger
 
   (add-hook 'smerge-mode-hook 'my-smerge-bindings)
 #+end_src 
+
 * extra file type modes
   
 ** cuda-mode
 dont use cuda-mode for now as it doesnt work with smart-indent
 
 #+begin_src emacs-lisp
-  (use-package cuda-mode
+(use-package cuda-mode
   :disabled t)
 #+end_src
 
@@ -769,21 +1011,21 @@ just load c++ mode for cuda files
 
 ** opencl-mode
 #+begin_src emacs-lisp
-  (use-package opencl-mode
+(use-package opencl-mode
   :disabled t)
 #+end_src
 
 ** glsl-mode
 #+begin_src emacs-lisp
-  (use-package glsl-mode
-:ensure t)
+(use-package glsl-mode
+  :ensure t)
 
-  (add-to-list 'auto-mode-alist '("\\.comp\\'" . glsl-mode))
-  (add-to-list 'auto-mode-alist '("\\.rgen\\'" . glsl-mode))
-  (add-to-list 'auto-mode-alist '("\\.rchit\\'" . glsl-mode))
-  (add-to-list 'auto-mode-alist '("\\.rahit\\'" . glsl-mode))
-  (add-to-list 'auto-mode-alist '("\\.rmiss\\'" . glsl-mode))
- 
+(add-to-list 'auto-mode-alist '("\\.comp\\'" . glsl-mode))
+(add-to-list 'auto-mode-alist '("\\.rgen\\'" . glsl-mode))
+(add-to-list 'auto-mode-alist '("\\.rchit\\'" . glsl-mode))
+(add-to-list 'auto-mode-alist '("\\.rahit\\'" . glsl-mode))
+(add-to-list 'auto-mode-alist '("\\.rmiss\\'" . glsl-mode))
+
 #+end_src
 
 ** conf-mode for mtstudio files
@@ -796,15 +1038,16 @@ just load c++ mode for cuda files
 * lsp-mode
 
 #+begin_src emacs-lisp
-  (use-package lsp-mode
-	:hook (c++-mode . lsp) (c-mode . lsp) (pyhton-mode . lsp)
-	:ensure t)
-  (use-package lsp-ui :commands lsp-ui-mode
-	:ensure t)
-  (use-package company-lsp :commands company-lsp
-	:ensure t)
-  (use-package helm-lsp :commands helm-lsp-workspace-symbol
-	:ensure t)
+(use-package lsp-mode
+  :hook (c++-mode . lsp) (c-mode . lsp) (pyhton-mode . lsp)
+  :ensure t)
+(use-package lsp-ui :commands lsp-ui-mode
+  :disabled t
+  :ensure t)
+(use-package company-lsp :commands company-lsp
+  :ensure t)
+(use-package helm-lsp :commands helm-lsp-workspace-symbol
+  :ensure t)
 #+end_src
 
 ** dap-mode
@@ -851,15 +1094,15 @@ just load c++ mode for cuda files
 #+end_src
 ** cmake-mode
 #+begin_src emacs-lisp
-  (use-package cmake-mode
-:ensure t)
+(use-package cmake-mode
+  :ensure t)
 #+end_src
 
 ** cmake-ide
 #+begin_src emacs-lisp
-  (use-package cmake-ide
-	:config (cmake-ide-setup)
-	:disabled t)
+(use-package cmake-ide
+  :config (cmake-ide-setup)
+  :disabled t)
 #+end_src
 
 *set cmake-build-dir to current dir* 
@@ -876,9 +1119,9 @@ the current directory from eshell.
 
 ** clang-format
 #+begin_src emacs-lisp
-  (use-package clang-format
+(use-package clang-format
   :ensure t
-               :config (define-key evil-normal-state-map (kbd "SPC c f") 'clang-format-region))
+  :config (define-key evil-normal-state-map (kbd "SPC c f") 'clang-format-region))
 #+end_src
 
 * tabify/untabify shortcuts
@@ -896,35 +1139,39 @@ the current directory from eshell.
 
 ** Jupyter / IPython notebooks
 #+begin_src emacs-lisp
-  (use-package ein 
-	:disabled t)
+  (use-package ein :ensure t)
 #+end_src
+
+#+RESULTS:
 
 * Debugging
 ** GDB
  #+begin_src emacs-lisp
    (setq gdb-dispaly-io-nopopup t)
  #+end_src
- ** gdb-mi
+** gdb-mi
  #+begin_src emacs-lisp
-   (use-package gdb-mi
-	 :straight (:host github :repo "weirdNox/emacs-gdb" :files ("*.el" "*.c" "*.h" "Makefile"))
-	 :disabled t
-	 :init
-	 (fmakunbound 'gdb)
-	 (fmakunbound 'gdb-enable-debug))
+(use-package gdb-mi
+  :straight (:host github :repo "weirdNox/emacs-gdb" :files ("*.el" "*.c" "*.h" "Makefile"))
+  :disabled t
+  :init
+  (fmakunbound 'gdb)
+  (fmakunbound 'gdb-enable-debug))
 #+end_src
+
 ** realgud
  #+begin_src emacs-lisp
    ;; (use-package realgud)
  #+end_src
+ 
 * pdftools
 #+begin_src emacs-lisp
-  (use-package pdf-tools
+(use-package pdf-tools
   :ensure t
-               :config (pdf-tools-install))
+  :config (pdf-tools-install))
 
 #+end_src
+
 * Paperless
 #+begin_src emacs-lisp
 	(use-package paperless
@@ -945,11 +1192,11 @@ the current directory from eshell.
 * latex
 ** auctex
 #+begin_src emacs-lisp
-  (use-package tex :ensure auctex)
-  (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-		TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
-		TeX-source-correlate-start-server t)
-  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
+(use-package tex :ensure auctex)
+(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+      TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
+      TeX-source-correlate-start-server t)
+(add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
 #+end_src
 
 ** biblatex

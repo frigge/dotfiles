@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 
-echo "\\documentclass[preview]{standalone}
+echo "\\documentclass[varwidth]{standalone}
+\\usepackage{psfrag}
 \\usepackage{xcolor}
 \\usepackage{amsfonts}
 \\usepackage{amsmath}
+\\usepackage{epsfig}
 \\begin{document}
 $1
 \\end{document}" > tmp.tex
 latex tmp.tex
-dvipng -D 1200 -bg Transparent tmp.dvi -o $2
-# dvisvgm tmp.dvi -o $2
-rm tmp*
+# pdflatex tmp.tex
+dvipng -D 900 -bg Transparent tmp.dvi -o $2.png
+# convert tmp.pdf $2.png
+rm tmp.{aux,log,dvi,pdf}
+# rm tmp.{aux,log,tex}
