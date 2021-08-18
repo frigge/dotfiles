@@ -1,6 +1,7 @@
 #+Title: Emacs Configuration
 
 * misc
+** search paths
    Add ~/.emacs.d to load path
 #+begin_src emacs-lisp
 (add-to-list 'load-path "~/.emacs.d/modules/")
@@ -14,20 +15,10 @@
   :config (global-undo-tree-mode))
 #+end_src
    
-** pixel scrolling
- #+begin_src emacs-lisp
-   (pixel-scroll-mode)
- #+end_src
-   
 ** start in eshell
 
  #+begin_src emacs-lisp
    (eshell)
- #+end_src
-
-** single window with i3
- #+begin_src emacs-lisp
-   (setq pop-up-frames 'graphic-only)
  #+end_src
 
 ** bookmarks
@@ -60,13 +51,23 @@
                 (rename-buffer name))))
 #+end_src
 
-** hide mode line
+** tabify/untabify shortcuts
 #+begin_src emacs-lisp
-(use-package hide-mode-line
-  :config (add-hook 'completion-list-mode-hook #'hide-mode-line-mode))
+  (define-key space-map (kbd "t t") 'tabify)
+  (define-key space-map (kbd "t u") 'untabify)
 #+end_src
 
-* yasnippet
+** default browser
+#+begin_src emacs-lisp
+  (setq browse-url-generic-program "vivaldi-stable")
+  (setq browse-url-browser-function 'browse-url-generic)
+#+end_src
+
+** start emacs server
+#+begin_src emacs-lisp
+(server-start)
+#+end_src
+** yasnippet
 #+begin_src emacs-lisp
 (use-package yasnippet
   :config (yas-global-mode 1)
@@ -76,78 +77,52 @@
   :ensure t)
 #+end_src
 
-* helm
+** helm
 #+begin_src emacs-lisp
 (use-package helm
   :ensure t)
 #+end_src
 
-* evil
-#+begin_src emacs-lisp
-(use-package evil
-  :config (evil-mode t)
-  :ensure t)
-
-(use-package evil-org
-  :ensure t
-  :after org
-  :hook (org-mode . evil-org-mode))
-
-(use-package evil-numbers
-  :ensure t
-  :bind (:map evil-normal-state-map
-			  ("+" . evil-numbers/inc-at-pt)
-			  ("-" . evil-numbers/dec-at-pt)
-			  :map evil-visual-state-map
-			  ("+" . evil-numbers/inc-at-pt)
-			  ("-" . evil-numbers/dec-at-pt)))
-
-(use-package evil-quickscope
-  :ensure t
-  :config (global-evil-quickscope-mode t))
-
-(use-package evil-surround
-  :ensure t
-  :config (global-evil-surround-mode 1))
-
-
-(use-package evil-visualstar
-  :ensure t
-  :config (global-evil-visualstar-mode t))
-
-(use-package evil-commentary
-  :ensure t
-  :config (evil-commentary-mode t))
-
-(use-package evil-string-inflection
-  :ensure t)
-#+end_src
-
-** don't use SPC and RET as motion keys in normal mode
-#+begin_src emacs-lisp
-  (defun my-move-key (keymap-from keymap-to key)
-	"Moves key binding from one keymap to another, deleting from the old location. "
-	(define-key keymap-to key (lookup-key keymap-from key))
-	(define-key keymap-from key nil))
-  (my-move-key evil-motion-state-map evil-normal-state-map (kbd "RET"))
-  (my-move-key evil-motion-state-map evil-normal-state-map " ")
-#+end_src
+** extra file type modes
   
-** SPC as leader key in evil normal mode
+*** cuda-mode
+dont use cuda-mode for now as it doesnt work with smart-indent
 
 #+begin_src emacs-lisp
-  (define-prefix-command 'space-map)
-  (define-key evil-normal-state-map (kbd "SPC") 'space-map)
-  (define-key evil-motion-state-map (kbd "SPC") 'space-map)
-  (define-key space-map (kbd "x") 'counsel-M-x)
-  ;; (define-key space-map (kbd "b") 'ivy-switch-buffer)
-  (define-key space-map (kbd "f") 'counsel-find-file)
-  (define-key space-map (kbd "o") 'ace-window)
-  (define-key space-map (kbd "0") 'delete-window)
-  (define-key space-map (kbd "1") 'delete-other-windows)
-  (define-key space-map (kbd "2") 'split-window-below)
-  (define-key space-map (kbd "3") 'split-window-right)
-  (define-key space-map (kbd "/") 'swiper)
+(use-package cuda-mode
+  :disabled t)
+#+end_src
+
+just load c++ mode for cuda files
+#+begin_src emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.cu\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.cuh\\'" . c++-mode))
+#+end_src
+
+*** opencl-mode
+#+begin_src emacs-lisp
+(use-package opencl-mode
+  :disabled t)
+#+end_src
+
+*** glsl-mode
+#+begin_src emacs-lisp
+(use-package glsl-mode
+  :ensure t)
+
+(add-to-list 'auto-mode-alist '("\\.comp\\'" . glsl-mode))
+(add-to-list 'auto-mode-alist '("\\.rgen\\'" . glsl-mode))
+(add-to-list 'auto-mode-alist '("\\.rchit\\'" . glsl-mode))
+(add-to-list 'auto-mode-alist '("\\.rahit\\'" . glsl-mode))
+(add-to-list 'auto-mode-alist '("\\.rmiss\\'" . glsl-mode))
+
+#+end_src
+
+*** conf-mode for mtstudio files
+#+begin_src emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.rg\\'" . conf-mode))
+  (add-to-list 'auto-mode-alist '("\\.prj\\'" . conf-mode))
+
 #+end_src
 
 * gui
@@ -355,13 +330,7 @@ load current theme from custom variable
     :config (global-diff-hl-mode))
 #+end_src
 
-** swiper/ivy
-#+begin_src emacs-lisp
-(use-package swiper
-  :ensure t)
-#+end_src
-
-ivy
+** ivy
 #+begin_src emacs-lisp
 (use-package ivy
   :config 
@@ -370,6 +339,7 @@ ivy
   :bind ("C-x b" . ivy-switch-buffer))
 #+end_src
 
+** Counsel
 #+begin_src emacs-lisp
 (use-package counsel
   :bind 
@@ -379,13 +349,92 @@ ivy
 (use-package counsel-etags)
 #+end_src
 
-* htmlize
+** hide mode line
 #+begin_src emacs-lisp
-  (use-package htmlize
-    :ensure t)
+(use-package hide-mode-line
+  :config (add-hook 'completion-list-mode-hook #'hide-mode-line-mode))
 #+end_src
 
-* orgmode
+** pixel scrolling
+ #+begin_src emacs-lisp
+   (pixel-scroll-mode)
+ #+end_src
+   
+** single window with i3
+ #+begin_src emacs-lisp
+   (setq pop-up-frames 'graphic-only)
+ #+end_src
+
+* evil
+#+begin_src emacs-lisp
+(use-package evil
+  :config (evil-mode t)
+  :ensure t)
+
+(use-package evil-org
+  :ensure t
+  :after org
+  :hook (org-mode . evil-org-mode))
+
+(use-package evil-numbers
+  :ensure t
+  :bind (:map evil-normal-state-map
+			  ("+" . evil-numbers/inc-at-pt)
+			  ("-" . evil-numbers/dec-at-pt)
+			  :map evil-visual-state-map
+			  ("+" . evil-numbers/inc-at-pt)
+			  ("-" . evil-numbers/dec-at-pt)))
+
+(use-package evil-quickscope
+  :ensure t
+  :config (global-evil-quickscope-mode t))
+
+(use-package evil-surround
+  :ensure t
+  :config (global-evil-surround-mode 1))
+
+
+(use-package evil-visualstar
+  :ensure t
+  :config (global-evil-visualstar-mode t))
+
+(use-package evil-commentary
+  :ensure t
+  :config (evil-commentary-mode t))
+
+(use-package evil-string-inflection
+  :ensure t)
+#+end_src
+
+** don't use SPC and RET as motion keys in normal mode
+#+begin_src emacs-lisp
+  (defun my-move-key (keymap-from keymap-to key)
+	"Moves key binding from one keymap to another, deleting from the old location. "
+	(define-key keymap-to key (lookup-key keymap-from key))
+	(define-key keymap-from key nil))
+  (my-move-key evil-motion-state-map evil-normal-state-map (kbd "RET"))
+  (my-move-key evil-motion-state-map evil-normal-state-map " ")
+#+end_src
+  
+** SPC as leader key in evil normal mode
+
+#+begin_src emacs-lisp
+  (define-prefix-command 'space-map)
+  (define-key evil-normal-state-map (kbd "SPC") 'space-map)
+  (define-key evil-motion-state-map (kbd "SPC") 'space-map)
+  (define-key space-map (kbd "x") 'counsel-M-x)
+  ;; (define-key space-map (kbd "b") 'ivy-switch-buffer)
+  (define-key space-map (kbd "f") 'counsel-find-file)
+  (define-key space-map (kbd "o") 'ace-window)
+  (define-key space-map (kbd "0") 'delete-window)
+  (define-key space-map (kbd "1") 'delete-other-windows)
+  (define-key space-map (kbd "2") 'split-window-below)
+  (define-key space-map (kbd "3") 'split-window-right)
+  (define-key space-map (kbd "/") 'swiper)
+#+end_src
+
+* Organization
+** orgmode
   make orgmode a little more beautiful
 #+begin_src emacs-lisp
 (defun efs/org-mode-setup ()
@@ -431,7 +480,7 @@ ivy
   :ensure org-plus-contrib)
 #+end_src
 
-** org-mime
+*** org-mime
 #+begin_src emacs-lisp
   (use-package org-mime 
     :ensure t)
@@ -443,18 +492,18 @@ ivy
 
 #+end_src
 
-** koma
+*** koma
  #+begin_src emacs-lisp
    (eval-after-load 'ox '(require 'ox-koma-letter))
  #+end_src
 
-** org-reveal
+*** org-reveal
  #+begin_src emacs-lisp
      (use-package ox-reveal
     :ensure t)
  #+end_src
 
-** org-pdfview
+*** org-pdfview
  #+begin_src emacs-lisp
      (use-package org-pdftools
     :ensure t)
@@ -462,13 +511,13 @@ ivy
 (add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open))
  #+end_src
 
-** org-pomodoro
+*** org-pomodoro
 #+begin_src emacs-lisp
   (use-package org-pomodoro
 	:ensure t)
 #+end_src
 
-** org-ref
+*** org-ref
 #+begin_src emacs-lisp
   (use-package org-ref
   :ensure t
@@ -514,13 +563,13 @@ set custom notes heading format
 ")
 #+end_src
 
-** org-noter
+*** org-noter
 #+begin_src emacs-lisp
   (use-package org-noter
     :ensure t)
 #+end_src
 
-** org-download
+*** org-download
 #+begin_src emacs-lisp
   (use-package org-download
   :ensure t
@@ -529,7 +578,7 @@ set custom notes heading format
 						   ("d y" . org-download-yank))))
 #+end_src
 
-** org-roam
+*** org-roam
 #+begin_src emacs-lisp
 	;;   (org-roam-directory "~/syncthing/documents/org/")
 	;; (setq org-roam-graph-viewer "/Applications/Safari.app/Contens/MacOS/Safari")
@@ -598,7 +647,7 @@ set custom notes heading format
 		 :unnarrowed t)))
 #+end_src
 
-** org-appear
+*** org-appear
 This shows markup elemenst when the cursor is on them
 #+begin_src emacs-lisp
 (use-package org-appear
@@ -606,7 +655,7 @@ This shows markup elemenst when the cursor is on them
   :hook (org-mode . org-appear-mode))
 #+end_src
 
-** org-presenter
+*** org-presenter
 #+begin_src emacs-lisp
 (defun dw/org-present-prepare-slide ()
   (org-overview)
@@ -659,18 +708,18 @@ This shows markup elemenst when the cursor is on them
   :hook (org-mode . org-superstar-mode))
 #+end_src
 
-** org-visualstar
-** helm-org
+*** org-visualstar
+*** helm-org
 #+begin_src emacs-lisp
   (use-package helm-org :ensure t)
 #+end_src
 
-** capture
+*** capture
 #+begin_src emacs-lisp
 (define-key space-map (kbd "c c") 'org-capture)
 #+end_src
 
-*** capture templates
+**** capture templates
 
 Function to insert paper bibliography entry and org-ref link
 #+begin_src emacs-lisp
@@ -687,7 +736,7 @@ Function to insert paper bibliography entry and org-ref link
   (setq org-capture-templates 
 			   '(("p" "Paper" entry (file "/mnt/piland/sascha/documents/research/papers.org") "* PREPARE %x\n  :PROPERTIES:\n  :Source:\n  :End:")))
 #+end_src
-** agenda
+*** agenda
 #+begin_src emacs-lisp
   (setq org-agenda-custom-commands
 		'(("p" . "Papers search")
@@ -695,7 +744,7 @@ Function to insert paper bibliography entry and org-ref link
 		  ("pd" tags "+paper+wave_optics+diffraction-notes")))
 #+end_src
 
-** export
+*** export
 #+begin_src emacs-lisp
   (setq org-latex-prefer-user-labels t)
   (setq org-latex-pdf-process
@@ -715,7 +764,7 @@ Function to insert paper bibliography entry and org-ref link
   \[EXTRA]"))
 #+end_src
 
-*** ICG Tu bs latex documentclass
+**** ICG Tu bs latex documentclass
 #+begin_src emacs-lisp
   (add-to-list
    'org-latex-classes
@@ -727,7 +776,7 @@ Function to insert paper bibliography entry and org-ref link
      ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
 #+end_src
 
-** caldav
+*** caldav
 #+begin_src emacs-lisp
   (use-package org-caldav
   :ensure t
@@ -738,14 +787,14 @@ Function to insert paper bibliography entry and org-ref link
     (setq org-caldav-files '("/mnt/piland/sascha/documents/todo.org")))
 #+end_src
 
-** misc
+*** misc
 make latex fragments a little bigger
 #+begin_src emacs-lisp
 (plist-put org-format-latex-options :scale 1.5)
 #+end_src
 
-** babel
-*** languages
+*** babel
+**** languages
 #+begin_src emacs-lisp
 (require 'ob-C)
 (require 'ob-gnuplot)
@@ -767,20 +816,28 @@ make latex fragments a little bigger
 (add-to-list 'org-latex-packages-alist '("" "color"))
 #+end_src
 
-*** IPython support
+**** IPython support
 #+begin_src emacs-lisp
   (use-package ob-ipython
 :ensure t)
 #+end_src
 
-* gnuplot
+*** htmlize
 #+begin_src emacs-lisp
-  (use-package gnuplot
-	:ensure t)
+  (use-package htmlize
+    :ensure t)
 #+end_src
 
-* email
-** mu4e
+** calfw
+#+begin_src emacs-lisp
+  (straight-use-package '(emacs-calfw :type git :host github :repo "zemaye/emacs-calfw"))
+  (require 'calfw)
+  (require 'calfw-org)
+  (setq cfw:org-overwrite-default-keybinding t)
+#+end_src
+
+** email
+*** mu4e
 #+begin_src emacs-lisp
   (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu/mu4e")
 (require 'mu4e)
@@ -877,13 +934,13 @@ make latex fragments a little bigger
 
 #+end_src
 
-*** mu4e-views (xwidget-webkit support)
+**** mu4e-views (xwidget-webkit support)
 #+begin_src emacs-lisp
 (use-package mu4e-views
   :straight (mu4e-views :type git :host github :repo "lordpretzel/mu4e-views"))
 #+end_src
 
-* mu4e-alert
+*** mu4e-alert
 #+begin_src emacs-lisp
   (use-package mu4e-alert
   :ensure t
@@ -892,81 +949,35 @@ make latex fragments a little bigger
 			 (mu4e-alert-enable-notifications))
 #+end_src
 
-* projectile
-#+begin_src emacs-lisp
-(use-package projectile
-  :ensure t
-  :config (setq projectile-mode t)
-  (define-key space-map (kbd "p") 'projectile-command-map)
-  (setq projectile-tags-command "ctags -Re -f '%s' --fields=+iaSt --extra=+q --exclude='.git' %s"))
-#+end_src
-
-** org-projectile
-#+begin_src emacs-lisp
-  (use-package org-projectile
-  :ensure t
-	:bind (:map space-map ("c p" . org-projectile-project-todo-completing-read))
-	:config (progn (org-projectile-per-project)
-				   (setq org-projectile-per-repo-filepath "project_todo.org")
-				   (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))))
-#+end_src
-
-* ag
+* Searching
+** ag
 #+begin_src emacs-lisp
 (use-package ag
   :ensure t
   :config (setq ag-group-matches nil))
 #+end_src
 
-* wgrep
+** wgrep
 #+begin_src emacs-lisp
   (use-package wgrep :ensure t)
   (use-package wgrep-ag :ensure t)
 #+end_src
 
-* calfw
+** swiper
 #+begin_src emacs-lisp
-  (straight-use-package '(emacs-calfw :type git :host github :repo "zemaye/emacs-calfw"))
-  (require 'calfw)
-  (require 'calfw-org)
-  (setq cfw:org-overwrite-default-keybinding t)
+(use-package swiper
+  :ensure t)
 #+end_src
 
-* ctags
-#+begin_src emacs-lisp
-  (setq ctags-update-command "/usr/bin/ctags")
-  (setq ctags-update-delay-seconds 10)
-  (setq ctags-update-other-options
-		(quote
-		 ("--fields=+iaSt"
-		  "--extra=+q"
-		  "--exclude='*.elc'"
-		  "--exclude='*.class'"
-		  "--exclude='.git'"
-		  "--exclude='.svn'"
-		  "--exclude='SCCS'"
-		  "--exclude='RCS'"
-		  "--exclude='CVS'"
-		  "--exclude='EIFGEN'"
-		  "-R"
-		  "-e")))
-#+end_src
-
-* flycheck
-#+begin_src emacs-lisp
-  (use-package flycheck
-	:ensure t
-	:config (global-flycheck-mode))
-#+end_src
-
-* magit
+* Version Control
+** magit
 #+begin_src emacs-lisp
 (use-package magit
   :ensure t
   :defer t)
 #+end_src 
 
-* smerge
+** smerge
 #+begin_src emacs-lisp
   (require 'smerge-mode)
   (define-key space-map (kbd "s s") 'smerge-mode)
@@ -991,49 +1002,8 @@ make latex fragments a little bigger
   (add-hook 'smerge-mode-hook 'my-smerge-bindings)
 #+end_src 
 
-* extra file type modes
-  
-** cuda-mode
-dont use cuda-mode for now as it doesnt work with smart-indent
-
-#+begin_src emacs-lisp
-(use-package cuda-mode
-  :disabled t)
-#+end_src
-
-just load c++ mode for cuda files
-#+begin_src emacs-lisp
-  (add-to-list 'auto-mode-alist '("\\.cu\\'" . c++-mode))
-  (add-to-list 'auto-mode-alist '("\\.cuh\\'" . c++-mode))
-#+end_src
-
-** opencl-mode
-#+begin_src emacs-lisp
-(use-package opencl-mode
-  :disabled t)
-#+end_src
-
-** glsl-mode
-#+begin_src emacs-lisp
-(use-package glsl-mode
-  :ensure t)
-
-(add-to-list 'auto-mode-alist '("\\.comp\\'" . glsl-mode))
-(add-to-list 'auto-mode-alist '("\\.rgen\\'" . glsl-mode))
-(add-to-list 'auto-mode-alist '("\\.rchit\\'" . glsl-mode))
-(add-to-list 'auto-mode-alist '("\\.rahit\\'" . glsl-mode))
-(add-to-list 'auto-mode-alist '("\\.rmiss\\'" . glsl-mode))
-
-#+end_src
-
-** conf-mode for mtstudio files
-#+begin_src emacs-lisp
-  (add-to-list 'auto-mode-alist '("\\.rg\\'" . conf-mode))
-  (add-to-list 'auto-mode-alist '("\\.prj\\'" . conf-mode))
-
-#+end_src
-
-* lsp-mode
+* IDE Features
+** lsp-mode
 
 #+begin_src emacs-lisp
 (use-package lsp-mode
@@ -1048,7 +1018,7 @@ just load c++ mode for cuda files
   :ensure t)
 #+end_src
 
-** dap-mode
+*** dap-mode
 #+begin_src emacs-lisp
   (use-package dap-mode :disabled t)
   ;; (require 'dap-gdb-lldb)
@@ -1056,8 +1026,8 @@ just load c++ mode for cuda files
   ;; (require 'dap-launch)
 #+end_src
 
-* c++
-** semantic-refactor
+** c++
+*** semantic-refactor
 #+begin_src emacs-lisp
   (use-package srefactor
 	:disabled t)
@@ -1069,7 +1039,7 @@ just load c++ mode for cuda files
   ;; (define-key space-map (kbd "SPC R") 'srefactor-refactor-at-point)
 #+end_src
 
-** C Style Formatting
+*** C Style Formatting
 #+begin_src emacs-lisp
 	  (setq indent-tabs-mode nil)
 
@@ -1090,13 +1060,13 @@ just load c++ mode for cuda files
 	  (setq-default tab-width 4)
 	  (setq-default default-tab-width 4)
 #+end_src
-** cmake-mode
+*** cmake-mode
 #+begin_src emacs-lisp
 (use-package cmake-mode
   :ensure t)
 #+end_src
 
-** cmake-ide
+*** cmake-ide
 #+begin_src emacs-lisp
 (use-package cmake-ide
   :config (cmake-ide-setup)
@@ -1115,39 +1085,33 @@ the current directory from eshell.
   ;;   (setq cmake-build-dir default-directory))
 #+end_src
 
-** clang-format
+*** clang-format
 #+begin_src emacs-lisp
 (use-package clang-format
   :ensure t
   :config (define-key evil-normal-state-map (kbd "SPC c f") 'clang-format-region))
 #+end_src
 
-* tabify/untabify shortcuts
-#+begin_src emacs-lisp
-  (define-key space-map (kbd "t t") 'tabify)
-  (define-key space-map (kbd "t u") 'untabify)
-#+end_src
-
-* Python
+** Python
 #+begin_src emacs-lisp
   (setq python-shell-interpreter "ipython3")
   (setq python-shell-interpreter-args "--simple-prompt -i")
   (push "ipython3" python-shell-completion-native-disabled-interpreters)
 #+end_src
 
-** Jupyter / IPython notebooks
+*** Jupyter / IPython notebooks
 #+begin_src emacs-lisp
   (use-package ein :ensure t)
 #+end_src
 
 #+RESULTS:
 
-* Debugging
-** GDB
+** Debugging
+*** GDB
  #+begin_src emacs-lisp
    (setq gdb-dispaly-io-nopopup t)
  #+end_src
-** gdb-mi
+*** gdb-mi
  #+begin_src emacs-lisp
 (use-package gdb-mi
   :straight (:host github :repo "weirdNox/emacs-gdb" :files ("*.el" "*.c" "*.h" "Makefile"))
@@ -1157,12 +1121,59 @@ the current directory from eshell.
   (fmakunbound 'gdb-enable-debug))
 #+end_src
 
-** realgud
+*** realgud
  #+begin_src emacs-lisp
    ;; (use-package realgud)
  #+end_src
  
-* pdftools
+** flycheck
+#+begin_src emacs-lisp
+  (use-package flycheck
+	:ensure t
+	:config (global-flycheck-mode))
+#+end_src
+
+** ctags
+#+begin_src emacs-lisp
+  (setq ctags-update-command "/usr/bin/ctags")
+  (setq ctags-update-delay-seconds 10)
+  (setq ctags-update-other-options
+		(quote
+		 ("--fields=+iaSt"
+		  "--extra=+q"
+		  "--exclude='*.elc'"
+		  "--exclude='*.class'"
+		  "--exclude='.git'"
+		  "--exclude='.svn'"
+		  "--exclude='SCCS'"
+		  "--exclude='RCS'"
+		  "--exclude='CVS'"
+		  "--exclude='EIFGEN'"
+		  "-R"
+		  "-e")))
+#+end_src
+
+** projectile
+#+begin_src emacs-lisp
+(use-package projectile
+  :ensure t
+  :config (setq projectile-mode t)
+  (define-key space-map (kbd "p") 'projectile-command-map)
+  (setq projectile-tags-command "ctags -Re -f '%s' --fields=+iaSt --extra=+q --exclude='.git' %s"))
+#+end_src
+
+*** org-projectile
+#+begin_src emacs-lisp
+  (use-package org-projectile
+  :ensure t
+	:bind (:map space-map ("c p" . org-projectile-project-todo-completing-read))
+	:config (progn (org-projectile-per-project)
+				   (setq org-projectile-per-repo-filepath "project_todo.org")
+				   (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))))
+#+end_src
+
+* Writing
+** pdftools
 #+begin_src emacs-lisp
 (use-package pdf-tools
   :ensure t
@@ -1170,7 +1181,7 @@ the current directory from eshell.
 
 #+end_src
 
-* Paperless
+** Paperless
 #+begin_src emacs-lisp
 	(use-package paperless
 	:disabled t
@@ -1181,14 +1192,8 @@ the current directory from eshell.
 
 #+end_src
 
-* default browser
-#+begin_src emacs-lisp
-  (setq browse-url-generic-program "vivaldi-stable")
-  (setq browse-url-browser-function 'browse-url-generic)
-#+end_src
-
-* latex
-** auctex
+** latex
+*** auctex
 #+begin_src emacs-lisp
 (use-package tex :ensure auctex)
 (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
@@ -1197,7 +1202,7 @@ the current directory from eshell.
 (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
 #+end_src
 
-** biblatex
+*** biblatex
    set default bibtex dialect
 #+begin_src emacs-lisp
   (setq bibtex-dialect 'biblatex)
@@ -1213,13 +1218,15 @@ gscholar references  (as alternative to org-ref)
 			 (setq gscholar-bibtex-default-source "Google Scholar"))
 #+end_src
 
-** reftex default bibliography
+*** reftex default bibliography
    
 #+begin_src emacs-lisp
 (setq reftex-default-bibliography '("/mnt/piland/sascha/documents/research/bibliography.bib"))
 #+end_src
 
-* start emacs server
+** gnuplot
 #+begin_src emacs-lisp
-(server-start)
+  (use-package gnuplot
+	:ensure t)
 #+end_src
+
