@@ -1,6 +1,10 @@
 #+Title: Emacs Configuration
 
 * misc
+  ** space-map
+  #+begin_src emacs-lisp
+    (define-prefix-command 'space-map)
+  #+end_src
 ** search paths
    Add ~/.emacs.d to load path
 #+begin_src emacs-lisp
@@ -419,7 +423,6 @@ load current theme from custom variable
 ** SPC as leader key in evil normal mode
 
 #+begin_src emacs-lisp
-  (define-prefix-command 'space-map)
   (define-key evil-normal-state-map (kbd "SPC") 'space-map)
   (define-key evil-motion-state-map (kbd "SPC") 'space-map)
   (define-key space-map (kbd "x") 'counsel-M-x)
