@@ -373,10 +373,10 @@ ivy
 	(require 'unsrt)
 
 	;; see org-ref for use of these variables
-	(setq org-ref-default-bibliography '("/mnt/piland/sascha/documents/research/bib.bib")
+	(setq org-ref-default-bibliography '("/mnt/piland/sascha/documents/research/pdfs/bibliography.bib")
 		  org-ref-pdf-directory "/mnt/piland/sascha/documents/research/pdfs/")
 
-	(setq bibtex-completion-bibliography "/mnt/piland/sascha/documents/research/bib.bib"
+	(setq bibtex-completion-bibliography "/mnt/piland/sascha/documents/research/pdfs/bibliography.bib"
 		  bibtex-completion-library-path "/mnt/piland/sascha/documents/research/pdfs/"
 		  bibtex-completion-notes-path "/mnt/piland/sascha/documents/org/")
 #+end_src
@@ -568,10 +568,12 @@ make latex fragments a little bigger
 #+begin_src emacs-lisp
   (require 'ob-C)
   (require 'ob-gnuplot)
+  (require 'ob-shell)
   (setq org-babel-load-languages '((python . t)
 								   (emacs-lisp . t)
 								   (latex . t)
 								   (ipython . t)
+								   (shell . t)
 								   (gnuplot . t)
 								   (C . t)
 								   (cpp . t)
@@ -787,7 +789,7 @@ just load c++ mode for cuda files
 ** conf-mode for mtstudio files
 #+begin_src emacs-lisp
   (add-to-list 'auto-mode-alist '("\\.rg\\'" . conf-mode))
-  (add-to-list 'auto-mode-alist '("\\.scn\\'" . conf-mode))
+  (add-to-list 'auto-mode-alist '("\\.prj\\'" . conf-mode))
 
 #+end_src
 
@@ -962,14 +964,14 @@ gscholar references  (as alternative to org-ref)
 	:ensure t
 	:bind (:map space-map ("r g" . gscholar-bibtex))
 	:config (setq gscholar-bibtex-database-file
-				   "/mnt/piland/sascha/documents/research/bib.bib")
+				   "/mnt/piland/sascha/documents/research/pdfs/bibliography.bib")
 			 (setq gscholar-bibtex-default-source "Google Scholar"))
 #+end_src
 
 ** reftex default bibliography
    
 #+begin_src emacs-lisp
-(setq reftex-default-bibliography '("/mnt/piland/sascha/documents/research/bib.bib"))
+(setq reftex-default-bibliography '("/mnt/piland/sascha/documents/research/bibliography.bib"))
 #+end_src
 
 * start emacs server

@@ -14,7 +14,8 @@ function current_project {
 function eninja {
 	projectname=$(current_project)
 	buildfolder=$(pwd | xargs basename)
-	ecmd compile-and-rename ninja "*$projectname-$buildfolder-compilation*"
+	buffername="*$projectname-$buildfolder-compilation*"
+	ecmd "compile-and-rename" '"ninja"' '"'$buffername'"'
 }
 
 eninja

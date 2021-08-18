@@ -95,3 +95,7 @@ if [[ -n $SSH_CONNECTION ]]; then
 else
 	export EDITOR='ff'
 fi
+
+#apply pywal theme
+(cat ~/.cache/wal/sequences &)
+source ~/.cache/wal/colors-tty.sh

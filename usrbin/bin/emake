@@ -15,7 +15,7 @@ function emake {
 	projectname=$(current_project)
 	buildfolder=$(pwd | xargs basename)
 	buffername="*$projectname-$buildfolder-compilation*"
-	ecmd "compile-and-rename" '"make -j13"' '"'$buffername'"'
+	ecmd "compile-and-rename" '"make -j25"' '"'$buffername'"'
 }
 
 emake

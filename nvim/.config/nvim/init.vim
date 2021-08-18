@@ -12,7 +12,6 @@ Plugin 'tpope/vim-surround'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'sickill/vim-monokai'
 
-Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 
 call vundle#end()
@@ -43,11 +42,6 @@ endif
 
 let g:ycm_confirm_extra_conf=0
 let g:pymode_folding=0
-
-let g:UltiSnipsEditSplit="vertical"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
-let g:UltiSnipsExpandTrigger="<C-Tab>"
 
 " this is incredibly useful
 set grepprg=ag
@@ -96,8 +90,8 @@ nnoremap <Space> :nohlsearch<CR>
 " stay at position when searching
 nnoremap * mz*`z
 nnoremap # mz#`z
-
-map <F5> :make!\|copen<CR>
+j
+map <F5> :cd build/\|make!\|copen<CR>\|cd ..
 " FileType dependand stuff ...
 
 " set cpp compiler
