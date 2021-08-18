@@ -291,7 +291,7 @@ load current theme from custom variable
   :init (progn
 		  (setq spacemacs-theme-underline-parens t
 				my:rice:font (font-spec
-							  :family "Monaco"
+							  :family "Consolas for Powerline"
 							  :weight 'semi-bold
 							  :size 11.0))
 		  (show-paren-mode +1)
