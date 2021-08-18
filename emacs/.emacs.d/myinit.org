@@ -291,7 +291,7 @@ load current theme from custom variable
   :init (progn
 		  (setq spacemacs-theme-underline-parens t
 				my:rice:font (font-spec
-							  :family "Consolas for Powerline"
+							  :family "Monaco"
 							  :weight 'semi-bold
 							  :size 11.0))
 		  (show-paren-mode +1)
@@ -408,7 +408,7 @@ ivy
 				  (org-level-6 . 1.1)
 				  (org-level-7 . 1.1)
 				  (org-level-8 . 1.1)))
-	(set-face-attribute (car face) nil :foreground 'unspecified :background 'unspecified :font "Cantarell" :weight 'regular :height (cdr face)))
+	(set-face-attribute (car face) nil :foreground 'unspecified :background 'unspecified :font "Helvetica Neue" :weight 'regular :height (cdr face)))
 
   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
   (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
