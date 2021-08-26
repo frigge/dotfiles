@@ -201,6 +201,7 @@ whitespace mode toggle
 
 ** font
 #+begin_src emacs-lisp
+(set-face-attribute 'variable-pitch nil :font "Baskerville" :height 120)
 (custom-set-faces
  '(default ((t (:height 98 :foundry "DAMA" :family "Consolas for Powerline")))))
 #+end_src
@@ -438,7 +439,9 @@ load current theme from custom variable
 
 * Organization
 ** orgmode
+
   make orgmode a little more beautiful
+  
 #+begin_src emacs-lisp
 (defun efs/org-mode-setup ()
   (org-indent-mode)
@@ -446,6 +449,7 @@ load current theme from custom variable
   (visual-line-mode 1))
 
 (defun efs/org-font-setup ()
+
   ;; Replace list hyphen with dot
   (font-lock-add-keywords 'org-mode
 						  '(("^ *\\([-]\\) "
@@ -460,22 +464,43 @@ load current theme from custom variable
 				  (org-level-6 . 1.1)
 				  (org-level-7 . 1.1)
 				  (org-level-8 . 1.1)))
-	(set-face-attribute (car face) nil :foreground 'unspecified :background 'unspecified :font "Helvetica Neue" :weight 'regular :height (cdr face)))
+	(set-face-attribute (car face) nil :foreground 'unspecified :background 'unspecified :weight 'bold :height (cdr face)))
 
-  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+#+end_src
+
+Ensure that anything that should be fixed-pitch in Org files appears that way
+  
+#+begin_src emacs-lisp
   (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
   (set-face-attribute 'org-block-begin-line nil :background (face-background 'org-block))
   (set-face-attribute 'org-block-end-line nil :background (face-background 'org-block))
+  (set-face-attribute 'org-todo nil :background 'unspecified)
+  (set-face-attribute 'org-done nil :background 'unspecified)
+  (set-face-attribute 'org-headline-done nil :foreground 'unspecified)
   (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
   (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
   (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
   (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
   (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
   (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+#+end_src
 
+prettyfy orgmode a little more
+#+begin_src emacs-lisp
+(defun frg/org-prettify ()
+  (setq line-spacing 0.4)
+  (setq org-ellipsis " ▾")
+  (setq header-line-format " ")
+  (set-face-attribute 'header-line nil :height 400 :inherit 'org-default :background 'unspecified)
+  (set-face-attribute 'org-document-title nil :height 250. :underline nil :weight 'bold)
+  (hide-mode-line-mode))
+#+end_src
+
+#+begin_src emacs-lisp
 (use-package org
   :hook ((org-mode . org-indent-mode)
-         (org-mode . efs/org-mode-setup))
+         (org-mode . efs/org-mode-setup)
+         (org-mode . frg/org-prettify))
   :config
   (efs/org-font-setup)
   (setq org-src-fontify-natively t)
@@ -707,7 +732,9 @@ This shows markup elemenst when the cursor is on them
 (use-package org-superstar
   :ensure t
   :after org
-  :custom (org-superstar-remove-leading-stars t)
+  :custom
+  (org-superstar-remove-leading-stars t)
+  (org-superstar-headline-bullets-list '(" "))
   :hook (org-mode . org-superstar-mode))
 #+end_src
 
