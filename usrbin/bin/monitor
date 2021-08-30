@@ -28,6 +28,9 @@ middle=DP-0
 right=HDMI-0
 
 if [ $mode == "all" ]; then
+    xrandr --output $left --off
+    xrandr --output $middle --off
+    xrandr --output $right --off
     xrandr --output $left --auto
     xrandr --output $middle --auto
     xrandr --output $right --auto
