@@ -87,7 +87,8 @@ antigen apply
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias bc="bc -lq"
 alias tmux="tmux -2"
-export TERM=xterm-256color
+# export TERM=xterm-256color
+export TERM=xterm-kitty
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
