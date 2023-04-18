@@ -1,4 +1,3 @@
-# Light Theme
-
-rofi.font: Consolas for Powerline 10
-rofi.theme: ~/.cache/wal/colors-rofi-light.rasi
+configuration {
+font: "Consolas for Powerline 10";
+} @theme "~/.cache/wal/colors-rofi-light.rasi"

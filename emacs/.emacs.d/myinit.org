@@ -15,7 +15,8 @@
 ** undo-tree
 #+begin_src emacs-lisp
 (use-package undo-tree
-  :ensure t
+  ;; :ensure t
+  :disabled t
   :config (global-undo-tree-mode))
 #+end_src
    
@@ -127,6 +128,13 @@ just load c++ mode for cuda files
   (add-to-list 'auto-mode-alist '("\\.rg\\'" . conf-mode))
   (add-to-list 'auto-mode-alist '("\\.prj\\'" . conf-mode))
 
+#+end_src
+
+** copilot
+#+begin_src emacs-lisp
+(use-package copilot
+  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el")) :ensure t
+  :config (add-hook 'prog-mode-hook 'copilot-mode))
 #+end_src
 
 * gui
@@ -271,7 +279,7 @@ load current theme from custom variable
   :init (progn
 		  (setq spacemacs-theme-underline-parens t
 				my:rice:font (font-spec
-							  :family "Monaco"
+							  :family "Consolas for Powerline"
 							  :weight 'semi-bold
 							  :size 11.0))
 		  (show-paren-mode +1)
@@ -374,6 +382,7 @@ load current theme from custom variable
 #+begin_src emacs-lisp
 (use-package evil
   :config (evil-mode t)
+  :init (setq evil-want-C-i-jump nil)
   :ensure t)
 
 (use-package evil-org
@@ -409,6 +418,7 @@ load current theme from custom variable
 
 (use-package evil-string-inflection
   :ensure t)
+
 #+end_src
 
 ** don't use SPC and RET as motion keys in normal mode
@@ -809,7 +819,8 @@ Function to insert paper bibliography entry and org-ref link
 *** caldav
 #+begin_src emacs-lisp
   (use-package org-caldav
-  :ensure t
+    :ensure t
+    :disabled t
     :config
     (setq org-caldav-url "https://cal.frotticloud.ydns.eu:22123/frigge")
     (setq org-caldav-calendar-id "4780be13-a759-7f2b-21d9-c6df543aa5d7")
@@ -1039,11 +1050,14 @@ make latex fragments a little bigger
 (use-package lsp-mode
   :hook (c++-mode . lsp) (c-mode . lsp) (pyhton-mode . lsp)
   :ensure t)
+
 (use-package lsp-ui :commands lsp-ui-mode
   :disabled t
   :ensure t)
+
 (use-package company-lsp :commands company-lsp
   :ensure t)
+
 (use-package helm-lsp :commands helm-lsp-workspace-symbol
   :ensure t)
 #+end_src
@@ -1205,19 +1219,20 @@ the current directory from eshell.
 * Writing
 ** pdftools
 #+begin_src emacs-lisp
-(use-package pdf-tools
-  :ensure t
-  :config (pdf-tools-install))
+    (use-package pdf-tools
+      :ensure t
+      :disabled t
+      :config (pdf-tools-install))
 
 #+end_src
 
 ** Paperless
 #+begin_src emacs-lisp
-	(use-package paperless
-	:disabled t
-	  :config (custom-set-variables '(paperless-capture-directory "~/Documents/capture")
-									'(paperless-root-directory "/mnt/piland/sascha/documents/paperless")))
-			
+  (use-package paperless
+    :disabled t
+    :config (custom-set-variables '(paperless-capture-directory "~/Documents/capture")
+                                  '(paperless-root-directory "/mnt/piland/sascha/documents/paperless")))
+
   ;; (require 'org-paperless)
 
 #+end_src

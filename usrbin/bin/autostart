@@ -12,6 +12,12 @@ set_keyboard()
 	xset r rate 200 60
 }
 
+set_mouse()
+{
+	#lower mouse sensitivity
+	xinput --set-prop 10 'libinput Accel Profile Enabled' 0, 1
+}
+
 set_everythin_else()
 {
 	xset dpms 600; xset s 600 600
@@ -19,22 +25,17 @@ set_everythin_else()
 
 	run_once "picom -b --backend xrender"
 	wal -R
-	nitrogen --restore
 	run_once nm-applet
 	run_once pasystray
 
 	#other settings
-
-	#lower mouse sensitivity
-	xinput --set-prop 14 "Device Accel Constant Deceleration" 2 
-
-
 	#wacom tabletpcbuttons (click and tap for secondary buttons)
 	xsetwacom --set "Wacom Intuos3 6x8 Pen stylus" TabletPCButton "on"
 
 
 	nvidia-settings --load-config-only
 	monitor
+	nitrogen --restore
 	# xrdb ~/.Xresources
 
 	# xmodmap -e 'clear Lock' -e 'keycode' 0x42 = 'Escape'
@@ -43,6 +44,7 @@ set_everythin_else()
 set_all ()
 {
 	set_keyboard
+	set_mouse
 	set_everythin_else
 }
 
@@ -52,4 +54,6 @@ fi
 
 if [ "$1" == "keyboard" ]; then
 	set_keyboard
+elif [ "$1" == "mouse" ]; then
+	set_mouse
 fi
