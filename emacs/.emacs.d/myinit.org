@@ -1,10 +1,10 @@
 #+Title: Emacs Configuration
 
 * misc
-  ** space-map
-  #+begin_src emacs-lisp
-    (define-prefix-command 'space-map)
-  #+end_src
+** space-map
+#+begin_src emacs-lisp
+  (define-prefix-command 'space-map)
+#+end_src
 ** search paths
    Add ~/.emacs.d to load path
 #+begin_src emacs-lisp
@@ -127,6 +127,13 @@ just load c++ mode for cuda files
   (add-to-list 'auto-mode-alist '("\\.rg\\'" . conf-mode))
   (add-to-list 'auto-mode-alist '("\\.prj\\'" . conf-mode))
 
+#+end_src
+
+
+*** ts-mode
+#+begin_src emacs-lisp
+(use-package typescript-mode
+  :ensure t)
 #+end_src
 
 * gui
@@ -270,7 +277,7 @@ load current theme from custom variable
   :init (progn
 		  (setq spacemacs-theme-underline-parens t
 				my:rice:font (font-spec
-							  :family "Monaco"
+							  :family "Consolas for Powerline"
 							  :weight 'semi-bold
 							  :size 11.0))
 		  (show-paren-mode +1)
@@ -460,7 +467,7 @@ load current theme from custom variable
 				  (org-level-6 . 1.1)
 				  (org-level-7 . 1.1)
 				  (org-level-8 . 1.1)))
-	(set-face-attribute (car face) nil :foreground 'unspecified :background 'unspecified :font "Helvetica Neue" :weight 'regular :height (cdr face)))
+	(set-face-attribute (car face) nil :foreground 'unspecified :background 'unspecified :font "Cantarell" :weight 'regular :height (cdr face)))
 
   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
   (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)

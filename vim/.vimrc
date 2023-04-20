@@ -88,10 +88,13 @@ set cino=(0
 
 " execute "set colorcolumn=".join(range(80, 400), ',')
 
-autocmd BufNewFile,BufRead *.glsl,*.geom,*.vert,*.frag,*.gsh,*.vsh,*.fsh,*.vs,*.fs set filetype=glsl
+autocmd BufNewFile,BufRead *.glsl,*.geom,*.mesh,*.task,*.rgen,*.rchit,*.rahit,*.rmiss,*.vert,*.frag,*.gsh,*.vsh,*.fsh,*.vs,*.fs set filetype=glsl
 
 set scrolloff=5
 nnoremap <Space> :nohlsearch<CR>
+
+" clang-format integration
+map <LEADER>f :pyf /usr/share/clang/clang-format.py<cr>
 
 " stay at position when searching
 nnoremap * mz*`z
@@ -113,10 +116,5 @@ set tags=tags
 
 " build tags of your own project with Ctrl-F12
 map <F12> :!bash -c "ack -f \| grep -v build \| ctags --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q -L -"<CR>
-
-" closing brackets "
-inoremap {<CR> {<CR>}<Esc>O
-inoremap {{ {
-inoremap {} {}
 
 let g:tex_flavor='latex'
