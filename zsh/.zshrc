@@ -52,7 +52,7 @@ plugins=(git)
 
 # User configuration
 
-export PATH="/home/frigge/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/frigge/bin:/home/frigge/.local/bin"
+export PATH="/home/frigge/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/frigge/bin:/home/frigge/.local/bin:/snap/bin"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 #source $ZSH/oh-my-zsh.sh
@@ -87,7 +87,8 @@ antigen apply
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias bc="bc -lq"
 alias tmux="tmux -2"
-export TERM=xterm-256color
+# export TERM=xterm-256color
+export TERM=xterm-kitty
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
