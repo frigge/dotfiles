@@ -136,18 +136,43 @@ just load c++ mode for cuda files
   :ensure t)
 #+end_src
   
-** COMMENT copilot
+** copilot
 #+begin_src emacs-lisp
-  (use-package copilot
-    :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el")) :ensure t
-    :config (add-hook 'prog-mode-hook 'copilot-mode))
+(use-package copilot
+  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :ensure t
+  :config (add-hook 'prog-mode-hook 'copilot-mode))
 
-  ;; define copilot complete key TAB but do not override TAB in insert mode
+(defun my/copilot-tab ()
+  (interactive)
+  (or (copilot-accept-completion)
+	  (indent-for-tab-command)))
 
-  (with-eval-after-load 'evil
-    (evil-define-key 'insert 'global (kbd "TAB") 'copilot-complete))
+(with-eval-after-load 'evil
+ (evil-define-key 'insert copilot-mode-map (kbd "TAB") #'my/copilot-tab))
 #+end_src
 
+** ripgrep
+#+begin_src emacs-lisp
+(use-package rg
+  :ensure t
+  :config
+  (rg-enable-default-bindings))
+#+end_src
+
+** fzf
+#+begin_src emacs-lisp
+(use-package fzf :ensure t)
+#+end_src
+** ranger
+#+begin_src emacs-lisp
+(use-package ranger
+  :ensure t
+  :bind ("C-x d" . ranger))
+(setq ranger-override-dired-mode t)
+(setq ranger-override-dired t)
+(setq rangber-preview-file nil)
+#+end_src
 * gui
 ** misc
 #+begin_src emacs-lisp
@@ -293,7 +318,6 @@ load current theme from custom variable
 							  :weight 'semi-bold
 							  :size 11.0))
 		  (show-paren-mode +1)
-		  (global-hl-line-mode)
 		  (set-frame-font my:rice:font nil t)
 		  (add-to-list  'default-frame-alist
 						`(font . ,(font-xlfd-name my:rice:font))))
@@ -388,6 +412,25 @@ load current theme from custom variable
    (setq pop-up-frames 'graphic-only)
  #+end_src
 
+** posframe
+#+begin_src emacs-lisp
+(use-package posframe
+  :ensure t
+  :config
+  (setq posframe-mouse-banish nil))
+
+(use-package company-posframe
+  :ensure t
+  :after company
+  :config
+  (company-posframe-mode 1))
+
+(use-package ivy-posframe
+  :ensure t
+  :after ivy
+  :config
+  (ivy-posframe-mode 1))
+#+end_src
 * evil
 #+begin_src emacs-lisp
 (use-package evil
@@ -447,8 +490,8 @@ load current theme from custom variable
   (define-key evil-normal-state-map (kbd "SPC") 'space-map)
   (define-key evil-motion-state-map (kbd "SPC") 'space-map)
   (define-key space-map (kbd "x") 'counsel-M-x)
-  ;; (define-key space-map (kbd "b") 'ivy-switch-buffer)
-  (define-key space-map (kbd "f") 'counsel-find-file)
+  (define-key space-map (kbd "b") 'fzf-switch-buffer)
+  (define-key space-map (kbd "f") 'fzf)
   (define-key space-map (kbd "o") 'ace-window)
   (define-key space-map (kbd "0") 'delete-window)
   (define-key space-map (kbd "1") 'delete-other-windows)
@@ -981,6 +1024,11 @@ make latex fragments a little bigger
   :ensure t
   :config (setq ag-group-matches nil))
 #+end_src
+
+** ripgrep
+# #+begin_src emacs-lisp
+# (grep-apply-setting 'grep-find-command '("rg -n -H --no-heading -e ''" . 27))
+# #+end_src
 
 ** wgrep
 #+begin_src emacs-lisp
