@@ -56,7 +56,6 @@ set wildmenu wildmode=full
 
 set nrformats+=alpha
 set mouse=a
-set number
 set showcmd
 set list
 set listchars=tab:▸\ ,eol:¬,extends:❯,precedes:❮
@@ -70,7 +69,7 @@ set softtabstop=4
 set laststatus=2
 set autoread
 set linebreak
-set expandtab
+" set expandtab
 set incsearch
 set hlsearch
 set showmatch
@@ -91,7 +90,7 @@ nnoremap <Space> :nohlsearch<CR>
 nnoremap * mz*`z
 nnoremap # mz#`z
 j
-map <F5> :cd build/\|make!\|copen<CR>\|cd ..
+map <F5> :make!\|copen<CR>
 " FileType dependand stuff ...
 
 " set cpp compiler
@@ -107,10 +106,5 @@ set tags=tags
 
 " build tags of your own project with Ctrl-F12
 map <F12> :!bash -c "ack -f \| grep -v build \| ctags --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q -L -"<CR>
-
-" closing brackets "
-inoremap {<CR> {<CR>}<Esc>O
-inoremap {{ {
-inoremap {} {}
 
 let g:tex_flavor='latex'

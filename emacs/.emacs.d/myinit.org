@@ -1,10 +1,10 @@
-#+Title: Emacs Configuration
+j#+Title: Emacs Configuration
 
 * misc
-  ** space-map
-  #+begin_src emacs-lisp
-    (define-prefix-command 'space-map)
-  #+end_src
+** space-map
+#+begin_src emacs-lisp
+  (define-prefix-command 'space-map)
+#+end_src
 ** search paths
    Add ~/.emacs.d to load path
 #+begin_src emacs-lisp
@@ -130,13 +130,49 @@ just load c++ mode for cuda files
 
 #+end_src
 
+*** ts-mode
+#+begin_src emacs-lisp
+(use-package typescript-mode
+  :ensure t)
+#+end_src
+  
 ** copilot
 #+begin_src emacs-lisp
 (use-package copilot
-  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el")) :ensure t
+  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :ensure t
   :config (add-hook 'prog-mode-hook 'copilot-mode))
+
+(defun my/copilot-tab ()
+  (interactive)
+  (or (copilot-accept-completion)
+	  (indent-for-tab-command)))
+
+(with-eval-after-load 'evil
+ (evil-define-key 'insert copilot-mode-map (kbd "TAB") #'my/copilot-tab))
 #+end_src
 
+** ripgrep
+#+begin_src emacs-lisp
+(use-package rg
+  :ensure t
+  :config
+  (rg-enable-default-bindings))
+#+end_src
+
+** fzf
+#+begin_src emacs-lisp
+(use-package fzf :ensure t)
+#+end_src
+** ranger
+#+begin_src emacs-lisp
+(use-package ranger
+  :ensure t
+  :bind ("C-x d" . ranger))
+(setq ranger-override-dired-mode t)
+(setq ranger-override-dired t)
+(setq rangber-preview-file nil)
+#+end_src
 * gui
 ** misc
 #+begin_src emacs-lisp
@@ -211,7 +247,7 @@ whitespace mode toggle
 #+begin_src emacs-lisp
 (set-face-attribute 'variable-pitch nil :font "Baskerville" :height 120)
 (custom-set-faces
- '(default ((t (:height 98 :foundry "DAMA" :family "Consolas for Powerline")))))
+ '(default ((t (:height 98 :foundry "DAMA" :family "Monaco")))))
 #+end_src
 
 ** visual-column-fill
@@ -279,11 +315,10 @@ load current theme from custom variable
   :init (progn
 		  (setq spacemacs-theme-underline-parens t
 				my:rice:font (font-spec
-							  :family "Consolas for Powerline"
+							  :family "Monaco"
 							  :weight 'semi-bold
 							  :size 11.0))
 		  (show-paren-mode +1)
-		  (global-hl-line-mode)
 		  (set-frame-font my:rice:font nil t)
 		  (add-to-list  'default-frame-alist
 						`(font . ,(font-xlfd-name my:rice:font))))
@@ -378,6 +413,25 @@ load current theme from custom variable
    (setq pop-up-frames 'graphic-only)
  #+end_src
 
+** posframe
+#+begin_src emacs-lisp
+(use-package posframe
+  :ensure t
+  :config
+  (setq posframe-mouse-banish nil))
+
+(use-package company-posframe
+  :ensure t
+  :after company
+  :config
+  (company-posframe-mode 1))
+
+(use-package ivy-posframe
+  :ensure t
+  :after ivy
+  :config
+  (ivy-posframe-mode 1))
+#+end_src
 * evil
 #+begin_src emacs-lisp
 (use-package evil
@@ -437,8 +491,8 @@ load current theme from custom variable
   (define-key evil-normal-state-map (kbd "SPC") 'space-map)
   (define-key evil-motion-state-map (kbd "SPC") 'space-map)
   (define-key space-map (kbd "x") 'counsel-M-x)
-  ;; (define-key space-map (kbd "b") 'ivy-switch-buffer)
-  (define-key space-map (kbd "f") 'counsel-find-file)
+  (define-key space-map (kbd "b") 'fzf-switch-buffer)
+  (define-key space-map (kbd "f") 'fzf)
   (define-key space-map (kbd "o") 'ace-window)
   (define-key space-map (kbd "0") 'delete-window)
   (define-key space-map (kbd "1") 'delete-other-windows)
@@ -998,6 +1052,11 @@ make latex fragments a little bigger
   :config (setq ag-group-matches nil))
 #+end_src
 
+** ripgrep
+# #+begin_src emacs-lisp
+# (grep-apply-setting 'grep-find-command '("rg -n -H --no-heading -e ''" . 27))
+# #+end_src
+
 ** wgrep
 #+begin_src emacs-lisp
   (use-package wgrep :ensure t)
@@ -1221,7 +1280,6 @@ the current directory from eshell.
 #+begin_src emacs-lisp
     (use-package pdf-tools
       :ensure t
-      :disabled t
       :config (pdf-tools-install))
 
 #+end_src
