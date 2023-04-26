@@ -613,29 +613,29 @@ prettyfy orgmode a little more
 #+begin_src emacs-lisp
   (use-package org-ref
   :ensure t
-	:bind (:map space-map ("r r" . org-ref-bibtex-hydra/body)))
+        :bind (:map space-map ("r r" . org-ref-bibtex-hydra/body)))
 
-	(require 'doi-utils)
-	(require 'org-ref-pdf)
-	(require 'org-ref-url-utils)
-	(require 'org-ref-bibtex)
-	(require 'org-ref-latex)
-	(require 'org-ref-arxiv)
-	(require 'org-ref-isbn)
-	(require 'org-ref-wos)
-	(require 'org-ref-scopus)
-	(require 'x2bib)
-	(require 'nist-webbook)
-	(require 'org-ref-citeproc)
-	(require 'unsrt)
+        (require 'doi-utils)
+        (require 'org-ref-pdf)
+        (require 'org-ref-url-utils)
 
-	;; see org-ref for use of these variables
-	(setq org-ref-default-bibliography '("/mnt/piland/sascha/documents/research/pdfs/bibliography.bib")
-		  org-ref-pdf-directory "/mnt/piland/sascha/documents/research/pdfs/")
+	(setq bibtex-completion-bibliography "~/.cache/bib/bibliography.bib"
+		  bibtex-completion-library-path "~/.cache/bib/"
+		  bibtex-completion-notes-path "~/syncthing/documents/org/")
+  
+        (require 'org-ref-bibtex)
+        (require 'org-ref-latex)
+        (require 'org-ref-arxiv)
+        (require 'org-ref-isbn)
+        (require 'org-ref-wos)
+        (require 'org-ref-scopus)
+        (require 'x2bib)
+        (require 'nist-webbook)
 
-	(setq bibtex-completion-bibliography "/mnt/piland/sascha/documents/research/pdfs/bibliography.bib"
-		  bibtex-completion-library-path "/mnt/piland/sascha/documents/research/pdfs/"
-		  bibtex-completion-notes-path "/mnt/piland/sascha/documents/org/")
+        ;; see org-ref for use of these variables
+        (setq org-ref-default-bibliography '("~/.cache/bib/bibliography.bib")
+                  org-ref-pdf-directory "~/.cache/bib/")
+
 #+end_src
 
 set custom notes heading format
@@ -948,31 +948,31 @@ make latex fragments a little bigger
  '(mu4e-update-interval 300)
  '(mu4e-use-fancy-chars t)
  '(mu4e-view-show-address t)
- '(org-mu4e-convert-to-html t)
+ ;; '(org-mu4e-convert-to-html t)
  '(mu4e-view-show-images t))
 (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
 
-(add-to-list 'mu4e-bookmarks
-			 (make-mu4e-bookmark
-			  :name "PhoenixD"
-			  :query "subject:phoenixd OR from:phoenixd"
-			  :key ?h))
-(require 'org-mu4e)
-(defalias 'org-mail 'org-mu4e-compose-org-mode)
+;; (add-to-list 'mu4e-bookmarks
+;; 			 (make-mu4e-bookmark
+;; 			  :name "PhoenixD"
+;; 			  :query "subject:phoenixd OR from:phoenixd"
+;; 			  :key ?h))
+;; (require 'org-mu4e)
+;; (defalias 'org-mail 'org-mu4e-compose-org-mode)
 
-(add-hook 'mu4e-compose-post-hook
-		  (defun do-compose-stuff ()
-			"My settings for message composition."
-			(org-mu4e-compose-org-mode)))
+;; (add-hook 'mu4e-compose-post-hook
+;; 		  (defun do-compose-stuff ()
+;; 			"My settings for message composition."
+;; 			(org-mu4e-compose-org-mode)))
 
-(defun htmlize-and-send ()
-  "When in an org-mu4e-compose-org-mode message, htmlize and send it."
-  (interactive)
-  (when (member 'org~mu4e-mime-switch-headers-or-body post-command-hook)
-	(org-mime-htmlize)
-	(org-mu4e-compose-org-mode)
-	(mu4e-compose-mode)
-	(message-send-and-exit)))
+;; (defun htmlize-and-send ()
+;;   "When in an org-mu4e-compose-org-mode message, htmlize and send it."
+;;   (interactive)
+;;   (when (member 'org~mu4e-mime-switch-headers-or-body post-command-hook)
+;; 	(org-mime-htmlize)
+;; 	;; (org-mu4e-compose-org-mode)
+;; 	(mu4e-compose-mode)
+;; 	(message-send-and-exit)))
 
 (defun set-tubs-smtp ()
   (setq send-mail-function (quote smtpmail-send-it))
@@ -1114,8 +1114,9 @@ make latex fragments a little bigger
   :disabled t
   :ensure t)
 
-(use-package company-lsp :commands company-lsp
-  :ensure t)
+;; (use-package company-lsp :commands company-lsp
+;;   :disabled t
+;;   :ensure t)
 
 (use-package helm-lsp :commands helm-lsp-workspace-symbol
   :ensure t)
