@@ -145,25 +145,13 @@ just load c++ mode for cuda files
 
 (defun my/copilot-tab ()
   (interactive)
-  (or (copilot-accept-completion)
+  (or (copilot-accept-completion-by-line)
 	  (indent-for-tab-command)))
 
 (with-eval-after-load 'evil
  (evil-define-key 'insert copilot-mode-map (kbd "TAB") #'my/copilot-tab))
 #+end_src
 
-** ripgrep
-#+begin_src emacs-lisp
-(use-package rg
-  :ensure t
-  :config
-  (rg-enable-default-bindings))
-#+end_src
-
-** fzf
-#+begin_src emacs-lisp
-(use-package fzf :ensure t)
-#+end_src
 ** ranger
 #+begin_src emacs-lisp
 (use-package ranger
@@ -379,21 +367,53 @@ load current theme from custom variable
 
 ** ivy
 #+begin_src emacs-lisp
-(use-package ivy
-  :config 
-  (ivy-mode)
-  (setq ivy-use-virtual-buffers t)
-  :bind ("C-x b" . ivy-switch-buffer))
+;; (use-package ivy
+;;   :config 
+;;   (ivy-mode)
+;;   :disabled t
+;;   (setq ivy-use-virtual-buffers t)
+;;   :bind ("C-x b" . ivy-switch-buffer))
 #+end_src
 
+** vertico
+#+begin_src emacs-lisp
+(use-package vertico
+  :init 
+  (vertico-mode))
+#+end_src
 ** Counsel
 #+begin_src emacs-lisp
-(use-package counsel
-  :bind 
-  ("M-x" . counsel-M-x)
-  ("C-x C-f" . counsel-find-file))
+;; (use-package counsel
+;;   :bind 
+;;   ("M-x" . counsel-M-x)
+;;   ("C-x C-f" . counsel-find-file))
 
-(use-package counsel-etags)
+;; (use-package counsel-etags)
+#+end_src
+
+** Consult
+
+#+begin_src emacs-lisp
+(use-package consult
+  :ensure t)
+#+end_src
+
+** Marginalia
+#+begin_src emacs-lisp
+(use-package marginalia
+  :ensure t
+  :config (marginalia-mode))
+#+end_src
+
+** Embark
+#+begin_src emacs-lisp
+(use-package embark
+  :ensure t)
+
+(use-package embark-consult
+  :ensure t
+  :hook
+  (embark-collect-mode . embark-consult-preview-minor-mode))
 #+end_src
 
 ** hide mode line
@@ -419,17 +439,24 @@ load current theme from custom variable
   :config
   (setq posframe-mouse-banish nil))
 
-(use-package company-posframe
+(use-package vertico-posframe
   :ensure t
-  :after company
+  :after vertico
   :config
-  (company-posframe-mode 1))
+  (vertico-posframe-mode 1))
 
-(use-package ivy-posframe
-  :ensure t
-  :after ivy
-  :config
-  (ivy-posframe-mode 1))
+
+;; (use-package company-posframe
+;;   :ensure t
+;;   :after company
+;;   :config
+;;   (company-posframe-mode 1))
+
+;; (use-package ivy-posframe
+;;   :ensure t
+;;   :after ivy
+;;   :config
+;;   (ivy-posframe-mode 1))
 #+end_src
 * evil
 #+begin_src emacs-lisp
@@ -489,7 +516,7 @@ load current theme from custom variable
 #+begin_src emacs-lisp
   (define-key evil-normal-state-map (kbd "SPC") 'space-map)
   (define-key evil-motion-state-map (kbd "SPC") 'space-map)
-  (define-key space-map (kbd "x") 'counsel-M-x)
+  ;; (define-key space-map (kbd "x") 'counsel-M-x)
   (define-key space-map (kbd "b") 'fzf-switch-buffer)
   (define-key space-map (kbd "f") 'fzf)
   (define-key space-map (kbd "o") 'ace-window)
@@ -497,7 +524,7 @@ load current theme from custom variable
   (define-key space-map (kbd "1") 'delete-other-windows)
   (define-key space-map (kbd "2") 'split-window-below)
   (define-key space-map (kbd "3") 'split-window-right)
-  (define-key space-map (kbd "/") 'swiper)
+  ;; (define-key space-map (kbd "/") 'swiper)
 #+end_src
 
 * Organization
@@ -1042,6 +1069,38 @@ make latex fragments a little bigger
   :ensure t)
 #+end_src
 
+** ripgrep
+#+begin_src emacs-lisp
+(use-package rg
+  :ensure t
+  :config
+  (rg-enable-default-bindings))
+#+end_src
+
+** fzf
+#+begin_src emacs-lisp
+(use-package fzf :ensure t)
+#+end_src
+** consult
+#+begin_src emacs-lisp
+(use-package consult
+  :ensure t
+  :bind
+  (:map space-map
+		(("g g" . consult-ripgrep)
+		("g s" . consult-line)
+		("g b" . consult-bookmark)))
+  ("C-x b" . consult-buffer))
+#+end_src
+
+** orderless
+#+begin_src emacs-lisp
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+#+end_src
 * Version Control
 ** magit
 #+begin_src emacs-lisp
