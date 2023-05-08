@@ -1,3 +1,4 @@
+
 #+Title: Emacs Configuration
 
 * misc
@@ -136,6 +137,13 @@ just load c++ mode for cuda files
   :ensure t)
 #+end_src
   
+*** zig-mode
+#+begin_src emacs-lisp
+(use-package zig-mode
+  :ensure t
+  :config (add-hook 'zig-mode-hook (setq zig-format-on-save nil)))
+#+end_src
+
 ** copilot
 #+begin_src emacs-lisp
 (use-package copilot
@@ -161,6 +169,19 @@ just load c++ mode for cuda files
 (setq ranger-override-dired t)
 (setq rangber-preview-file nil)
 #+end_src
+** harpoon
+#+begin_src emacs-lisp
+(use-package harpoon
+  :ensure t
+  :bind (:map space-map
+			  ("h a" . harpoon-add-file)
+			  ("h h" . harpoon-toggle-quick-menu)
+			  ("h c" . harpoon-clear)
+			  ("h 1" . harpoon-go-to-1)
+			  ("h 2" . harpoon-go-to-2)
+			  ("h 3" . harpoon-go-to-3)
+			  ("h 4" . harpoon-go-to-4)))
+#+end_src
 * gui
 ** misc
 #+begin_src emacs-lisp
@@ -176,6 +197,9 @@ just load c++ mode for cuda files
 (setq global-hl-line-mode t)
 (setq global-auto-revert-mode t)
 (setq global-visual-line-mode t)
+(setq display-line-numbers 'relative)
+(setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode)
 
 (global-set-key (kbd "<f4>") 'ff-find-other-file)
 ;; (recentf-mode)
@@ -183,9 +207,9 @@ just load c++ mode for cuda files
 
 *** rainbow mode
 #+begin_src emacs-lisp
-  (use-package rainbow-mode
-	:ensure t
-	:bind (:map space-map ("h h" . rainbow-mode)))
+  ;; (use-package rainbow-mode
+  ;; 	:ensure t
+  ;; 	:bind (:map space-map ("h h" . rainbow-mode)))
 #+end_src
 *** display inline images
 #+begin_src emacs-lisp
@@ -462,7 +486,9 @@ load current theme from custom variable
 #+begin_src emacs-lisp
 (use-package evil
   :config (evil-mode t)
-  :init (setq evil-want-C-i-jump nil)
+  (setq evil-undo-system 'undo-redo)
+  :init
+  (setq evil-want-C-i-jump nil)
   :ensure t)
 
 (use-package evil-org
