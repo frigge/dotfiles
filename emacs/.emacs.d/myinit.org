@@ -1,4 +1,4 @@
-j#+Title: Emacs Configuration
+#+Title: Emacs Configuration
 
 * misc
 ** space-map
@@ -136,6 +136,13 @@ just load c++ mode for cuda files
   :ensure t)
 #+end_src
   
+*** zig-mode
+#+begin_src emacs-lisp
+(use-package zig-mode
+  :ensure t
+  :config (add-hook 'zig-mode-hook (setq zig-format-on-save nil)))
+#+end_src
+
 ** copilot
 #+begin_src emacs-lisp
 (use-package copilot
@@ -161,6 +168,19 @@ just load c++ mode for cuda files
 (setq ranger-override-dired t)
 (setq rangber-preview-file nil)
 #+end_src
+** harpoon
+#+begin_src emacs-lisp
+(use-package harpoon
+  :ensure t
+  :bind (:map space-map
+			  ("h a" . harpoon-add-file)
+			  ("h h" . harpoon-toggle-quick-menu)
+			  ("h c" . harpoon-clear)
+			  ("h 1" . harpoon-go-to-1)
+			  ("h 2" . harpoon-go-to-2)
+			  ("h 3" . harpoon-go-to-3)
+			  ("h 4" . harpoon-go-to-4)))
+#+end_src
 * gui
 ** misc
 #+begin_src emacs-lisp
@@ -176,6 +196,9 @@ just load c++ mode for cuda files
 (setq global-hl-line-mode t)
 (setq global-auto-revert-mode t)
 (setq global-visual-line-mode t)
+(setq display-line-numbers 'relative)
+(setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode)
 
 (global-set-key (kbd "<f4>") 'ff-find-other-file)
 ;; (recentf-mode)
@@ -183,9 +206,9 @@ just load c++ mode for cuda files
 
 *** rainbow mode
 #+begin_src emacs-lisp
-  (use-package rainbow-mode
-	:ensure t
-	:bind (:map space-map ("h h" . rainbow-mode)))
+  ;; (use-package rainbow-mode
+  ;; 	:ensure t
+  ;; 	:bind (:map space-map ("h h" . rainbow-mode)))
 #+end_src
 *** display inline images
 #+begin_src emacs-lisp
@@ -463,7 +486,9 @@ load current theme from custom variable
 #+begin_src emacs-lisp
 (use-package evil
   :config (evil-mode t)
-  :init (setq evil-want-C-i-jump nil)
+  (setq evil-undo-system 'undo-redo)
+  :init
+  (setq evil-want-C-i-jump nil)
   :ensure t)
 
 (use-package evil-org
@@ -518,7 +543,7 @@ load current theme from custom variable
   (define-key evil-normal-state-map (kbd "SPC") 'space-map)
   (define-key evil-motion-state-map (kbd "SPC") 'space-map)
   ;; (define-key space-map (kbd "x") 'counsel-M-x)
-  (define-key space-map (kbd "b") 'fzf-switch-buffer)
+  ;; (define-key space-map (kbd "b") 'fzf-switch-buffer)
   (define-key space-map (kbd "f") 'fzf)
   (define-key space-map (kbd "o") 'ace-window)
   (define-key space-map (kbd "0") 'delete-window)
@@ -1113,11 +1138,14 @@ make latex fragments a little bigger
 (use-package consult
   :ensure t
   :bind
+  ("C-x b" . consult-buffer)
+  ("C-x f" . consult-find)
   (:map space-map
 		(("g g" . consult-ripgrep)
-		("g s" . consult-line)
-		("g b" . consult-bookmark)))
-  ("C-x b" . consult-buffer))
+		 ("g s" . consult-line)
+		 ("g b" . consult-bookmark)
+		 ("b" . consult-buffer)
+		 ("f" . consult-find))))
 #+end_src
 
 ** orderless
@@ -1335,6 +1363,17 @@ the current directory from eshell.
 				   (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))))
 #+end_src
 
+** Treesitter
+#+begin_src emacs-lisp
+(use-package tree-sitter
+  :ensure t
+  :config
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
+(use-package tree-sitter-langs
+  :ensure t)
+#+end_src
 * Writing
 ** pdftools
 #+begin_src emacs-lisp
