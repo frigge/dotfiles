@@ -543,7 +543,7 @@ load current theme from custom variable
   (define-key evil-normal-state-map (kbd "SPC") 'space-map)
   (define-key evil-motion-state-map (kbd "SPC") 'space-map)
   ;; (define-key space-map (kbd "x") 'counsel-M-x)
-  (define-key space-map (kbd "b") 'fzf-switch-buffer)
+  ;; (define-key space-map (kbd "b") 'fzf-switch-buffer)
   (define-key space-map (kbd "f") 'fzf)
   (define-key space-map (kbd "o") 'ace-window)
   (define-key space-map (kbd "0") 'delete-window)
@@ -1112,11 +1112,14 @@ make latex fragments a little bigger
 (use-package consult
   :ensure t
   :bind
+  ("C-x b" . consult-buffer)
+  ("C-x f" . consult-find)
   (:map space-map
 		(("g g" . consult-ripgrep)
-		("g s" . consult-line)
-		("g b" . consult-bookmark)))
-  ("C-x b" . consult-buffer))
+		 ("g s" . consult-line)
+		 ("g b" . consult-bookmark)
+		 ("b" . consult-buffer)
+		 ("f" . consult-find))))
 #+end_src
 
 ** orderless
@@ -1333,6 +1336,17 @@ the current directory from eshell.
 				   (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))))
 #+end_src
 
+** Treesitter
+#+begin_src emacs-lisp
+(use-package tree-sitter
+  :ensure t
+  :config
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
+(use-package tree-sitter-langs
+  :ensure t)
+#+end_src
 * Writing
 ** pdftools
 #+begin_src emacs-lisp
