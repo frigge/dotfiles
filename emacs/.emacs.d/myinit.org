@@ -22,9 +22,9 @@
    
 ** start in eshell
 
- #+begin_src emacs-lisp
-   (eshell)
- #+end_src
+ # #+begin_src emacs-lisp
+ #   (eshell)
+ # #+end_src
 
 ** bookmarks
  # #+begin_src emacs-lisp
@@ -179,14 +179,15 @@ just load c++ mode for cuda files
 #+begin_src emacs-lisp
 (use-package harpoon
   :ensure t
-  :bind (:map space-map
-			  ("h a" . harpoon-add-file)
-			  ("h h" . harpoon-toggle-quick-menu)
-			  ("h c" . harpoon-clear)
-			  ("h 1" . harpoon-go-to-1)
-			  ("h 2" . harpoon-go-to-2)
-			  ("h 3" . harpoon-go-to-3)
-			  ("h 4" . harpoon-go-to-4)))
+  :bind
+  ("C-1" . harpoon-go-to-1)
+  ("C-2" . harpoon-go-to-2)
+  ("C-3" . harpoon-go-to-3)
+  ("C-4" . harpoon-go-to-4)
+  (:map space-map
+		("h a" . harpoon-add-file)
+		("h h" . harpoon-quick-menu-hydra)
+		("h c" . harpoon-clear)))
 #+end_src
 ** atomic-chrome
 #+begin_src emacs-lisp
@@ -283,6 +284,8 @@ whitespace mode toggle
   (visual-fill-column-mode 1))
 
 (use-package visual-fill-column
+  :ensure t
+  :bind (:map space-map ("w v" . visual-fill-column-mode))
   :hook (org-mode . efs/org-mode-visual-fill))
   #+end_src
 
@@ -1208,16 +1211,32 @@ make latex fragments a little bigger
 
 #+begin_src emacs-lisp
 (use-package lsp-mode
-  :hook (c++-mode . lsp) (c-mode . lsp) (pyhton-mode . lsp) (zig-mode . lsp) (rust-mode . lsp) (shell-script-mode . lsp)
+  :hook
+  (c++-mode . lsp)
+  (c-mode . lsp)
+  (pyhton-mode . lsp)
+  (zig-mode . lsp)
+  (rust-mode . lsp)
+  (shell-script-mode . lsp)
+  (glsl-mode . lsp)
+  :config 
+  (evil-define-key 'normal lsp-mode-map (kbd "SPC l") lsp-command-map)
   :ensure t)
 
 (use-package lsp-ui
   :config
   (setq lsp-ui-sideline-enable t)
-  (setq lsp-ui-sideline-show-hover t)
+  (setq lsp-ui-sideline-show-hover nil)
   (setq lsp-ui-sideline-show-code-actions t)
-  (setq lsp-ui-sideline-show-diagnostics t)
-  (setq lsp-ui-sideline-show-symbol t)
+  (setq lsp-ui-sideline-show-diagnostics nil)
+  (setq lsp-ui-doc-enable t)
+  (setq lsp-ui-doc-show-with-cursor t)
+  :ensure t)
+
+(use-package treemacs
+  :ensure t)
+
+(use-package lsp-treemacs
   :ensure t)
 
 ;; (use-package company-lsp :commands company-lsp
@@ -1369,7 +1388,10 @@ the current directory from eshell.
   :ensure t
   :config (setq projectile-mode t)
   (define-key space-map (kbd "p") 'projectile-command-map)
-  (setq projectile-tags-command "ctags -Re -f '%s' --fields=+iaSt --extra=+q --exclude='.git' %s"))
+  (setq projectile-tags-command "ctags -Re -f '%s' --fields=+iaSt --extra=+q --exclude='.git' %s")
+  (setq projectile-project-search-path '("~/src/" "~/src/mtstudio/projects/"))
+  (setq projectile-indexing-method 'native)
+  (projectile-discover-projects-in-search-path))
 #+end_src
 
 *** org-projectile
