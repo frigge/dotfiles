@@ -1208,7 +1208,7 @@ make latex fragments a little bigger
 
 #+begin_src emacs-lisp
 (use-package lsp-mode
-  :hook (c++-mode . lsp) (c-mode . lsp) (pyhton-mode . lsp)
+  :hook (c++-mode . lsp) (c-mode . lsp) (pyhton-mode . lsp) (zig-mode . lsp) (rust-mode . lsp) (shell-script-mode . lsp)
   :ensure t)
 
 (use-package lsp-ui
