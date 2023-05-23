@@ -90,6 +90,13 @@
 
 ** extra file type modes
   
+*** zig-mode
+#+begin_src emacs-lisp
+(use-package zig-mode
+  :ensure t
+  :config (add-hook 'zig-mode-hook (setq zig-format-on-save nil)))
+#+end_src
+
 *** cuda-mode
 dont use cuda-mode for now as it doesnt work with smart-indent
 
@@ -180,6 +187,13 @@ just load c++ mode for cuda files
 			  ("h 2" . harpoon-go-to-2)
 			  ("h 3" . harpoon-go-to-3)
 			  ("h 4" . harpoon-go-to-4)))
+#+end_src
+** atomic-chrome
+#+begin_src emacs-lisp
+(use-package atomic-chrome
+  :ensure t
+  :config
+  (atomic-chrome-start-server))
 #+end_src
 * gui
 ** misc
@@ -1197,8 +1211,13 @@ make latex fragments a little bigger
   :hook (c++-mode . lsp) (c-mode . lsp) (pyhton-mode . lsp)
   :ensure t)
 
-(use-package lsp-ui :commands lsp-ui-mode
-  :disabled t
+(use-package lsp-ui
+  :config
+  (setq lsp-ui-sideline-enable t)
+  (setq lsp-ui-sideline-show-hover t)
+  (setq lsp-ui-sideline-show-code-actions t)
+  (setq lsp-ui-sideline-show-diagnostics t)
+  (setq lsp-ui-sideline-show-symbol t)
   :ensure t)
 
 ;; (use-package company-lsp :commands company-lsp
