@@ -184,6 +184,11 @@ just load c++ mode for cuda files
   ("C-2" . harpoon-go-to-2)
   ("C-3" . harpoon-go-to-3)
   ("C-4" . harpoon-go-to-4)
+  ("C-5" . harpoon-go-to-5)
+  ("C-6" . harpoon-go-to-6)
+  ("C-6" . harpoon-go-to-7)
+  ("C-6" . harpoon-go-to-8)
+  ("C-6" . harpoon-go-to-9)
   (:map space-map
 		("h a" . harpoon-add-file)
 		("h h" . harpoon-quick-menu-hydra)
@@ -1160,9 +1165,10 @@ make latex fragments a little bigger
   (:map space-map
 		(("g g" . consult-ripgrep)
 		 ("g s" . consult-line)
-		 ("g b" . consult-bookmark)
 		 ("b" . consult-buffer)
-		 ("f" . consult-find))))
+		 ("f" . consult-find)
+		 ("g e" . consult-compile-error)
+		 ("g b" . consult-bookmark))))
 #+end_src
 
 ** orderless
@@ -1386,7 +1392,8 @@ the current directory from eshell.
 #+begin_src emacs-lisp
 (use-package projectile
   :ensure t
-  :config (setq projectile-mode t)
+  :bind (:map projectile-command-map ("b" . consult-project-buffer))
+  :config (setq projectile-mode +1)
   (define-key space-map (kbd "p") 'projectile-command-map)
   (setq projectile-tags-command "ctags -Re -f '%s' --fields=+iaSt --extra=+q --exclude='.git' %s")
   (setq projectile-project-search-path '("~/src/" "~/src/mtstudio/projects/"))
@@ -1398,7 +1405,7 @@ the current directory from eshell.
 #+begin_src emacs-lisp
   (use-package org-projectile
   :ensure t
-	:bind (:map space-map ("c p" . org-projectile-project-todo-completing-read))
+	:bind (:map space-map ("c p" . org-projectile-capture-for-current-project))
 	:config (progn (org-projectile-per-project)
 				   (setq org-projectile-per-repo-filepath "project_todo.org")
 				   (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))))
