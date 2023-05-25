@@ -547,6 +547,9 @@ load current theme from custom variable
 (use-package evil-string-inflection
   :ensure t)
 
+(use-package evil-fringe-mark
+  :ensure t
+  :config (global-evil-fringe-mark-mode t))
 #+end_src
 
 ** don't use SPC and RET as motion keys in normal mode
