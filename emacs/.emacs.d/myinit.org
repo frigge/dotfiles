@@ -343,7 +343,6 @@ load current theme from custom variable
   :init (setq ewal-use-built-in-always-p nil
 			  ewal-use-built-in-on-failure-p t
 			  ewal-built-in-palette "sexy-material"))
-
 (use-package ewal-spacemacs-themes
   :init (progn
 		  (setq spacemacs-theme-underline-parens t
@@ -973,7 +972,6 @@ make latex fragments a little bigger
 								 (latex . t)
 								 (shell . t)
 								 (sh . t)
-								 (ipython . t)
 								 (gnuplot . t)
 								 (C . t)
 								 (cpp . t)
@@ -983,12 +981,6 @@ make latex fragments a little bigger
 (setq org-latex-listings t)
 (add-to-list 'org-latex-packages-alist '("" "listings"))
 (add-to-list 'org-latex-packages-alist '("" "color"))
-#+end_src
-
-**** IPython support
-#+begin_src emacs-lisp
-  (use-package ob-ipython
-:ensure t)
 #+end_src
 
 *** htmlize
@@ -1329,9 +1321,7 @@ the current directory from eshell.
 
 ** Python
 #+begin_src emacs-lisp
-  (setq python-shell-interpreter "ipython3")
-  (setq python-shell-interpreter-args "--simple-prompt -i")
-  (push "ipython3" python-shell-completion-native-disabled-interpreters)
+(use-package python-mode :ensure t)
 #+end_src
 
 *** Jupyter / IPython notebooks
@@ -1392,9 +1382,11 @@ the current directory from eshell.
 #+begin_src emacs-lisp
 (use-package projectile
   :ensure t
-  :bind (:map projectile-command-map ("b" . consult-project-buffer))
-  :config (setq projectile-mode +1)
-  (define-key space-map (kbd "p") 'projectile-command-map)
+  :bind
+  (:map space-map ("p" . projectile-command-map))
+  (:map projectile-command-map ("b" . consult-project-buffer))
+  :init (setq projectile-mode +1)
+  :config
   (setq projectile-tags-command "ctags -Re -f '%s' --fields=+iaSt --extra=+q --exclude='.git' %s")
   (setq projectile-project-search-path '("~/src/" "~/src/mtstudio/projects/"))
   (setq projectile-indexing-method 'native)
