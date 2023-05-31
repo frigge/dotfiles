@@ -339,8 +339,7 @@ load current theme from custom variable
 
 (use-package doom-modeline
   :ensure t
-  :init (doom-modeline-mode 1)
-  :custom (doom-modeline-height 15))
+  :init (doom-modeline-mode 1))
 #+end_src
 ** use pywal and spacemaces theme
 #+begin_src emacs-lisp
@@ -350,16 +349,16 @@ load current theme from custom variable
 			  ewal-built-in-palette "sexy-material"))
 
 (use-package ewal-spacemacs-themes
-  :init (progn
-		  (setq spacemacs-theme-underline-parens t
-				my:rice:font (font-spec
-							  :family "Monaco"
-							  :weight 'semi-bold
-							  :size 11.0))
-		  (show-paren-mode +1)
-		  (set-frame-font my:rice:font nil t)
-		  (add-to-list  'default-frame-alist
-						`(font . ,(font-xlfd-name my:rice:font))))
+  ;; :init (progn
+  ;; 		  (setq spacemacs-theme-underline-parens t
+  ;; 				my:rice:font (font-spec
+  ;; 							  :family "Consolas for Powerline"
+  ;; 							  :weight 'semi-bold
+  ;; 							  :size 11.0))
+  ;; 		  (show-paren-mode +1)
+  ;; 		  (set-frame-font my:rice:font nil t)
+  ;; 		  (add-to-list  'default-frame-alist
+  ;; 						`(font . ,(font-xlfd-name my:rice:font))))
   :config (progn
 			(load-theme 'ewal-spacemacs-modern t)
 			(enable-theme 'ewal-spacemacs-modern)))
