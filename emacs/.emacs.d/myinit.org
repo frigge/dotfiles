@@ -1249,13 +1249,6 @@ make latex fragments a little bigger
   :ensure t)
 #+end_src
 
-*** dap-mode
-#+begin_src emacs-lisp
-  (use-package dap-mode :disabled t)
-  ;; (require 'dap-gdb-lldb)
-  ;; (require 'dap-python)
-  ;; (require 'dap-launch)
-#+end_src
 
 ** c++
 *** semantic-refactor
@@ -1407,8 +1400,7 @@ the current directory from eshell.
 	(walk-up-until-org-todo root (file-name-directory (directory-file-name dir))))))
 
 (defun org-projectile-open-todo ()
-  "Open TODO.org in folder of current file if it exists, otherwise
-open or create a file at the project root"
+  "Open TODO.org in current folder or parent-directory all the way to project root"
   (interactive)
   (find-file (walk-up-until-org-todo (projectile-project-root) (file-name-directory buffer-file-name))))
 
