@@ -9,6 +9,8 @@
    Add ~/.emacs.d to load path
 #+begin_src emacs-lisp
 (add-to-list 'load-path "~/.emacs.d/modules/")
+(setenv "PATH" (concat (getenv "PATH") ":/home/frigge/bin"))
+(setq exec-path (append exec-path '("/home/frigge/bin")))
 #+end_src
 
 
@@ -199,7 +201,11 @@ just load c++ mode for cuda files
 (use-package atomic-chrome
   :ensure t
   :config
-  (atomic-chrome-start-server))
+  (atomic-chrome-start-server)
+  (setq atomic-chrome-url-major-mode-alist
+		(append '(("overleaf\\.com" . latex-mode))
+				atomic-chrome-url-major-mode-alist)))
+		
 #+end_src
 * gui
 ** misc
@@ -515,7 +521,7 @@ load current theme from custom variable
 (use-package evil-org
   :ensure t
   :after org
-  :hook (org-mode . evil-org-mode))
+  :hook (org-mode . (lambda () evil-org-mode)))
 
 (use-package evil-numbers
   :ensure t
@@ -645,7 +651,7 @@ prettyfy orgmode a little more
   (efs/org-font-setup)
   (setq org-src-fontify-natively t)
   (setq org-hide-emphasis-markers t)
-  :ensure org-plus-contrib)
+  :straight (:type built-in))
 #+end_src
 
 *** org-mime
@@ -970,20 +976,42 @@ make latex fragments a little bigger
 (require 'ob-C)
 (require 'ob-gnuplot)
 (require 'ob-shell)
+(require 'ob-ditaa)
+(require 'ob-plantuml)
 (setq org-babel-load-languages '((python . t)
 								 (emacs-lisp . t)
 								 (latex . t)
 								 (shell . t)
 								 (sh . t)
+								 (ditaa . t)
+								 (mermaid . t)
+								 (plantuml . t)
 								 (gnuplot . t)
 								 (C . t)
 								 (cpp . t)
 								 (org . t)))
 
+(setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa.jar")
 (setq org-src-preserve-indentation t)
+(setq org-plantuml-jar-path "/usr/share/java/plantuml/plantuml.jar")
 (setq org-latex-listings t)
 (add-to-list 'org-latex-packages-alist '("" "listings"))
 (add-to-list 'org-latex-packages-alist '("" "color"))
+#+end_src
+
+*** mermaid
+#+begin_src emacs-lisp
+(use-package mermaid-mode
+  :ensure t
+  :mode "\\.mmd\\'"
+  :config
+  (setq mermaid-mmdc-location "/usr/sbin/mmdc"))
+
+(use-package ob-mermaid
+  :ensure t
+  :after org
+  :config
+  (setq ob-mermaid-cli-path "/usr/sbin/mmdc"))
 #+end_src
 
 *** htmlize
@@ -1402,7 +1430,7 @@ the current directory from eshell.
 (defun org-projectile-open-todo ()
   "Open TODO.org in current folder or parent-directory all the way to project root"
   (interactive)
-  (find-file (walk-up-until-org-todo (projectile-project-root) (file-name-directory buffer-file-name))))
+  (find-file-other-window (walk-up-until-org-todo (projectile-project-root) (file-name-directory buffer-file-name))))
 
 (define-key space-map (kbd "c p") 'org-projectile-open-todo)
 #+end_src
