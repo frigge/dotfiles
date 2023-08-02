@@ -152,6 +152,10 @@ just load c++ mode for cuda files
   :config (add-hook 'zig-mode-hook (setq zig-format-on-save nil)))
 #+end_src
 
+*** rust-mode
+#+begin_src emacs-lisp
+(use-package rust-mode :ensure t)
+#+end_src
 ** copilot
 #+begin_src emacs-lisp
 (use-package copilot
@@ -432,6 +436,15 @@ load current theme from custom variable
   :init 
   (vertico-mode))
 #+end_src
+
+** Helm
+#+begin_src emacs-lisp
+(use-package helm
+  :ensure t)
+
+(use-package helm-bibtex
+  :ensure t)
+#+end_src
 ** Counsel
 #+begin_src emacs-lisp
 ;; (use-package counsel
@@ -521,7 +534,7 @@ load current theme from custom variable
 (use-package evil-org
   :ensure t
   :after org
-  :hook (org-mode . (lambda () evil-org-mode)))
+  :hook (org-mode . (evil-org-mode)))
 
 (use-package evil-numbers
   :ensure t
@@ -777,6 +790,27 @@ set custom notes heading format
 
 (use-package org-roam-bibtex
   :after org-roam
+*** org-journal
+#+begin_src emacs-lisp
+(defun org-journal-file-header-func (time)
+  "Custom function to create journal header."
+  (concat
+   (pcase org-journal-file-type
+     (`daily "#+TITLE: Daily Journal\n#+STARTUP: showeverything")
+     (`weekly (concat
+			   "#+TITLE: Weekly Journal\n"
+			   "#+STARTUP: showeverything\n"
+			   "#+TAGS: orga writing programming\n"
+			   "#+BEGIN: clocktable :scope file :maxlevel 2 :tags t\n"
+			   "#+END:\n\n"
+			   "* Orga\n"
+			   "* Writing\n"
+			   "* Programming\n"
+			   ))
+     (`monthly "#+TITLE: Monthly Journal\n#+STARTUP: showeverything")
+     (`yearly "#+TITLE: Yearly Journal\n#+STARTUP: showeverything"))))
+
+(use-package org-journal
   :ensure t
   :hook (org-roam-mode . org-roam-bibtex-mode)
   :bind (:map org-mode-map
@@ -819,6 +853,16 @@ set custom notes heading format
 	  :NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")
 	  :END:" 
 		 :unnarrowed t)))
+  :config 
+  (setq org-journal-dir "~/syncthing-documents/org/journal")
+  (setq org-journal-file-type 'weekly)
+  (setq org-journal-date-format "")
+  (setq org-journal-time-format "")
+  (setq org-journal-date-prefix "")
+  (setq org-journal-time-prefix "")
+  ;; (setq org-journal-time-format "%A, %d %B %Y, %H:%M")
+  (setq org-journal-file-format "%Y-%m-%d.org")
+  (setq org-journal-file-header 'org-journal-file-header-func))
 #+end_src
 
 *** org-appear
