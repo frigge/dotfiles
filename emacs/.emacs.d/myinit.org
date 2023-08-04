@@ -529,12 +529,12 @@ load current theme from custom variable
   (setq evil-undo-system 'undo-redo)
   :init
   (setq evil-want-C-i-jump nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-d-scroll t)
   :ensure t)
 
-(use-package evil-org
-  :ensure t
-  :after org
-  :hook (org-mode . (evil-org-mode)))
+(use-package org-evil
+  :ensure t)
 
 (use-package evil-numbers
   :ensure t
@@ -798,15 +798,26 @@ set custom notes heading format
    (pcase org-journal-file-type
      (`daily "#+TITLE: Daily Journal\n#+STARTUP: showeverything")
      (`weekly (concat
-			   "#+TITLE: Weekly Journal\n"
-			   "#+STARTUP: showeverything\n"
-			   "#+TAGS: orga writing programming\n"
-			   "#+BEGIN: clocktable :scope file :maxlevel 2 :tags t\n"
-			   "#+END:\n\n"
-			   "* Orga\n"
-			   "* Writing\n"
-			   "* Programming\n"
-			   ))
+               "#+TITLE: Weekly Journal\n"
+               "#+TAGS: orga writing programming\n"
+               "#+BEGIN: clocktable :scope file :maxlevel 2 :formula %\n"
+               "#+END:\n\n"
+               "#+begin_src python\n"
+               "from matplotlib import pyplot as plt\n"
+               "import numpy as np\n"
+               "fig = plt.figure()\n"
+               "plt.ylim(0, 100)\n"
+               "categories = np.transpose(np.array(table), (1, 0))[0][2:]\n"
+               "percentages = list(np.transpose(np.array(table), (1, 0))[2][2:].astype(np.float32))\n"
+               "plt.bar(list(categories), list(percentages))\n"
+               "chart = \n"barchart.png""
+               "fig.savefig(chart)\n"
+               "print(\n"[[./{}]]".format(chart))"
+               "#+end_src"
+               "* Orga\n"
+               "* Writing/Working on paper\n"
+               "* Programming/Trying new ideas\n"
+               ))
      (`monthly "#+TITLE: Monthly Journal\n#+STARTUP: showeverything")
      (`yearly "#+TITLE: Yearly Journal\n#+STARTUP: showeverything"))))
 
@@ -1022,6 +1033,7 @@ make latex fragments a little bigger
 (require 'ob-shell)
 (require 'ob-ditaa)
 (require 'ob-plantuml)
+(require 'ob-python)
 (setq org-babel-load-languages '((python . t)
 								 (emacs-lisp . t)
 								 (latex . t)
