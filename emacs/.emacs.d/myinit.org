@@ -810,7 +810,7 @@ set custom notes heading format
                "categories = np.transpose(np.array(table), (1, 0))[0][2:]\n"
                "percentages = list(np.transpose(np.array(table), (1, 0))[2][2:].astype(np.float32))\n"
                "plt.bar(list(categories), list(percentages))\n"
-               "chart = \n\"barchart.png\"\n"
+               "hart = \"barchart.png\"\n"
                "fig.savefig(chart)\n"
                "print(\n\"[[./{}]]\".format(chart))\n"
                "#+end_src\n\n"
