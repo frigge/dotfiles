@@ -1,0 +1,21 @@
+#! /usr/bin/env sh
+
+prj=$(find ~/src/ -maxdepth 1 -type d | fzf)
+if [[ -z $TMUX ]]; then
+    session=$(basename $prj)
+    if tmux list-sessions | grep $session; then
+        tmux attach -t $session
+    else
+        cd $prj
+        tmux new-session -s $(basename $prj)
+    fi
+else
+    session=$(basename $prj)
+    if tmux list-sessions | grep $session; then
+        tmux switch-client -t $session
+    else
+        cd $prj
+        tmux new-session -ds $(basename $prj)
+        tmux switch-client -t $session
+    fi
+fi
