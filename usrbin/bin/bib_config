@@ -1,0 +1,14 @@
+piland=piland.fritz.box
+
+documents_folder=$piland:/var/files/sascha/documents
+pdf_folder=$documents_folder/research/pdfs
+
+cache_base=/Users/frigge/syncthing/documents
+cache_folder=$cache_base/research/pdfs
+notes_folder="/Users/frigge/Library/Mobile Documents/iCloud~com~logseq~logseq/Documents/org/pages"
+
+bibfile=$cache_folder/bibliography.bib
+tagfolder=$cache_folder/tags
+
+# bibtex_parser=~/src/bibtex-parser/build/bibtex_parser
+bibtex_parser=~/src/zig_bibtex_parser/zig-out/bin/zig_bibtex_parser

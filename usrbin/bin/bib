@@ -1,0 +1,284 @@
+#! /usr/bin/env bash
+
+source bib_config
+mount_if_unmounted () {
+	if [ ! -d "$documents_folder" ]; then
+		mount_piland
+	fi
+}
+
+get_document_file () {
+	key=$1
+	file=$(ssh -p 22122 $piland "ls -1 ~/documents/research/pdfs/$key*")
+
+	cnt=$(echo $file | wc -l)
+	if [[ $cnt -ge 1 ]]; then
+		file=$(echo $file | fzf)
+	fi
+	echo $file
+}
+
+copy () {
+	echo 'rsync -e "ssh -p 22122" -rzzP '"$1" "$2"
+	rsync -e "ssh -p 22122" -rzzP $1 $2
+}
+
+get_pdf_path () {
+	key=$1
+	$cache_folder/$key.pdf
+}
+
+open_ueberzug() {
+	UB_PID_FILE="/tmp/.$(uuidgen)"
+	ueberzugpp layer --no-stdin --silent --use-escape-codes --pid-file $UB_PID_FILE
+	UB_PID=$(cat $UB_PID_FILE)
+
+	export SOCKET=/tmp/ueberzugpp-$UB_PID.socket
+}
+
+close_ueberzug() {
+	ueberzugpp cmd -s $SOCKET -a exit
+}
+
+bibls () {
+	# open_ueberzug
+
+	if [ -z "$1" ]; then
+		$bibtex_parser $bibfile | fzf --multi --ansi --preview 'preview_pdf_from_fzf_line $SOCKET {}'
+	else
+		$bibtex_parser $bibfile -t $@ | fzf --multi --ansi --preview 'preview_pdf_from_fzf_line $SOCKET {}'
+	fi
+
+	# close_ueberzug
+}
+
+bibsearch () {
+	csv_rows=$(~/src/scholar.py/scholar.py --csv -A "$1")
+	row=$(echo "$csv_rows" | fzf)
+	IFS="|" 
+	read -r title rest <<< "$row"
+	gscholar $title
+}
+
+cache_pdf () {
+	if [[ ! -f "$1" ]]; then
+		echo "caching file ..."
+		if [[ ! -d "$cache_folder" ]]; then
+			echo "creating cache folder"
+			mkdir "$cache_folder"
+		fi
+		copy "$pdf" "$1"
+	fi
+}
+
+extract_key () {
+	echo "$@" | sed "s/^\([^,]*\),.*$/\1/"
+}
+
+bibcite () {
+	citekey=$(extract_key $(bibls $@))
+
+	output_bib=0
+	case "$1" in
+		-b) output_bib=1; shift ;;
+	esac
+	if [[ $output_bib == 1 ]]; then
+		$bibtex_parser $bibfile --print-bib-entries "$@" $citekey
+	else
+		echo -e "$citekey"
+	fi
+}
+
+bibgrep () {
+	keys=$(bibcite $@)
+	pdffiles=""
+	for key in $keys; do
+		cachefile=$cache_folder/$key.pdf
+		cache_pdf $cachefile
+		pdfgrep "$1" $cachefile
+	done
+}
+
+bibmove () {
+	pdf_file=$2
+	supplemental=$3
+
+	key=$1
+	if [[ $supplemental == 1 ]]; then
+		pdf=$pdf_folder/$key_supplemental.pdf
+		cachefile=$cache_folder/$key_supplemental.pdf
+	else
+		pdf=$pdf_folder/$key.pdf
+		cachefile=$cache_folder/$key.pdf
+	fi
+
+	echo "moving $pdf_file to $pdf"
+	echo "cached in $cachefile"
+
+	if [ -f "$pdf" ]; then
+		echo "File already exists!!"
+		exit 0
+	fi
+	echo "moving $pdf_file to $pdf"
+	copy $pdf_file $pdf
+	copy $pdf_file $cachefile
+	rm $pdf_file
+}
+
+bibadd () {
+	entry=$(pbpaste)
+	unsorted_tag=$tagfolder/unsorted
+	echo -e "$entry" >> $bibfile
+	echo -e $($bibtex_parser -e) >> $unsorted_tag
+
+	case "$1" in
+		-n) exit 0 ;;
+	esac
+
+	cd ~/Downloads
+	pdf_file="$(ls -1t *.pdf | head -n 1)"
+
+	key=$($bibtex_parser $bibfile -e)
+	bibmove "$key" "$pdf_file"
+	cd -
+}
+
+print_untagged () {
+	bib.py --untagged $cache_folder $bibfile $tagfolder
+}
+
+bibtag () {
+	if [[ ! -d "$tagfolder" ]]; then
+		mkdir $tagfolder
+	fi
+
+	cd $tagfolder
+	tagchoices=$(for tag in *; do echo $tag"\n"; done)
+	tags=$(echo -e $tagchoices | fzf --multi)
+	do_something_with_bib $(bibls $tags)
+
+	# echo $tag
+
+	# if [[ -z "$1" ]]; then
+	# 	for tag in $tagfolder/*; do basename $tag; done
+	# else
+	# 	while read line < /dev/stdin; do
+	# 		echo $line >> $tagfolder/$tag
+	# 	done
+	# fi
+}
+
+bibpdf () {
+	open_pdf=0
+	associate_pdf=0
+	print_cache=0
+	print_missing=0
+	if [[ ! -z "$1" ]]; then
+		case "$1" in
+			-*) case "$1" in
+				-o) shift; open_pdf=1 ;;
+				-c) shift; print_cache=1 ;;
+				-m) shift; print_missing=1 ;;
+				-a) shift; pdf_file=$1; shift; associate_pdf=1 ;;
+				-*) echo "ERROR: Unexpected input"; exit 1
+			esac
+		esac
+	fi
+
+	if [ $print_missing -eq 1 ]; then
+		biblist=$(bibtex-ls $bibfile)
+		keys=$(grep -e "^@.*{.*,$" $bibfile | sed "s/@.*{\(.*\),/\1/")
+
+		mount_if_unmounted
+		for key in $keys; do
+			pdf="$pdf_folder/$key.pdf"
+
+			if [[ ! -f $pdf ]]; then
+				echo $(echo "$biblist" | grep $key)
+			fi
+		done
+		return
+	fi
+
+	keys=$(bibcite $@)
+
+	for key in $keys; do
+		pdf=$pdf_folder/$key.pdf
+		cachefile=$cache_folder/$key.pdf
+		if [ $associate_pdf -eq 1 ]; then
+			if [ -f "$pdf" ]; then
+				echo "File already exists!!"
+				exit 0
+			fi
+			echo "moving $pdf_file to $pdf"
+			copy "$pdf_file" "$pdf"
+			copy "$pdf_file" "$cachefile"
+		elif [ $open_pdf -eq 1 ]; then
+			cache_pdf "$cachefile"
+			termpdf.py "$cachefile"
+		elif [ $print_cache -eq 1 ]; then
+			cache_pdf "$cachefile"
+			echo "$cachefile"
+		else
+			echo "$pdf"
+		fi
+	done
+}
+
+bibnotes () {
+	key=$(bibcite)
+	notes=$notes_folder/$key.org
+	$EDITOR $notes
+}
+
+print_help () {
+	echo "manage paper library"
+	echo "commands:"
+	echo ""
+	echo "    ls: find and list bibliography entries"
+	echo "    cite: print cite key"
+	echo "    pdf: list/open/associate pdf"
+	echo "    notes: open notes"
+	echo "    search <query>: search google scholar for <query> and output the bib entry"
+}
+
+associate_files () {
+	cd ~/Downloads/
+	file=$(ls -1t *.pdf | fzf)
+	kind=$(echo -e"paper\nsupplemental\n" | fzf)
+	cd -
+
+	key=$1
+	case "$kind" in
+		paper) shift; bibmove $key; exit;;
+		supplemental) shift; move_paper $key $file 1; exit;;
+	esac
+}
+
+do_something_with_bib () {
+	#what now ?
+	key=$1
+	then=$(echo -e "key\nbibentry\nnotes\npdf\ngui-pdf\ntag\nassociate" | fzf)
+
+	case "$then" in
+		key) echo $key; exit;;
+		bibentry) $bibtex_parser $bibfile --print-bib-entries $key; exit;;
+		notes) $EDITOR "$notes_folder/$key.org"; exit;;
+		pdf) shift; termpdf.py "$cache_folder/$key.pdf"; exit;;
+		gui-pdf) shift; open "$cache_folder/$key.pdf"; exit;;
+		tag) shift; bibtag key exit;;
+		associate)shift; associate_files $key; exit;;
+	esac
+}
+
+case "$1" in
+	pdf)  shift; bibpdf $@ ;;
+	add) bibadd "$2" ;;
+	search) bibsearch "$2" ;;
+	grep) bibgrep "$2" ;;
+	sync) bibsync ;;
+	tag) bibtag;;
+	-h) print_help ;;
+	--help) print_help ;;
+	*) shift; do_something_with_bib $(bibcite);;
+esac
