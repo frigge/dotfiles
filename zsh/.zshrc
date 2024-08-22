@@ -117,4 +117,38 @@ rcd() {
     rm -f -- "$temp_file"
 }
 
+notes() {
+    session="notes"
+    folder=~/syncthing-documents/org/
+    if [[ -z $TMUX ]]; then
+        if tmux list-sessions | grep $session; then
+            tmux attach -t $session
+        else
+            cd $folder
+            tmux new-session -s $session
+        fi
+    else
+        if tmux list-sessions | grep $session; then
+            tmux switch-client -t $session
+        else
+            cd $folder
+            tmux new-session -ds $session
+            tmux switch-client -t $session
+        fi
+    fi
+}
+
 bindkey -s "^p" "project^M"
+bindkey -s "^k" "notes^M"
+function iplot {
+    cat <<EOF | gnuplot
+    set terminal pngcairo enhanced font 'Fira Sans,10'
+    set autoscale
+    set samples 1000
+    set output '|kitty +kitten icat --stdin yes'
+    set object 1 rectangle from screen 0,0 to screen 1,1 fillcolor rgb"#fdf6e3" behind
+    plot $@
+    set output '/dev/null'
+EOF
+}
+source '/home/frigge/.cargo/env'
