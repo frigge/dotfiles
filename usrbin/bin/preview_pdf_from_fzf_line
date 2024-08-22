@@ -1,0 +1,52 @@
+#! /usr/bin/env bash
+
+source bib_config
+cached_images_folder=$cache_folder/previews
+
+ueberzug_image() {
+	X=$(($(tput cols) / 2 + 1))
+	ueberzugpp cmd \
+			   -s $1 \
+			   -a add \
+			   -f $2 \
+			   -x $X \
+			   -y 1 \
+			   --max-width $FZF_PREVIEW_COLUMNS \
+			   --max-height $FZF_PREVIEW_LINES
+}
+
+list_tags () {
+	key=$1
+	tags=$($bibtex_parser $bibfile --show_tags $key)
+	# echo $bibfile
+	echo "TAGS: "$tags
+}
+
+pdf_preview () {
+	# SOCKET=$1
+	key=$1
+	pdf_file=$cache_folder/$key.pdf
+
+	[ -d $cached_images_folder ] || mkdir $cached_images_folder
+
+	cached_image=$cached_images_folder/$key
+	[ -f $cached_image.jpg ] || pdftoppm -f 1 -l 1 \
+									 -scale-to-x 1920 \
+									 -scale-to-y -1 \
+									 -singlefile \
+									 -jpeg -tiffcompression jpeg \
+									 -- "$pdf_file" "$cached_image"
+
+	# ueberzug_image $SOCKET "$cached_image.jpg"
+	# tmpfile=$cached_images_folder/$key.txt
+	# pdftotext $pdf_file $tmpfile
+
+	list_tags $key
+	if [ -f $cached_image.jpg ]; then
+		timg -g${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES} -p h $cached_image.jpg
+	fi
+}
+
+key=$(echo "$1" | sed "s/^\([^,]*\),.*$/\1/")
+
+pdf_preview $key
