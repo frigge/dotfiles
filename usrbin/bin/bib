@@ -41,13 +41,16 @@ bibls () {
     fi
 }
 
-# bibsearch () {
+bibsearch () {
+	key=$1
+	title=$($bibtex_parser $bibfile | grep $key | sed "s/$key, \"\(.*\)\"/\1/")
+	xdg-open "https://scholar.google.com/scholar?q=$title"
+}
 # 	# csv_rows=$(~/src/scholar.py/scholar.py --csv -A "$1")
 # 	# row=$(echo "$csv_rows" | fzf)
 # 	# IFS="|" 
 # 	# read -r title rest <<< "$row"
 # 	gscholar $title
-# }
 
 # cache_pdf () {
 # 	if [[ ! -f "$1" ]]; then
@@ -94,31 +97,26 @@ bibmove () {
 
 	key=$1
 	if [[ $supplemental == 1 ]]; then
-		pdf=$pdf_folder/$key_supplemental.pdf
 		cachefile=$cache_folder/$key_supplemental.pdf
 	else
-		pdf=$pdf_folder/$key.pdf
 		cachefile=$cache_folder/$key.pdf
 	fi
-
-	echo "moving $pdf_file to $pdf"
-	echo "cached in $cachefile"
 
 	if [ -f "$pdf" ]; then
 		echo "File already exists!!"
 		exit 0
 	fi
-	echo "moving $pdf_file to $pdf"
-	# copy $pdf_file $pdf
 	mv $pdf_file $cachefile
-	rm $pdf_file
 }
 
 bibadd () {
-	entry=$(pbpaste)
+	entry=$(xclip -o)
 	unsorted_tag=$tagfolder/unsorted
+	echo "adding the following bib entry to bibfile:"
+	echo $entry
+	echo "bibfile :"$bibfile
 	echo -e "$entry" >> $bibfile
-	echo -e $($bibtex_parser -e) >> $unsorted_tag
+	echo -e $($bibtex_parser $bibfile -e) >> $unsorted_tag
 
 	case "$1" in
 		-n) exit 0 ;;
@@ -128,6 +126,7 @@ bibadd () {
 	pdf_file="$(ls -1t *.pdf | head -n 1)"
 
 	key=$($bibtex_parser $bibfile -e)
+	echo $key
 	bibmove "$key" "$pdf_file"
 	cd -
 }
@@ -157,63 +156,62 @@ bibtag () {
 	# fi
 }
 
-bibpdf () {
-	open_pdf=0
-	associate_pdf=0
-	print_cache=0
-	print_missing=0
-	if [[ ! -z "$1" ]]; then
-		case "$1" in
-			-*) case "$1" in
-				-o) shift; open_pdf=1 ;;
-				-c) shift; print_cache=1 ;;
-				-m) shift; print_missing=1 ;;
-				-a) shift; pdf_file=$1; shift; associate_pdf=1 ;;
-				-*) echo "ERROR: Unexpected input"; exit 1
-			esac
-		esac
-	fi
-
-	if [ $print_missing -eq 1 ]; then
-		biblist=$(bibtex-ls $bibfile)
-		keys=$(grep -e "^@.*{.*,$" $bibfile | sed "s/@.*{\(.*\),/\1/")
-
-		mount_if_unmounted
-		for key in $keys; do
-			pdf="$pdf_folder/$key.pdf"
-
-			if [[ ! -f $pdf ]]; then
-				echo $(echo "$biblist" | grep $key)
-			fi
-		done
-		return
-	fi
-
-	keys=$(bibcite $@)
-
-	for key in $keys; do
-		pdf=$pdf_folder/$key.pdf
-		cachefile=$cache_folder/$key.pdf
-		if [ $associate_pdf -eq 1 ]; then
-			if [ -f "$pdf" ]; then
-				echo "File already exists!!"
-				exit 0
-			fi
-			echo "moving $pdf_file to $pdf"
-			# copy "$pdf_file" "$pdf"
-			# copy "$pdf_file" "$cachefile"
-			mv "$pdf_file" "$cachefile"
-		elif [ $open_pdf -eq 1 ]; then
-			cache_pdf "$cachefile"
-			termpdf.py "$cachefile"
-		elif [ $print_cache -eq 1 ]; then
-			cache_pdf "$cachefile"
-			echo "$cachefile"
-		else
-			echo "$pdf"
-		fi
-	done
-}
+# bibpdf () {
+# 	open_pdf=0
+# 	associate_pdf=0
+# 	print_cache=0
+# 	print_missing=0
+# 	if [[ ! -z "$1" ]]; then
+# 		case "$1" in
+# 			-*) case "$1" in
+# 				-o) shift; open_pdf=1 ;;
+# 				-c) shift; print_cache=1 ;;
+# 				-m) shift; print_missing=1 ;;
+# 				-a) shift; pdf_file=$1; shift; associate_pdf=1 ;;
+# 				-*) echo "ERROR: Unexpected input"; exit 1
+# 			esac
+# 		esac
+# 	fi
+#
+# 	# if [ $print_missing -eq 1 ]; then
+# 	# 	biblist=$(bibtex-ls $bibfile)
+# 	# 	keys=$(grep -e "^@.*{.*,$" $bibfile | sed "s/@.*{\(.*\),/\1/")
+# 	#
+# 	# 	for key in $keys; do
+# 	# 		pdf="$pdf_folder/$key.pdf"
+# 	#
+# 	# 		if [[ ! -f $pdf ]]; then
+# 	# 			echo $(echo "$biblist" | grep $key)
+# 	# 		fi
+# 	# 	done
+# 	# 	return
+# 	# fi
+#
+# 	keys=$(bibcite $@)
+#
+# 	for key in $keys; do
+# 		pdf=$pdf_folder/$key.pdf
+# 		cachefile=$cache_folder/$key.pdf
+# 		if [ $associate_pdf -eq 1 ]; then
+# 			if [ -f "$pdf" ]; then
+# 				echo "File already exists!!"
+# 				exit 0
+# 			fi
+# 			echo "moving $pdf_file to $pdf"
+# 			# copy "$pdf_file" "$pdf"
+# 			# copy "$pdf_file" "$cachefile"
+# 			mv "$pdf_file" "$cachefile"
+# 		elif [ $open_pdf -eq 1 ]; then
+# 			cache_pdf "$cachefile"
+# 			termpdf.py "$cachefile"
+# 		elif [ $print_cache -eq 1 ]; then
+# 			cache_pdf "$cachefile"
+# 			echo "$cachefile"
+# 		else
+# 			echo "$pdf"
+# 		fi
+# 	done
+# }
 
 bibnotes () {
 	key=$(bibcite)
@@ -226,8 +224,8 @@ print_help () {
 	echo "commands:"
 	echo ""
 	echo "    ls: find and list bibliography entries"
+	echo "    add: append bib entry to bibliography from clipboard and move newest pdf from ~/Downloads folder to <pdf_folder>/<citekey>.pdf"
 	echo "    cite: print cite key"
-	echo "    pdf: list/open/associate pdf"
 	echo "    notes: open notes"
 	# echo "    search <query>: search google scholar for <query> and output the bib entry"
 }
@@ -248,23 +246,24 @@ associate_files () {
 do_something_with_bib () {
 	#what now ?
 	key=$1
-	then=$(echo -e "key\nbibentry\nnotes\npdf\ngui-pdf\ntag\nassociate" | fzf)
+	then=$(echo -e "key\nbibentry\nnotes\npdf\ngui-pdf\ntag\nassociate\nscholar" | fzf)
 
 	case "$then" in
 		key) echo $key; exit;;
 		bibentry) $bibtex_parser $bibfile --print-bib-entries $key; exit;;
 		notes) $EDITOR "$notes_folder/$key.org"; exit;;
-		pdf) shift; termpdf.py "$cache_folder/$key.pdf"; exit;;
-		gui-pdf) shift; open "$cache_folder/$key.pdf"; exit;;
+		pdf) shift; $termpdf "$cache_folder/$key.pdf"; exit;;
+		gui-pdf) shift; $gpdf "$cache_folder/$key.pdf"; exit;;
 		tag) shift; bibtag key exit;;
 		associate)shift; associate_files $key; exit;;
+		scholar)shift; bibsearch $key; exit;;
 	esac
 }
 
 case "$1" in
-	pdf)  shift; bibpdf $@ ;;
+	# pdf)  shift; bibpdf $@ ;;
 	add) bibadd "$2" ;;
-	# search) bibsearch "$2" ;;
+	search) bibsearch "$2" ;;
 	grep) bibgrep "$2" ;;
 	ls) bibls $2;;
 	# sync) bibsync ;;

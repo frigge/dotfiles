@@ -43,7 +43,11 @@ pdf_preview () {
 
 	list_tags $key
 	if [ -f $cached_image.jpg ]; then
-		timg -g${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES} -p h $cached_image.jpg
+		if [[ -z $TMUX ]]; then
+			timg -g${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES} -p kitty $cached_image.jpg
+		else
+			timg -g${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES} $cached_image.jpg
+		fi
 	fi
 }
 
